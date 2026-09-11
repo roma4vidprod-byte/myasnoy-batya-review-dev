@@ -1,0 +1,1 @@
+Trigger deployment from current main so Vercel includes the latest API routes, including /api/email-test.
