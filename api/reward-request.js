@@ -1,3 +1,5 @@
+import { rpc } from './_supabase.js';
+
 function clean(value, max = 1000) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
@@ -13,30 +15,42 @@ export default async function handler(req, res) {
   const body = req.body || {};
   const email = clean(body.email, 320).toLowerCase();
   const platform = clean(body.platform, 30);
+  const token = clean(body.token || body.sourceToken, 200) || 'mb-dev-main';
   const allowed = new Set(['yandex', '2gis']);
 
   if (!validEmail(email) || !allowed.has(platform)) {
     return res.status(400).json({ ok: false, error: 'VALIDATION_ERROR' });
   }
 
-  const session = {
-    id: `rs_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
-    email,
-    platform,
-    locationId: clean(body.locationId, 100) || 'dev-location',
-    sourceId: clean(body.sourceId, 100) || 'dev-source',
-    status: 'WAITING_PUBLICATION',
-    createdAt: new Date().toISOString()
-  };
+  try {
+    const sessionId = await rpc('review_public_create_session', {
+      p_token: token,
+      p_email: email,
+      p_platform: platform
+    });
 
-  return res.status(201).json({
-    ok: true,
-    mode: 'dev-safe',
-    session,
-    verification: {
-      provider: platform === 'yandex' ? 'YandexBusinessProvider' : 'TwoGisBusinessProvider',
-      state: 'NOT_CONNECTED',
-      matching: 'FOUNDATION_READY'
-    }
-  });
+    return res.status(201).json({
+      ok: true,
+      mode: 'dev-supabase',
+      persisted: true,
+      session: {
+        id: sessionId,
+        email,
+        platform,
+        status: 'WAITING_PUBLICATION',
+        createdAt: new Date().toISOString()
+      },
+      verification: {
+        provider: platform === 'yandex' ? 'YandexBusinessProvider' : 'TwoGisBusinessProvider',
+        state: 'NOT_CONNECTED',
+        matching: 'FOUNDATION_READY'
+      }
+    });
+  } catch (error) {
+    console.error('reward session persistence failed', error.details || error.message);
+    return res.status(error.status === 400 ? 400 : 503).json({
+      ok: false,
+      error: 'PERSISTENCE_FAILED'
+    });
+  }
 }
