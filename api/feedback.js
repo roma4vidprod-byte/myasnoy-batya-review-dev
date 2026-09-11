@@ -47,6 +47,53 @@ async function sendTelegram({ reason, text, contact, feedbackId }) {
   return { status: 'SENT', messageId: data.result?.message_id || null };
 }
 
+async function sendEmail({ reason, text, contact, feedbackId }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.REVIEW_EMAIL_FROM;
+  const to = process.env.NEGATIVE_REVIEW_EMAIL_TO;
+  if (!apiKey || !from || !to) return { status: 'NOT_CONFIGURED' };
+
+  const recipients = to.split(',').map(v => v.trim()).filter(Boolean);
+  if (!recipients.length) return { status: 'NOT_CONFIGURED' };
+
+  const time = new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' });
+  const html = `
+    <div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#1F2933">
+      <h2 style="margin:0 0 20px">🔴 Негативная обратная связь</h2>
+      <p><b>Причина:</b> ${escapeHtml(reason)}</p>
+      <p><b>Комментарий:</b><br>${escapeHtml(text).replace(/\n/g, '<br>')}</p>
+      <p><b>Контакт:</b> ${escapeHtml(contact || 'не указан')}</p>
+      <p><b>ID обращения:</b> ${escapeHtml(feedbackId || '')}</p>
+      <p><b>Время:</b> ${escapeHtml(time)}</p>
+      <hr style="border:0;border-top:1px solid #DDE3E6;margin:24px 0">
+      <p style="font-size:12px;color:#6B7280">Мясной Батя · Review Activator</p>
+    </div>`;
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Idempotency-Key': `negative-feedback/${feedbackId}`
+    },
+    body: JSON.stringify({
+      from,
+      to: recipients,
+      subject: `Негативный отзыв · ${reason}`,
+      html
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.error) {
+    const error = new Error(data.message || data.error?.message || 'RESEND_SEND_FAILED');
+    error.status = response.status;
+    throw error;
+  }
+
+  return { status: 'SENT', emailId: data.id || null };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'METHOD_NOT_ALLOWED' });
@@ -70,6 +117,8 @@ export default async function handler(req, res) {
     });
 
     let telegram = { status: 'NOT_CONFIGURED' };
+    let email = { status: 'NOT_CONFIGURED' };
+
     try {
       telegram = await sendTelegram({ reason, text, contact, feedbackId });
     } catch (error) {
@@ -77,7 +126,12 @@ export default async function handler(req, res) {
       telegram = { status: 'FAILED' };
     }
 
-    const emailConfigured = Boolean(process.env.REVIEW_EMAIL_FROM && process.env.REVIEW_EMAIL_API_KEY && process.env.NEGATIVE_REVIEW_EMAIL_TO);
+    try {
+      email = await sendEmail({ reason, text, contact, feedbackId });
+    } catch (error) {
+      console.error('email delivery failed', error.message);
+      email = { status: 'FAILED' };
+    }
 
     return res.status(201).json({
       ok: true,
@@ -87,7 +141,8 @@ export default async function handler(req, res) {
       delivery: {
         telegram: telegram.status,
         telegramMessageId: telegram.messageId || null,
-        email: emailConfigured ? 'READY_NOT_SENT_YET' : 'NOT_CONFIGURED'
+        email: email.status,
+        emailId: email.emailId || null
       }
     });
   } catch (error) {
