@@ -4,6 +4,49 @@ function clean(value, max = 2000) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
 }
 
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+async function sendTelegram({ reason, text, contact, feedbackId }) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return { status: 'NOT_CONFIGURED' };
+
+  const message = [
+    '🔴 <b>Негативная обратная связь</b>',
+    '',
+    `<b>Причина:</b> ${escapeHtml(reason)}`,
+    `<b>Комментарий:</b> ${escapeHtml(text)}`,
+    `<b>Контакт:</b> ${escapeHtml(contact || 'не указан')}`,
+    `<b>ID:</b> <code>${escapeHtml(feedbackId || '')}</code>`,
+    `<b>Время:</b> ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' })}`
+  ].join('\n');
+
+  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message,
+      parse_mode: 'HTML',
+      disable_web_page_preview: true
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.ok) {
+    const error = new Error(data.description || 'TELEGRAM_SEND_FAILED');
+    error.status = response.status;
+    throw error;
+  }
+
+  return { status: 'SENT', messageId: data.result?.message_id || null };
+}
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'METHOD_NOT_ALLOWED' });
@@ -26,7 +69,14 @@ export default async function handler(req, res) {
       p_contact: contact || null
     });
 
-    const telegramConfigured = Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID);
+    let telegram = { status: 'NOT_CONFIGURED' };
+    try {
+      telegram = await sendTelegram({ reason, text, contact, feedbackId });
+    } catch (error) {
+      console.error('telegram delivery failed', error.message);
+      telegram = { status: 'FAILED' };
+    }
+
     const emailConfigured = Boolean(process.env.REVIEW_EMAIL_FROM && process.env.REVIEW_EMAIL_API_KEY && process.env.NEGATIVE_REVIEW_EMAIL_TO);
 
     return res.status(201).json({
@@ -35,7 +85,8 @@ export default async function handler(req, res) {
       feedbackId,
       persisted: true,
       delivery: {
-        telegram: telegramConfigured ? 'READY_NOT_SENT_YET' : 'NOT_CONFIGURED',
+        telegram: telegram.status,
+        telegramMessageId: telegram.messageId || null,
         email: emailConfigured ? 'READY_NOT_SENT_YET' : 'NOT_CONFIGURED'
       }
     });
