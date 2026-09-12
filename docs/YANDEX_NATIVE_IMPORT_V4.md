@@ -1,0 +1,216 @@
+# Yandex operator import v4 — pre-use security review
+
+Only myasnoy-batya-review-dev. Real import is NOT authorized by this implementation
+checkpoint. Do not refresh Yandex, run GET, enable scheduler/review persistence,
+send alerts, push/deploy, or operate Business OS/production.
+
+The owner supplied installed extension ID `gdjhmlbffahmpnphfoogegihhnfkoojm`.
+The previous extension was installed/opened by the owner; the v4 update and native
+registration have NOT been installed or exercised through real Chrome yet.
+
+## Decision: Native Messaging, not a localhost HTTP listener
+
+The initially preferred TCP design needs a trustworthy bootstrap for its nonce.
+An Origin header protects against other web pages, but a local executable can
+spoof it; an unauthenticated listener issuing its own nonce does not prove its
+identity to the extension. Passing a nonce manually would defeat the requested UX.
+
+Native Messaging adds a one-time per-user registration, then needs no manual
+transfer. Chrome checks the exact allowed extension origin; Windows same-user
+named pipes connect the Chrome-launched adapter to the existing key-holding PS7.
+CurrentUserOnly is set on BOTH pipe ends, checking server/client user and elevation.
+No TCP port, HTTP endpoint, CORS, DNS, port discovery or external extension network.
+The host permission remains exactly https://yandex.ru/*; CSP connect-src remains none.
+
+This relies on a trusted local user/profile, source tree and HKCU registration.
+It does NOT defend against malicious software running as that same user/elevation,
+administrators, debugger/process capture, paging or crash dumps. Origin argv alone
+is not an OS authentication boundary: Chrome's allowlist and pipe ACL do that work.
+
+## Complete extension manifest
+
+```json
+{
+  "manifest_version": 3,
+  "name": "Review Activator DEV — Cookie Metadata",
+  "version": "0.2.0",
+  "minimum_chrome_version": "132",
+  "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
+  "permissions": ["cookies", "nativeMessaging"],
+  "host_permissions": ["https://yandex.ru/*"],
+  "incognito": "not_allowed",
+  "action": {"default_popup": "popup.html", "default_title": "Review DEV: connect Yandex Business"},
+  "content_security_policy": {
+    "extension_pages": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"
+  }
+}
+```
+
+cookies technically permits mutation; reviewed code uses only getAll and
+getAllCookieStores. nativeMessaging permits only locally registered native hosts;
+this code names one fixed host and independently checks chrome.runtime.id.
+clipboardWrite was REMOVED. No clipboard input/output, storage permission,
+content/background scripts, externally_connectable or remote code.
+
+## Complete source inventory
+
+- [manifest.json](../tools/yandex-cookie-metadata/manifest.json)
+- [connect.js](../tools/yandex-cookie-metadata/connect.js): automatic collection,
+  native channel, cancellation, bounded protocol and fixed safe statuses.
+- [metadata.js](../tools/yandex-cookie-metadata/metadata.js): existing attribute
+  projection reused; historical v3 export retained for regression, not exposed in UI.
+- [popup.js](../tools/yandex-cookie-metadata/popup.js)
+- [popup.html](../tools/yandex-cookie-metadata/popup.html)
+- [popup.css](../tools/yandex-cookie-metadata/popup.css)
+- [start-yandex-local-import.ps1](../scripts/start-yandex-local-import.ps1): ephemeral
+  same-user listener in the owner's existing PS7; no persistent server/service.
+- [yandex-native-host.ps1](../scripts/yandex-native-host.ps1): Chrome's binary stdio
+  adapter, exact origin check, same-user pipe client. Never terminal secret output.
+- [yandex-native-protocol.ps1](../scripts/yandex-native-protocol.ps1): UTF-8 framed
+  messages, nonce TTL/single-use, adapter to unchanged manual wrapper/CLI.
+- [install-yandex-native-host.ps1](../scripts/install-yandex-native-host.ps1):
+  one-time NONSECRET HKCU registration and static launcher/manifest only.
+
+Unchanged sole engine: import-yandex-session.ps1 -> yandex-session.mjs import ->
+validateSession -> AES-256-GCM -> scoped expectedRevision=0 CAS/private storage.
+No API, database migration, grants, provider or scheduler changes.
+
+## Fixed scope and cookie policy
+
+- account: myasnoibatya-zakaz
+- organization: 54309413522
+- company: 13f3cb80-487a-4a19-96a1-fb3103200230
+- location: 9a95f63b-18e6-447b-a449-8530b67ddbae
+- DEV project: ykiubttldgyjpajmsuas
+
+The active tab must be HTTPS yandex.ru, /sprav/, with organization ID as an exact
+path segment, non-incognito and a uniquely identified cookie store. Otherwise stop;
+do not infer scope from an arbitrary tab or send cookies to discover it.
+
+Query only cookies matching the full /sprav/api/54309413522/reviews URL, in that store,
+including partitions so ambiguity cannot be hidden. This is a deterministic
+URL-applicable eligible set, NOT proof of the minimal authentication cookie set or
+the exact historic Request Cookie header. No all-domain/browser-profile dump.
+Duplicate names, any partition key, invalid domain/store, missing or invalid
+attributes fail closed. Prohibited CSRF/XSRF/password/authorization/2FA/SMS names
+are excluded; an all-excluded set fails. Retained cookies must pass existing
+domain/path/secure/httpOnly/expiry/value checks, and validateSession again server-side.
+No attribute guessing, value decoding, authentication-list guesses or validator changes.
+
+The account label remains an OPERATOR ASSERTION on the connect button, as in v1.
+Cookie metadata cannot prove account identity or authorization to an organization.
+No live validation occurs: successful import returns only NOT_CONFIGURED.
+
+## Protocol and state boundary
+
+1. Start listener manually in the same PS7 process; require three existing server
+   env variables and Node before listening. It accepts only one same-user pipe
+   connection, with FirstPipeInstance and 120-second total pre-import lifetime.
+2. Explicit button click opens Chrome native port. Registered allowed_origins and
+   host argv both require the exact extension ID. Adapter hello carries fixed origin.
+3. Server issues 32 random bytes as nonce over the authenticated local pipe only.
+   Nonce is never printed, stored, passed in argv or clipboard. No public bootstrap.
+4. Extension collects eligible cookies after successful hello. One import message
+   carries version/op/nonce/session. Scope/revision cannot be selected by browser.
+5. Exact envelope keys, TTL and nonce are checked. First attempt consumes the nonce
+   even if invalid. No second attempt/replay/reconnect processing by that listener.
+6. Existing wrapper passes session only through bounded child stdin and retains
+   its sanitized environment; keys never go to Chrome/native adapter. The existing
+   CLI encrypts before one fixed DEV RPC. No read/health/alert operation is called.
+7. Only successful state NOT_CONFIGURED/revision 1 yields the UI success result.
+   Listener/host close after result. No automatic retry. Caller key env is retained.
+
+Frames are bounded at 65,000 bytes before allocation and decoded with strict UTF-8;
+session's existing 60,000-byte validation and CLI 70,000-byte bound remain in force.
+Reads/writes have deadlines; malformed/EOF/oversize/expired input stops. There is
+no JSON response echo, raw exception, logger, value display, clipboard or plaintext
+file. Native stdio carries protocol bytes only, never console transcript output.
+Buffers are zeroed and references released best-effort; immutable copies cannot
+be guaranteed erased. Do not enable transcription/debug capture of operator code.
+
+Cancellation BEFORE the complete import is accepted causes no mutation. AFTER
+acceptance/CLI dispatch, closing the popup or losing a response cannot roll back an
+atomic DB write. The UI therefore says NOT CONFIRMED, never falsely 'not imported'.
+Stop and arrange a separately approved metadata-only status check; do not retry.
+
+## External destinations
+
+Extension/native adapter: none; only OS IPC. No loopback TCP or Yandex network.
+Server importer: ONLY existing fixed Supabase DEV storage RPC, with ciphertext and
+server auth. 'No external network' cannot literally apply to encrypted DEV DB
+persistence itself; it applies to browser/native material transfer. Existing RPC
+disallows redirects. Yandex/alerts/scheduler/review persistence never invoked.
+
+## Verification and remaining acceptance
+
+Implementation checkpoint: **225/225 tests PASS**, zero failed/skipped;
+**67 source/JSON/inline-script/PowerShell syntax checks PASS**; diff-check PASS.
+No standalone build script exists in this static DEV project; npm run check is
+the repository's available code/configuration verification. No deploy/build to Vercel.
+
+Offline tests cover collection/forbidden filtering and scope failures, unchanged
+validation/encrypted CAS roundtrip, native framing/limits/invalid UTF-8/EOF, exact
+origin, expiry, bad nonce, replay, cancellation and no secret output. Tests run an
+ACTUAL PS7 native host process over same-user Windows pipes and binary stdio,
+through the actual existing CLI with synthetic data and mocked storage RPC.
+Registry installation is NOT executed by tests. Chrome popup/API are mocked;
+native Chrome permission/launcher integration remains a manual acceptance step.
+
+TCP bind/CORS/HTTP Origin tests are not applicable: there is no HTTP server. Their
+replacements are same-user pipe options, exact Chrome origin, no network APIs and
+native allowlist checks. Cross-user/elevation rejection is backed by Windows API
+configuration; no second Windows account/elevation was exercised by these tests.
+
+No real session/keys/DB query used. Scheduler PAUSED/persistence OFF are prior state,
+not freshly queried here, and have not been modified. Full test/check/diff results
+are reported in the implementation handoff; not evidence of a live import.
+
+## One-time preparation — only after review
+
+Cancel the old hidden prompt with Ctrl+C. Do not copy anything from DevTools.
+In PS7 run the installer ONCE (no secret input, no browser/data access):
+
+```powershell
+& 'C:\Users\tasfo\BusinessOS\myasnoy-batya-review-dev\scripts\install-yandex-native-host.ps1'
+```
+
+It creates only %LOCALAPPDATA%\ReviewActivatorDev\YandexNativeV4\host.json and host.cmd,
+and HKCU\Software\Google\Chrome\NativeMessagingHosts\com.review_activator.dev_yandex.
+No secrets, global registry changes or policy bypass. It refuses existing paths/
+registration; on partial failure stop for inspection, not overwrite/retry. Manifest
+allows exactly chrome-extension://gdjhmlbffahmpnphfoogegihhnfkoojm/.
+
+Reload the existing unpacked extension at chrome://extensions (not the Yandex tab).
+Review the new nativeMessaging permission. Keep the same directory and confirm ID
+unchanged. Do not enable Incognito or broaden host permissions. No need to relaunch
+Chrome from the key-bearing console; never expose its environment to Chrome.
+
+## Normal use after separate real-import authorization: exactly two actions
+
+1. In the SAME open PS7 where SETUP PASS occurred, launch:
+
+```powershell
+& 'C:\Users\tasfo\BusinessOS\myasnoy-batya-review-dev\scripts\start-yandex-local-import.ps1'
+```
+
+2. On the existing organization's Yandex Business tab in the technical account,
+   click **Подключить Яндекс Бизнес** in the extension within 120 seconds. Keep its
+   popup open until the result. No manual cookie/header/JSON/metadata inputs.
+
+Success is exactly:
+
+```text
+Session imported
+State: NOT_CONFIGURED
+```
+
+STOP afterwards. No automatic Yandex GET. Keep the key-bearing console open;
+disable/remove the extension when finished. Revoke the dedicated native registration
+later only after inspecting those exact nonsecret paths/key; no broad cleanup.
+
+## Primary references
+
+- [Chrome Native Messaging](https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging)
+- [Chrome cookies URL filtering](https://developer.chrome.com/docs/extensions/reference/api/cookies)
+- [Windows pipe CurrentUserOnly on both ends](https://learn.microsoft.com/en-us/dotnet/api/system.io.pipes.pipeoptions)
+- [Supabase server key boundary](https://supabase.com/docs/guides/getting-started/api-keys)

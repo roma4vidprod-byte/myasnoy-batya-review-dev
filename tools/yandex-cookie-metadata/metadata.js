@@ -19,7 +19,7 @@ export function parseRequest(text, now = Date.now()) {
   } catch { stop(); }
 }
 
-function projectCookie(c, name, storeId, now) {
+export function projectCookie(c, name, storeId, now) {
   if (!c || c.name !== name || c.storeId !== storeId || !['yandex.ru','.yandex.ru'].includes(c.domain) ||
       !PATHS.has(c.path) || c.secure !== true || typeof c.httpOnly !== 'boolean' ||
       typeof c.session !== 'boolean' || Object.hasOwn(c,'partitionKey')) stop();

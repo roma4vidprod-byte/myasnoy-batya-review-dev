@@ -1,5 +1,9 @@
 # Local DEV keys — operator reports setup PASS; waiting for session input
 
+Current handoff: [native import v4](YANDEX_NATIVE_IMPORT_V4.md). No manual cookie,
+header or metadata transfer. Keep existing key-bearing console; no new key setup.
+The manual import instructions below are historical and must not be followed.
+
 2026-09-12. Only `myasnoy-batya-review-dev`, Supabase `ykiubttldgyjpajmsuas`.
 No deployment, DDL, session import, Yandex request, review persistence or alert delivery.
 Business OS and production are outside scope and untouched.

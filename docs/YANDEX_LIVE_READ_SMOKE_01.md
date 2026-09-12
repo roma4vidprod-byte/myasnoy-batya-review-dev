@@ -1,5 +1,9 @@
 # Yandex Live Read Smoke 01 — WAITING_FOR_MANUAL_SESSION_IMPORT
 
+Current checkpoint: [native import v4 pre-use review](YANDEX_NATIVE_IMPORT_V4.md).
+Old header/metadata transfer discontinued. No real import or GET in this development
+checkpoint; both require later explicit authorization. Historical evidence below.
+
 Current handoff (2026-09-12): owner confirmed keys configured / all checks PASS in
 the same still-open private PowerShell. This does not transfer keys to the agent.
 Current extension checkpoint permits development only, NOT real import or GET. Session material

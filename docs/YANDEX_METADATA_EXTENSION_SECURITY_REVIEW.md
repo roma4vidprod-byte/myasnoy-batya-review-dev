@@ -1,5 +1,9 @@
 # Metadata extension — pre-install security review
 
+HISTORICAL v3 snapshot. Current source/permissions are documented in
+[v4 Native Messaging security review](YANDEX_NATIVE_IMPORT_V4.md). Do not use the
+old clipboard workflow. The owner installed v3; v4 registration/update is pending.
+
 STATUS: offline implementation verified; native Chrome installation NOT VERIFIED.
 No real cookies/session, Yandex request, DB mutation, push/deploy. Business OS and
 production untouched. Supabase boundary reused unchanged; no browser server keys.

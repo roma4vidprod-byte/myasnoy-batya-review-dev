@@ -105,46 +105,5 @@ test('wrong active origin/incognito/ambiguous store cannot read cookies', async 
   }
 });
 
-test('reviewed extension inventory/manifest: strict host, no storage/network/mutation/background or injected code', () => {
-  const root=new URL('../tools/yandex-cookie-metadata/',import.meta.url);
-  assert.deepEqual(readdirSync(root).sort(),['manifest.json','metadata.js','popup.css','popup.html','popup.js']);
-  const manifest=JSON.parse(readFileSync(new URL('manifest.json',root),'utf8'));
-  assert.deepEqual(manifest.permissions,['cookies','clipboardWrite']);
-  assert.deepEqual(manifest.host_permissions,['https://yandex.ru/*']);
-  assert.equal(manifest.incognito,'not_allowed');
-  assert.equal(manifest.minimum_chrome_version,'132');
-  assert.equal(manifest.content_security_policy.extension_pages,"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'");
-  for (const field of ['background','content_scripts','web_accessible_resources','externally_connectable','update_url','optional_permissions']) assert.equal(Object.hasOwn(manifest,field),false);
-  const code=['metadata.js','popup.js'].map(p => readFileSync(new URL(p,root),'utf8')).join('\n');
-  assert.doesNotMatch(code,/fetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|localStorage|sessionStorage|indexedDB|chrome\.storage|console\.|cookies\.(set|remove|onChanged)|readText\(|eval\(|new Function/);
-  assert.doesNotMatch(code,/c\.value|cookie\.value\s*[;),=]/);
-  const html=readFileSync(new URL('popup.html',root),'utf8');
-  assert.match(html,/type="password"/);
-  assert.doesNotMatch(html,/<form|<iframe|https?:\/\//);
-});
-
-test('actual popup click copies only metadata and clears input; no raw API value access', async () => {
-  const elements=new Map(['request','copy','cancel','status'].map(id => [id,{value:'',disabled:false,textContent:'',events:{},addEventListener(name,fn){this.events[name]=fn;}}]));
-  const f=fixture(); const r=request(); r.issuedAt=Date.now();
-  // Use a persistent future expiry because the popup uses the real clock.
-  f.api.getCookies=async details => { const c=cookie(details.name); if (!c.session)c.expirationDate=4070934000;
-    Object.defineProperty(c,'value',{get(){throw new Error('PRIVATE_ACCESS');}}); return [c]; };
-  const held={document:globalThis.document,window:globalThis.window,chrome:globalThis.chrome,navigator:Object.getOwnPropertyDescriptor(globalThis,'navigator')};
-  const writes=[];
-  try {
-    globalThis.document={getElementById:id => elements.get(id)};
-    globalThis.window={addEventListener(){}};
-    globalThis.chrome={tabs:{query:f.api.queryTabs},cookies:{getAllCookieStores:f.api.getStores,getAll:f.api.getCookies}};
-    Object.defineProperty(globalThis,'navigator',{configurable:true,value:{clipboard:{writeText:async text => {writes.push(JSON.parse(text));}}}});
-    await import('../tools/yandex-cookie-metadata/popup.js');
-    elements.get('request').value=JSON.stringify(r);
-    await elements.get('copy').events.click();
-    assert.equal(writes.length,1);
-    assert.equal(writes[0].cookies.every(c => !Object.hasOwn(c,'value')),true);
-    assert.equal(elements.get('request').value,'');
-    assert.equal(elements.get('status').textContent.includes('только метаданные'),true);
-  } finally {
-    for (const name of ['document','window','chrome']) { if (held[name]===undefined) delete globalThis[name]; else globalThis[name]=held[name]; }
-    if (held.navigator) Object.defineProperty(globalThis,'navigator',held.navigator); else delete globalThis.navigator;
-  }
-});
+// The retained v3 projection is covered above. The active v4 popup/manifest are
+// verified in yandex-native-import.test.mjs; no obsolete clipboard workflow.

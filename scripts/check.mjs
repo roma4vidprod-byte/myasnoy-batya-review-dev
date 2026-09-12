@@ -24,6 +24,16 @@ for (const file of files) {
   } else if (/\.json$/.test(file)) {
     JSON.parse(readFileSync(file, 'utf8'));
     checked += 1;
+  } else if (/\.ps1$/.test(file)) {
+    // Parse only; never execute an operator script or read its process keys.
+    const quoted = file.replaceAll("'", "''");
+    const result = spawnSync('pwsh', ['-NoProfile', '-NonInteractive', '-Command',
+      `$tokens=$null; $errors=$null; $null=[System.Management.Automation.Language.Parser]::ParseFile('${quoted}',[ref]$tokens,[ref]$errors); if($errors.Count){exit 1}`], {encoding:'utf8'});
+    if (result.status !== 0) {
+      console.error(`PowerShell parse failed: ${relative(root,file)}`);
+      process.exit(1);
+    }
+    checked += 1;
   }
 }
 for (const file of ['package.json', 'vercel.json']) JSON.parse(readFileSync(resolve(root, file), 'utf8'));

@@ -37,10 +37,11 @@ DEV service key, генерация AES-256 keyring только в памяти
 preflight. Владелец подтвердил setup/all checks PASS; ожидается ручной session input.
 Исправлена диагностика отказа до prompt: PowerShell 5.1 получает понятную ошибку;
 prompt в PowerShell 7 проверен без ввода секрета. `& .ps1` сохраняет env в том же процессе.
-[Browser cookie helper v3](docs/YANDEX_BROWSER_SESSION_HELPER.md) принимает Cookie скрыто;
-локальное unpacked-расширение сопоставляет метаданные каждого имени без экспорта values.
-[Исходники и security review](docs/YANDEX_METADATA_EXTENSION_SECURITY_REVIEW.md).
-Реальная установка/session import ещё не выполнены; ручной JSON не требуется.
+[Native import v4: исходники и security review](docs/YANDEX_NATIVE_IMPORT_V4.md).
+После разовой регистрации локального адаптера: запустить importer в прежнем PS7 и
+нажать «Подключить Яндекс Бизнес». Cookies/header/JSON/metadata вручную не переносятся.
+Native Messaging + Windows same-user pipe; никакого HTTP/clipboard/browser network.
+Реальная session не импортирована; обновление Chrome/native registration ещё не проверено.
 Helper переиспользует
 `scripts/import-yandex-session.ps1` и существующий CLI, не запускает GET/alerts.
 

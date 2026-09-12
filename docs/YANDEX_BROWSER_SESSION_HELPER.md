@@ -1,5 +1,8 @@
 # Browser cookie helper v3 — local metadata matching
 
+HISTORICAL / STOP: the owner discontinued manual header/metadata transfer.
+Use [v4 review and native workflow](YANDEX_NATIVE_IMPORT_V4.md), not the steps below.
+
 Implemented for pre-install review. No real session import, browser cookie read,
 Yandex request, DB changes, scheduler activation, persistence, push or deployment.
 Business OS/production untouched. Existing validator, AES, CAS and CLI unchanged.

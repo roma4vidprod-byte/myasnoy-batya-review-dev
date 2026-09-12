@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "minimum_chrome_version": "132",
-  "description": "Local operator-only metadata export for the Asbest DEV read smoke.",
-  "permissions": ["cookies", "clipboardWrite"],
+  "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
+  "permissions": ["cookies", "nativeMessaging"],
   "host_permissions": ["https://yandex.ru/*"],
   "incognito": "not_allowed",
-  "action": {"default_popup": "popup.html", "default_title": "Review DEV: metadata only"},
+  "action": {"default_popup": "popup.html", "default_title": "Review DEV: connect Yandex Business"},
   "content_security_policy": {
     "extension_pages": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"
   }
