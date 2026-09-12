@@ -70,6 +70,11 @@ was performed. Future removal requires checking dependencies and exact UUIDs fir
 
 ## Manual import instruction — trusted operator only
 
+**Current ordinary-user entrypoint:** [browser cookie helper](YANDEX_BROWSER_SESSION_HELPER.md).
+It collects individual fields and hidden values; no manual JSON is required. The raw-JSON
+instructions below are retained as legacy technical contract/reference, not the current
+operator workflow. Both interfaces reuse the same CLI/encryption/CAS; no live import yet.
+
 The owner has confirmed [local DEV key setup](YANDEX_LOCAL_DEV_KEYS.md) succeeded.
 Run the import below only in that SAME still-open private PowerShell. Do not rerun
 key setup, start another PowerShell, expose env, or send session JSON to the agent.

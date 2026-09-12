@@ -43,11 +43,12 @@ function Read-YandexImportBuffer {
 }
 
 function Read-YandexImportJson {
+  param([string] $Prompt = 'Session JSON input is HIDDEN. Paste/type JSON; Ctrl+D submits; Ctrl+C cancels. Enter adds a newline.')
   if ([Console]::IsInputRedirected) { throw 'IMPORT_INTERACTIVE_CONSOLE_REQUIRED' }
   $previousControlMode = [Console]::TreatControlCAsInput
   try {
     [Console]::TreatControlCAsInput = $true
-    [Console]::WriteLine('Session JSON input is HIDDEN. Paste/type JSON; Ctrl+D submits; Ctrl+C cancels. Enter adds a newline.')
+    [Console]::WriteLine($Prompt)
     return Read-YandexImportBuffer -ReadKey { [Console]::ReadKey($true) }
   } finally { [Console]::TreatControlCAsInput = $previousControlMode }
 }
@@ -70,13 +71,16 @@ function New-YandexImportStartInfo {
   return $start
 }
 
+function Get-YandexImportPowerShellMajor { return $PSVersionTable.PSVersion.Major }
+
 function Invoke-YandexManualImport {
+  param([scriptblock] $InputReader = { Read-YandexImportJson })
   $ErrorActionPreference = 'Stop'
   $secure = $null; $bstr = [IntPtr]::Zero; $plain = $null; $session = $null; $payload = $null
   $child = $null; $start = $null; $started = $false; $confirmed = $false
   $failure = 'IMPORT_POWERSHELL_7_REQUIRED'
   try {
-    if ($PSVersionTable.PSVersion.Major -lt 7) { throw 'STOP' }
+    if ((Get-YandexImportPowerShellMajor) -lt 7) { throw 'STOP' }
     $failure = 'IMPORT_CONFIG_MISSING'
     foreach ($name in @('SUPABASE_SERVICE_ROLE_KEY','YANDEX_SESSION_KEYS_JSON','YANDEX_SESSION_ACTIVE_KID')) {
       if (-not [Environment]::GetEnvironmentVariable($name,'Process')) { throw 'STOP' }
@@ -84,7 +88,7 @@ function Invoke-YandexManualImport {
     $failure = 'IMPORT_LOCAL_RUNTIME_UNAVAILABLE'
     $start = New-YandexImportStartInfo
     $failure = 'IMPORT_SECURE_INPUT_FAILED'
-    $secure = Read-YandexImportJson
+    $secure = & $InputReader
     if ($secure -isnot [Security.SecureString]) { throw 'STOP' }
     $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
     $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)

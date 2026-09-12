@@ -37,8 +37,9 @@ DEV service key, генерация AES-256 keyring только в памяти
 preflight. Владелец подтвердил setup/all checks PASS; ожидается ручной session input.
 Исправлена диагностика отказа до prompt: PowerShell 5.1 получает понятную ошибку;
 prompt в PowerShell 7 проверен без ввода секрета. `& .ps1` сохраняет env в том же процессе.
-`scripts/import-yandex-session.ps1` принимает длинный JSON скрыто (Ctrl+D — отправить)
-и передаёт его через stdin существующему CLI; сам не запускает GET/alerts.
+[Browser cookie helper](docs/YANDEX_BROWSER_SESSION_HELPER.md) собирает cookies по полям,
+значения — скрыто; пользователю не нужно составлять JSON. Он переиспользует
+`scripts/import-yandex-session.ps1` и существующий CLI, не запускает GET/alerts.
 
 [Live Read Smoke 01](docs/YANDEX_LIVE_READ_SMOKE_01.md): отдельный synthetic DEV scope
 Асбеста подготовлен; session отсутствует. Ожидается ручной server-side import.

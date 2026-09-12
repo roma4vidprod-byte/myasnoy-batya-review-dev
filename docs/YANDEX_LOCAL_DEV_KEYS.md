@@ -152,6 +152,10 @@ Do not run health/probe/dry-run or set `YANDEX_LIVE_READ_APPROVAL` at this stage
 
 ## 5. Later manual hidden session import — not authorized by this setup step
 
+Current operator workflow: [browser cookie helper](YANDEX_BROWSER_SESSION_HELPER.md),
+which asks for individual fields with hidden values, not hand-written JSON. Use it in
+the same configured PowerShell 7. The raw JSON procedure below is historical/reference.
+
 Only after the separate keys-configured confirmation:
 
 1. In the already authorized `myasnoibatya-zakaz` browser, inspect existing cookies
