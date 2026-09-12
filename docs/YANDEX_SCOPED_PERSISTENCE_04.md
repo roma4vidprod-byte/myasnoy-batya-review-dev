@@ -76,7 +76,9 @@ The operation is one database transaction. It validates the complete batch,
 rejects duplicate IDs and contract drift, locks existing scoped rows, and fails
 the whole transaction on any invalid row or scope collision. The server wrapper
 `lib/server/review-persistence-writer.js` is server-only and calls only the
-allowlisted RPC `review_persist_external_reviews`.
+allowlisted RPC `review_persist_external_reviews`. An explicit `persist` mode
+and fixed-scope operator runner were added after 04; health and dry-run commands
+do not invoke them automatically.
 
 Provider-owned fields that may be inserted/updated:
 
