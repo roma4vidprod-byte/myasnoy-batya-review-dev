@@ -1,5 +1,10 @@
 # Yandex Foundation Remediation 01
 
+Historical checkpoint. Current RPC security, centralized page-base adapter and paused
+scheduler are documented in [Remediation 02](SYNC_BOUNDARY_REMEDIATION_02.md).
+The public enqueue risk described below has since been closed. Persistence/index
+risks and live type confirmation remain pending.
+
 Status: fixture-tested read foundation; **no Yandex session/auth transport implemented**.
 Date: 2026-09-12. Baseline: `e255faf6a0b3f69c45c75e18a468d03c81c3d110`.
 Pointer audit was read before implementation. Pointer is not a runtime dependency;

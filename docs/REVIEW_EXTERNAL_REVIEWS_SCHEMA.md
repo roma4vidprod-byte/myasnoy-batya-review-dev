@@ -1,5 +1,9 @@
 # Verified DEV schema evidence — 2026-09-12
 
+Historical Remediation 01 snapshot. Review table/index definitions remain unchanged,
+but RPC privileges/signatures and scheduler state have changed in
+[Remediation 02](SYNC_BOUNDARY_REMEDIATION_02.md). Refer there for current status.
+
 Target identity verified: `myasnoy-batya-review-dev`, ref `ykiubttldgyjpajmsuas`,
 Postgres 17. Business OS projects were not queried. Source of truth:
 information_schema.columns, pg_constraint, pg_indexes, pg_proc, pg_policies,

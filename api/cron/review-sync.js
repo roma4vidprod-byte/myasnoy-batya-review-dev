@@ -1,4 +1,4 @@
-import { rpc } from '../_supabase.js';
+import { enqueueDueSyncs } from '../../lib/server/review-sync.js';
 import { timingSafeEqual } from 'node:crypto';
 
 function authorized(req, secret) {
@@ -11,7 +11,10 @@ function authorized(req, secret) {
 }
 
 // Injection is for offline handler tests; no scheduler or Yandex session is provisioned here.
-export function createReviewSyncHandler({ requestRpc = rpc, getSecret = () => process.env.CRON_SECRET } = {}) {
+export function createReviewSyncHandler({
+  enqueue = enqueueDueSyncs,
+  getSecret = () => process.env.CRON_SECRET
+} = {}) {
   return async function handler(req, res) {
     res.setHeader('Cache-Control', 'no-store');
     if (req.method !== 'GET') {
@@ -23,19 +26,16 @@ export function createReviewSyncHandler({ requestRpc = rpc, getSecret = () => pr
     }
 
     try {
-      const queued = await requestRpc('review_public_request_due_syncs', {
-        p_token: 'mb-dev-main'
-      });
-
-      const status = await requestRpc('review_public_sync_status', {
-        p_token: 'mb-dev-main'
-      });
+      // Scope and service credentials come from server configuration, never HTTP input.
+      const queued = await enqueue();
 
       return res.status(200).json({
         ok: true,
         schedule: 'hourly',
         requested: Number(queued || 0),
-        providers: Array.isArray(status) ? status : []
+        // Legacy response key retained. Health is now exclusively the public read endpoint;
+        // its QR token scope must never be confused with the scheduler's company scope.
+        providers: []
       });
     } catch {
       // Backend errors may carry headers/session data. Return a fixed public error only.

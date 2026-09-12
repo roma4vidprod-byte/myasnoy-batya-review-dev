@@ -20,13 +20,23 @@ Static server не запускает server endpoints. Открытие UI мо
 ## Offline checks (Node 22+)
 
 ```sh
+npm ci --ignore-scripts
 npm test
 npm run check
 git diff --check
 ```
 
-Внешний Fetch в тестах запрещён; provider/RPC вызовы замоканы. Нет сторонних test
-dependencies. Check компилирует JS/inline scripts и проверяет JSON без выполнения кода.
+Внешний Fetch в тестах запрещён; provider/RPC вызовы замоканы. PostgreSQL-тесты используют
+dev-only PGlite в памяти, без подключения к DEV БД. Check компилирует JS/inline scripts
+и проверяет JSON без выполнения кода.
+
+## Sync Boundary Remediation 02 — current
+
+[Аудит, права, callers, scheduler и persistence plan](docs/SYNC_BOUNDARY_REMEDIATION_02.md).
+В DEV применена RPC security migration: public enqueue закрыт, существующий engine
+требует company UUID и service_role/postgres. Legacy hourly job приостановлен, не удалён.
+Новый server caller пока только в локальном коде, без push/deploy/реальных service keys.
+Yandex requests и persistence не включены; scoped-index migration остаётся планом.
 
 ## Yandex Foundation Remediation 01
 
@@ -34,12 +44,12 @@ dependencies. Check компилирует JS/inline scripts и проверяе
 - [Проверенная схема DEV, миграции, RPC/индексы и риски](docs/REVIEW_EXTERNAL_REVIEWS_SCHEMA.md).
 - [Происхождение fixtures](test/fixtures/yandex/README.md).
 
-HTTP cron закрыт при missing/wrong secret, но существующая public enqueue RPC
-требует отдельного hardening. Весь sync периметр пока нельзя считать закрытым.
+Этот checkpoint описывает состояние до Remediation 02. Найденный в нём обход public
+enqueue RPC теперь закрыт; persistence/index и live transport остаются отдельными этапами.
 
 ## Vercel
 
 Статические страницы и server functions, без отдельного frontend build command.
 Deployment target — DEV/Preview only. Vercel Hobby не используется для hourly cron;
-существующий hourly job находится в отдельном Supabase DEV. В Remediation 01 не
-выполнялись push/deploy, новые scheduler jobs, DB mutations и Yandex transport.
+существующий hourly job в отдельном Supabase DEV приостановлен в Remediation 02.
+Push/deploy, запуск scheduler и Yandex transport в Remediation 02 не выполнялись.

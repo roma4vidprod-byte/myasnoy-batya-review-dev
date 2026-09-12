@@ -13,8 +13,7 @@ export default async function handler(req, res) {
   try {
     const data = await rpc('review_public_sync_status', { p_token: token });
     return res.status(200).json({ ok: true, providers: Array.isArray(data) ? data : [] });
-  } catch (error) {
-    console.error('review sync status failed', error.details || error.message);
+  } catch {
     return res.status(503).json({ ok: false, error: 'SYNC_STATUS_FAILED' });
   }
 }

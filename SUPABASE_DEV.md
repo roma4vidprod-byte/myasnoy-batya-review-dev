@@ -1,5 +1,9 @@
 # Review Activator — dedicated Supabase DEV
 
+Current: [Remediation 02](docs/SYNC_BOUNDARY_REMEDIATION_02.md) applied the DEV-only
+RPC security migration 20260912095126 and paused (did not delete) the existing
+hourly job. Review data/indexes were not changed; no real Yandex transport is enabled.
+
 2026-09-12 read-only verification: see
 [REVIEW_EXTERNAL_REVIEWS_SCHEMA.md](docs/REVIEW_EXTERNAL_REVIEWS_SCHEMA.md) for the
 subsequent external reviews/reply columns, migrations, RPCs and existing pg_cron.

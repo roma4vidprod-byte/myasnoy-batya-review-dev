@@ -1,5 +1,9 @@
 # Review Activator — v0.6 BACKEND FOUNDATION
 
+Current server-only sync boundary:
+[Remediation 02](docs/SYNC_BOUNDARY_REMEDIATION_02.md). This checkpoint predates
+the DEV RPC security migration and scheduler pause.
+
 Historical checkpoint. Current Yandex remediation and verified DEV schema are in
 [YANDEX_REVIEW_PROVIDER.md](docs/YANDEX_REVIEW_PROVIDER.md) and
 [REVIEW_EXTERNAL_REVIEWS_SCHEMA.md](docs/REVIEW_EXTERNAL_REVIEWS_SCHEMA.md).
