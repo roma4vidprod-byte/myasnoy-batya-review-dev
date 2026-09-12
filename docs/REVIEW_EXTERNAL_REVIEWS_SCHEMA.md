@@ -1,8 +1,19 @@
 # Verified DEV schema evidence — 2026-09-12
 
-Historical Remediation 01 snapshot. Review table/index definitions remain unchanged,
-but RPC privileges/signatures and scheduler state have changed in
-[Remediation 02](SYNC_BOUNDARY_REMEDIATION_02.md). Refer there for current status.
+## Current post-04 state — 2026-09-13
+
+The historical snapshot below describes the pre-04 catalog. It is superseded for
+the active DEV state by [Yandex Scoped Persistence + Atomic Writer 04](YANDEX_SCOPED_PERSISTENCE_04.md).
+The active identity is `(company_id, location_id, provider, external_review_id)`;
+`location_id` is NOT NULL and is protected by a composite location/company FK.
+The global `(provider, external_review_id)` index and company-only unique
+constraint were removed in the DEV-only migration. The atomic writer is
+service-role-only and real review persistence remains OFF.
+
+Historical Remediation 01 snapshot. Its pre-04 table/index claims are retained
+for audit history only; RPC privileges/signatures and scheduler state changed in
+[Remediation 02](SYNC_BOUNDARY_REMEDIATION_02.md), and the active persistence
+schema is documented above and in the 04 handoff.
 
 Target identity verified: `myasnoy-batya-review-dev`, ref `ykiubttldgyjpajmsuas`,
 Postgres 17. Business OS projects were not queried. Source of truth:
@@ -11,9 +22,9 @@ pg_trigger, targeted cron.job and Supabase migration-history SELECTs.
 No customer rows, credentials or provider configuration values were selected.
 No RPC/job was executed. No schema/data writes or migrations were applied.
 
-No local SQL/migration files exist, including in tracked Git history. Definitions
-were inspected in this dedicated project's applied migrations and current catalog.
-This document is evidence, NOT a runnable migration or replacement schema.
+At the time of this historical snapshot no local SQL/migration files existed.
+The 04 migration was added later and is documented separately; the definitions
+below are historical evidence, NOT a runnable migration or replacement schema.
 
 ## Current `public.review_external_reviews`
 

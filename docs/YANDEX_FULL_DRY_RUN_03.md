@@ -1,5 +1,12 @@
 # Yandex full live dry-run 03
 
+## Post-04 persistence boundary
+
+The dry-run result below remains read-only evidence: its planned 67 inserts were
+never executed. Since this report was produced, DEV-only migration 04 added the
+scoped atomic writer and removed the unsafe global identity index. The writer is
+still not wired into this dry-run path; `review_external_reviews` remains empty.
+
 ## STATUS: PASS — owner-reported full live result
 
 Completed at 2026-09-12T19:08:26.752376+00:00: READY, revision 4,

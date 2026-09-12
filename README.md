@@ -1,5 +1,14 @@
 # Мясной Батя — Review Activator DEV
 
+## Current checkpoint — Yandex scoped persistence + atomic writer 04
+
+DEV-only scoped persistence hardening is complete and applied to the dedicated
+Review Activator DEV Supabase project. The writer exists behind a server-only,
+service-role RPC, but it is **not wired into the live Yandex dry-run path** and
+no real reviews were persisted. `review_external_reviews` remains empty,
+`review-provider-due-check-hourly` remains PAUSED, and no Yandex write was made.
+See [the 04 audit and handoff](docs/YANDEX_SCOPED_PERSISTENCE_04.md).
+
 Изолированный Review Activator DEV: интерфейс `v0.4 BRAND` и последующая server foundation.
 
 Локальное расширение 0.2.4: по явному разрешению partitioned cookies исключаются
@@ -78,7 +87,9 @@ Session не импортирована; реальных запросов не�
 В DEV применена RPC security migration: public enqueue закрыт, существующий engine
 требует company UUID и service_role/postgres. Legacy hourly job приостановлен, не удалён.
 Новый server caller пока только в локальном коде, без push/deploy/реальных service keys.
-Yandex requests и persistence не включены; scoped-index migration остаётся планом.
+Yandex requests и persistence не включены в runtime path; scoped-index/atomic
+writer hardening выполнен отдельной DEV-only миграцией 04, но writer требует
+отдельного явного запуска после следующего аудита.
 
 ## Yandex Foundation Remediation 01
 

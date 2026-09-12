@@ -1,5 +1,9 @@
 # Yandex Session Transport v1 — isolated DEV
 
+This document is the v1 historical checkpoint. The later live read and scoped
+persistence status are recorded in [full dry-run 03](YANDEX_FULL_DRY_RUN_03.md)
+and [scoped persistence 04](YANDEX_SCOPED_PERSISTENCE_04.md).
+
 Next checkpoint: [Live Read Smoke 01](YANDEX_LIVE_READ_SMOKE_01.md) prepared an explicitly
 synthetic Asbest company/location under new owner authorization. Manual session import
 is pending; no live request yet. The missing-location evidence below is the v1 snapshot.

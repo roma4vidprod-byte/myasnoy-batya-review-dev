@@ -1,5 +1,10 @@
 # Review Activator — Sync Boundary Remediation 02
 
+This is the Remediation 02 historical boundary audit. Its pre-04 persistence
+section is superseded by [Yandex Scoped Persistence + Atomic Writer 04](YANDEX_SCOPED_PERSISTENCE_04.md):
+the DEV global review identity index was later replaced by the scoped identity
+and server-only atomic writer. The scheduler remains PAUSED.
+
 Date: 2026-09-12. Baseline: `b7822f5f1fad146190fabb50b81877ea791fedfd`.
 Only repository `myasnoy-batya-review-dev` and its Supabase DEV project
 `ykiubttldgyjpajmsuas` are in scope. Business OS and production were not queried or modified.
