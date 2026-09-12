@@ -71,7 +71,8 @@ was performed. Future removal requires checking dependencies and exact UUIDs fir
 ## Manual import instruction — trusted operator only
 
 **Current ordinary-user entrypoint:** [browser cookie helper](YANDEX_BROWSER_SESSION_HELPER.md).
-It collects individual fields and hidden values; no manual JSON is required. The raw-JSON
+It accepts one hidden Cookie header paste and confirmed shared metadata; no manual JSON
+is required. Mixed/unknown metadata stops the fast path. The raw-JSON
 instructions below are retained as legacy technical contract/reference, not the current
 operator workflow. Both interfaces reuse the same CLI/encryption/CAS; no live import yet.
 

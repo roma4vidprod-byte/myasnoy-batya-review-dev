@@ -13,12 +13,12 @@ for (const extra of [[],['--unexpected']]) {
     assert.equal(child.status === 0 && child.stderr === '' && child.stdout.trim().replaceAll('\r','') === `session imported = false\nstate = UNKNOWN\nerror = ${code}`,true);
   });
 }
-for (const mode of ['valid','date','old_version','missing','domain','path','expired','prohibited','duplicate','cancel','value_cancel','malformed','secure','httpOnly','expiry']) {
+for (const mode of ['valid','prefix','date','old_version','missing','domain','path','expired','prohibited','duplicate','cancel','value_cancel','malformed','secure','httpOnly','expiry','newline','empty_value','trailing','set_cookie','duplicate_prohibited','oversize','mixed_metadata']) {
   test(`browser cookie helper: ${mode}, synthetic input only`, () => {
     const child = spawnSync('pwsh',['-NoProfile','-NonInteractive','-File','test/support/yandex-browser-import.test.ps1','-Mode',mode], {cwd,encoding:'utf8',timeout:20000});
     // Never include captured input or exceptions in assertion diagnostics.
     assert.equal(child.status === 0 && child.stderr === '' && child.stdout.trim().endsWith('PASS: browser input fixture'),true);
-    assert.equal(/synthetic-cookie-|SYNTHETIC_PRIVATE|SYNTHETIC;PRIVATE|ciphertext/.test(child.stdout + child.stderr),false);
+    assert.equal(/synthetic-cookie-|SYNTHETIC_PRIVATE|SECRET_SYNTHETIC|ciphertext|csrf_fixture/.test(child.stdout + child.stderr),false);
   });
 }
 
