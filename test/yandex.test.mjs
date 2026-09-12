@@ -17,6 +17,22 @@ const scope = {
 const errorCode = code => error => error.code === code && error.message === code;
 const drift = fn => assert.throws(fn, errorCode('YANDEX_CONTRACT_DRIFT'));
 
+test('full live shape: numeric Unix milliseconds preserve precision and public_rating stays boolean',()=>{
+  for(const publicRating of [true,false]){
+    const payload=fixture('live-shape-milliseconds');
+    payload.list.items[0].public_rating=publicRating;
+    const [review]=parseYandexReviewsPayload(payload,location).reviews;
+    assert.equal(review.publishedAt,'2025-01-01T00:00:00.123Z');
+    assert.equal(review.rawPayload.time_created,1735689600123);
+    assert.equal(review.rawPayload.public_rating,publicRating);
+    assert.equal(typeof review.rawPayload.public_rating,'boolean');
+    assert.equal(review.rawPayload.id,review.rawPayload.cmnt_entity_id);
+    const projected=toReviewExternalReview(review,scope);
+    assert.equal(projected.published_at,review.publishedAt);
+    assert.equal(projected.raw_payload.public_rating,publicRating);
+  }
+});
+
 test('1 list.items item -> 1 normalized review; ID, author, rating, text, UTC time', () => {
   const parsed = parseYandexReviewsPayload(fixture('single-review'), location);
   assert.equal(parsed.reviews.length, 1);

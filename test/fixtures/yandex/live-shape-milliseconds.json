@@ -1,0 +1,17 @@
+{
+  "list": {
+    "items": [{
+      "id": "synthetic-live-shape-001",
+      "cmnt_entity_id": "synthetic-live-shape-001",
+      "author": { "user": "Synthetic guest" },
+      "full_text": "Synthetic text, not a captured review.",
+      "rating": 5,
+      "time_created": 1735689600123,
+      "owner_comment": null,
+      "comments_count": 0,
+      "lang": "ru",
+      "public_rating": true
+    }],
+    "pager": { "limit": 20, "offset": 0, "total": 1 }
+  }
+}

@@ -1,6 +1,47 @@
 # Yandex full live dry-run 03
 
-## STATUS: PREPARED — operator execution pending
+## STATUS: PASS — owner-reported full live result
+
+Completed at 2026-09-12T19:08:26.752376+00:00: READY, revision 4,
+errorCode null; lastSessionCheckAt and lastSuccessfulSyncAt both have that timestamp.
+Existing dry-run semantics update the successful-read timestamp; NO reviews persisted.
+
+| Page | limit | offset | total | items |
+| --- | --- | --- | --- | --- |
+| 1 | 20 | 0 | 67 | 20 |
+| 2 | 20 | 20 | 67 | 20 |
+| 3 | 20 | 40 | 67 | 20 |
+| 4 | 20 | 60 | 67 | 7 |
+
+Received=67, unique=67, duplicates=0. Owner reply objects=54. Ratings:
+1 star=9, 2=3, 3=0, 4=0, 5=55. Text null/non-null=0/67; author null/non-null=0/67.
+ID consistency equal/different/missing=67/0/0. public_rating boolean=67/67.
+
+time_created confirmed number/UNIX_MILLISECONDS: raw range
+1735495043063..1788885653396 -> 2024-12-29T17:57:23.063Z through
+2026-09-08T16:40:53.396Z. Milliseconds plausible=67, seconds plausible=0 within
+declared 2000-01-01..2026-09-13T19:08:23.679Z window; normalization matched all values.
+Existing normalizer already handled this correctly and retains subsecond precision.
+Compatibility formats retained; no claim about owner_comment timestamp units.
+
+Plan: inserts=67, update candidates=0, unchanged=0 (no existing matches),
+collisions=0, scope failures=0; persistenceEnabled=false, reviewPersistence=OFF.
+This is a snapshot preflight, not proof that concurrent persistence would be safe.
+Global index/scoped writer hardening is still required before persistence.
+
+Safe sample, hash prefixes only (all provider=yandex, external_location_id=54309413522):
+
+| ID hash prefix | rating | published_at | reply present |
+| --- | --- | --- | --- |
+| 63b0af450b01 | 5 | 2026-09-08T16:40:53.396Z | false |
+| 2fe9d7a1b710 | 5 | 2026-09-06T07:21:28.010Z | true |
+| 2828fc0e8be3 | 5 | 2026-09-03T13:11:50.409Z | true |
+
+No texts, names, raw IDs, cookies, CSRF or raw response stored in this report.
+No new live fetch in post-result work. Scheduler not touched (PAUSED by prior report),
+alerts mocked by the operator entrypoint, no Business OS/production or push/deploy.
+
+## Historical preparation (superseded by result above)
 
 Preparation verification: 286/286 tests PASS, 75 checks PASS, diff-check PASS.
 Post-live checks and factual unit/count confirmation remain pending.

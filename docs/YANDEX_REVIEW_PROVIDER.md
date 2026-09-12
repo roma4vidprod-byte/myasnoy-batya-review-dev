@@ -1,5 +1,13 @@
 # Yandex Foundation Remediation 01
 
+Latest: [full dry-run 03 PASS](YANDEX_FULL_DRY_RUN_03.md) confirms all 67 Asbest
+review timestamps are numeric Unix milliseconds, public_rating boolean, canonical
+IDs equal cmnt_entity_id. Page base 1 validated across 4 pages. Existing normalizer
+already preserves milliseconds; a dedicated synthetic live-shape fixture pins this.
+Earlier timestamp-unit uncertainty below is historical; owner reply source units
+remain unconfirmed. Generic rawPayload.type_confirmation=PENDING covers broader
+unverified source contracts and is not a claim that these Asbest fields are unknown.
+
 Current live evidence: [probe 02](YANDEX_PAGINATION_PROBE_02.md) confirms Asbest
 base 1 with page 0 alias (pages 0,1,2 only); time_created number, public_rating boolean.
 Timestamp units and owner reply time types remain unconfirmed. Existing tolerant

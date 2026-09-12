@@ -1,5 +1,13 @@
 # Yandex Business contract fixtures
 
+Current Asbest full dry-run 03 evidence: 67 numeric Unix-millisecond review timestamps,
+67 boolean public_rating values, all id/cmnt_entity_id pairs equal. Pages 1..4 use
+offsets 0/20/40/60 for total 67. `live-shape-milliseconds.json` reproduces confirmed
+types with fabricated values, text and identity; it is NOT an exported real review.
+Tests preserve milliseconds and true/false booleans without numeric coercion.
+Owner reply time units were not reported separately and remain unconfirmed.
+Older fixture formats below are historical compatibility cases, not live assertions.
+
 These are synthetic, anonymized fixtures reconstructed from the owner-confirmed field
 names and envelope, NOT captured real responses. No actual review, author or session
 data is included. `author.user` is the confirmed string display name. `approved` is
