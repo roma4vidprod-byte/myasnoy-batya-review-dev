@@ -11,7 +11,7 @@ function walk(directory) {
     else files.push(path);
   }
 }
-for (const directory of ['api', 'lib', 'scripts', 'test']) walk(resolve(root, directory));
+for (const directory of ['api', 'lib', 'scripts', 'test', 'tools/yandex-cookie-metadata']) walk(resolve(root, directory));
 let checked = 0;
 for (const file of files) {
   if (/\.(?:m?js)$/.test(file)) {

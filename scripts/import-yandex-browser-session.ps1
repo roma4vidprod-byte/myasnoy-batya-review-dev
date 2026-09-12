@@ -1,5 +1,5 @@
-﻿# One header paste; existing CLI remains the ONLY validator/encryption/CAS engine.
-# Header attributes cannot be inferred. Fast path requires confirmed shared metadata.
+﻿# One hidden header + metadata-only local extension exchange. No shared/default metadata.
+# Existing CLI remains the ONLY validator/encryption/CAS engine.
 . (Join-Path $PSScriptRoot 'import-yandex-session.ps1')
 
 function Read-YandexCookieField {
@@ -36,31 +36,59 @@ function ConvertFrom-YandexCookieHeader {
   } finally { $text=$null; $parts=$null; $pair=$null; $match=$null; $records.Clear() }
 }
 
-function Read-YandexSharedCookieMetadata {
-  [Console]::WriteLine('Заголовок не содержит атрибутов. Сверьте показанные имена в Application > Cookies > https://yandex.ru.')
-  [Console]::WriteLine('Быстрый путь: у ВСЕХ оставшихся cookies одинаковые Domain, Path, Secure, HttpOnly и Expires.')
-  [Console]::WriteLine('Если атрибуты разные, неизвестны, истекли или есть Partition Key — отмените. Не угадывайте.')
-  if ((Read-YandexCookieField 'Все эти атрибуты одинаковы, проверены и нет partitioned cookies? ДА') -cne 'ДА') { throw 'INPUT_STOP' }
-  $domain = Read-YandexCookieField 'Общий Domain: yandex.ru или .yandex.ru, как в браузере'
-  if ($domain -cnotin @('yandex.ru','.yandex.ru')) { throw 'INPUT_STOP' }
-  $path = Read-YandexCookieField 'Общий Path: наблюдаемый путь'
-  if ($path -cnotin @('/','/sprav','/sprav/','/sprav/api','/sprav/api/')) { throw 'INPUT_STOP' }
-  if ((Read-YandexCookieField 'Общий Secure: true только если отмечен у всех') -cne 'true') { throw 'INPUT_STOP' }
-  $httpOnly = Read-YandexCookieField 'Общий HttpOnly: true если отмечен, false если нет'
-  if ($httpOnly -cnotin @('true','false')) { throw 'INPUT_STOP' }
-  $expiry = Read-YandexCookieField 'Общий Expires: session для Session; иначе Unix seconds или ISO дата с Z/смещением'
-  $expires = [double]0
-  if ($expiry -ceq 'session') { $expires = [double]-1 }
-  else {
-    if ($expiry -cmatch '^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?(?:Z|[+-]\d\d:\d\d)$') {
-      $date = [DateTimeOffset]::MinValue
-      if (-not [DateTimeOffset]::TryParse($expiry,[Globalization.CultureInfo]::InvariantCulture,[Globalization.DateTimeStyles]::None,[ref]$date)) { throw 'INPUT_STOP' }
-      $expires = $date.ToUnixTimeMilliseconds() / 1000.0
-    } elseif (-not [double]::TryParse($expiry,[Globalization.NumberStyles]::Float,[Globalization.CultureInfo]::InvariantCulture,[ref]$expires)) { throw 'INPUT_STOP' }
-    if ([double]::IsNaN($expires) -or [double]::IsInfinity($expires) -or
-        $expires -le ([DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() / 1000.0)) { throw 'INPUT_STOP' }
+function Publish-YandexMetadataRequest {
+  param($Request)
+  # Only names and a non-secret correlation ID. Never put the header/pairs on clipboard.
+  Set-Clipboard -Value ($Request | ConvertTo-Json -Depth 4 -Compress) -ErrorAction Stop
+}
+
+function Assert-YandexMetadataKeys {
+  param($Object, [string[]] $Keys)
+  if ($Object -isnot [Collections.IDictionary] -or $Object.Count -ne $Keys.Count) { throw 'INPUT_STOP' }
+  foreach ($key in $Object.Keys) { if ($key -cnotin $Keys) { throw 'INPUT_STOP' } }
+}
+
+function Read-YandexMatchedMetadata {
+  param($Request, $Pairs)
+  $secure=$null; $pointer=[IntPtr]::Zero; $plain=$null; $map=$null
+  try {
+    $secure = Read-YandexImportJson -Prompt 'Вставьте МЕТАДАННЫЕ из расширения. Ctrl+D — закончить; Ctrl+C — отменить.'
+    $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
+    $map = $plain | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+    Assert-YandexMetadataKeys $map @('version','requestId','url','capturedAt','cookies')
+    $now = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+    if (($map.version -isnot [long] -and $map.version -isnot [int]) -or $map.version -ne 1 -or
+        $map.requestId -isnot [string] -or $map.requestId -cne $Request.requestId -or
+        $map.url -isnot [string] -or $map.url -cne $Request.url -or
+        ($map.capturedAt -isnot [long] -and $map.capturedAt -isnot [int]) -or
+        $map.capturedAt -lt $Request.issuedAt -or $map.capturedAt -gt $now -or $now-$Request.issuedAt -gt 300000 -or
+        $map.cookies -isnot [array] -or $map.cookies.Count -ne $Pairs.Count) { throw 'INPUT_STOP' }
+    $byName = [Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
+    foreach ($c in $map.cookies) {
+      Assert-YandexMetadataKeys $c @('name','domain','path','secure','httpOnly','expirationDate','partitioned')
+      if ($c.name -isnot [string] -or $c.name -cnotin $Request.names -or $byName.ContainsKey($c.name) -or
+          $c.domain -isnot [string] -or $c.domain -cnotin @('yandex.ru','.yandex.ru') -or
+          $c.path -isnot [string] -or $c.path -cnotin @('/','/sprav','/sprav/','/sprav/api','/sprav/api/') -or
+          $c.secure -isnot [bool] -or -not $c.secure -or $c.httpOnly -isnot [bool] -or
+          $c.partitioned -isnot [bool] -or $c.partitioned) { throw 'INPUT_STOP' }
+      if ($null -ne $c.expirationDate -and
+          (($c.expirationDate -isnot [double] -and $c.expirationDate -isnot [long] -and $c.expirationDate -isnot [int]) -or
+           [double]::IsNaN($c.expirationDate) -or [double]::IsInfinity($c.expirationDate) -or $c.expirationDate*1000 -le $now)) { throw 'INPUT_STOP' }
+      $byName.Add($c.name,$c)
+    }
+    $records = foreach ($pair in $Pairs) {
+      if (-not $byName.ContainsKey($pair.name)) { throw 'INPUT_STOP' }
+      $c = $byName[$pair.name]
+      @{name=$pair.name;value=$pair.value;domain=$c.domain;path=$c.path;secure=$c.secure;httpOnly=$c.httpOnly;
+        expires=$(if ($null -eq $c.expirationDate) { -1 } else { $c.expirationDate })}
+    }
+    return ,@($records)
+  } finally {
+    if ($pointer -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
+    if ($null -ne $secure) { $secure.Dispose() }
+    $plain=$null; $map=$null; $records=$null; $byName=$null; $c=$null
   }
-  return @{domain=$domain;path=$path;secure=$true;httpOnly=($httpOnly -ceq 'true');expires=$expires}
 }
 
 function Read-YandexBrowserSession {
@@ -77,10 +105,12 @@ function Read-YandexBrowserSession {
     $pairs = ConvertFrom-YandexCookieHeader -Header $header
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer); $pointer=[IntPtr]::Zero
     $secret.Dispose(); $secret=$null; $header=$null
-    [Console]::WriteLine('Запрещённые имена исключены. Для сверки атрибутов оставлены только имена, БЕЗ значений:')
-    foreach ($pair in $pairs) { [Console]::WriteLine($pair.name) }
-    $metadata = Read-YandexSharedCookieMetadata
-    $records = @($pairs | ForEach-Object { @{name=$_.name;value=$_.value;domain=$metadata.domain;path=$metadata.path;secure=$metadata.secure;httpOnly=$metadata.httpOnly;expires=$metadata.expires} })
+    $request = @{version=1;requestId=[Guid]::NewGuid().ToString();url='https://yandex.ru/sprav/api/54309413522/reviews';
+      issuedAt=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds();names=@($pairs | ForEach-Object { $_.name })}
+    Publish-YandexMetadataRequest $request
+    [Console]::WriteLine('В буфер помещён только блок ИМЁН без значений. Вставьте его в локальное расширение и нажмите «Скопировать метаданные».')
+    [Console]::WriteLine('Вернитесь сюда в течение 5 минут. Ни Cookie header, ни ключи расширению не передавайте.')
+    $records = Read-YandexMatchedMetadata -Request $request -Pairs $pairs
     if ((Read-YandexCookieField 'Всё сверено. ИМПОРТ — зашифровать в DEV и остановиться БЕЗ GET; иначе отмена') -cne 'ИМПОРТ') { throw 'INPUT_STOP' }
     $json = @{account='myasnoibatya-zakaz';cookies=$records} | ConvertTo-Json -Depth 5 -Compress -WarningAction Stop
     return ConvertTo-SecureString -String $json -AsPlainText -Force

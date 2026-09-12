@@ -2,7 +2,7 @@
 
 Current handoff (2026-09-12): owner confirmed keys configured / all checks PASS in
 the same still-open private PowerShell. This does not transfer keys to the agent.
-Manual session import and subsequent GET-only smoke are authorized. Session material
+Current extension checkpoint permits development only, NOT real import or GET. Session material
 has not been entered yet; no live authentication/contract result is claimed.
 DEV metadata rechecked at 14:11:33 UTC: private sessions=0 (including Asbest scope),
 external reviews=0, exact location/company linkage present, scheduler active=false.
@@ -71,8 +71,8 @@ was performed. Future removal requires checking dependencies and exact UUIDs fir
 ## Manual import instruction — trusted operator only
 
 **Current ordinary-user entrypoint:** [browser cookie helper](YANDEX_BROWSER_SESSION_HELPER.md).
-It accepts one hidden Cookie header paste and confirmed shared metadata; no manual JSON
-is required. Mixed/unknown metadata stops the fast path. The raw-JSON
+It accepts a hidden Cookie header and metadata-only block from the local extension;
+no manual JSON is required. Missing/ambiguous metadata stops. The raw-JSON
 instructions below are retained as legacy technical contract/reference, not the current
 operator workflow. Both interfaces reuse the same CLI/encryption/CAS; no live import yet.
 

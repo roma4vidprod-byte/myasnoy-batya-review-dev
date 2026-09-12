@@ -13,7 +13,7 @@ for (const extra of [[],['--unexpected']]) {
     assert.equal(child.status === 0 && child.stderr === '' && child.stdout.trim().replaceAll('\r','') === `session imported = false\nstate = UNKNOWN\nerror = ${code}`,true);
   });
 }
-for (const mode of ['valid','prefix','date','old_version','missing','domain','path','expired','prohibited','duplicate','cancel','value_cancel','malformed','secure','httpOnly','expiry','newline','empty_value','trailing','set_cookie','duplicate_prohibited','oversize','mixed_metadata']) {
+for (const mode of ['publish','valid','prefix','date','old_version','missing','domain','path','expired','prohibited','duplicate','cancel','value_cancel','malformed','secure','httpOnly','expiry','newline','empty_value','trailing','set_cookie','duplicate_prohibited','oversize','mixed_metadata','metadata_cancel','metadata_duplicate','metadata_missing','metadata_extra','metadata_value','partitioned','wrong_nonce','wrong_url','stale','metadata_only']) {
   test(`browser cookie helper: ${mode}, synthetic input only`, () => {
     const child = spawnSync('pwsh',['-NoProfile','-NonInteractive','-File','test/support/yandex-browser-import.test.ps1','-Mode',mode], {cwd,encoding:'utf8',timeout:20000});
     // Never include captured input or exceptions in assertion diagnostics.

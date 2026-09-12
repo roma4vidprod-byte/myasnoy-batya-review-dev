@@ -1,0 +1,8 @@
+body { width: 360px; margin: 0; padding: 20px; font: 14px/1.5 system-ui, sans-serif; color: #202020; background: #faf8f3; }
+h1 { font-size: 20px; margin-top: 0; }
+label { display: block; font-weight: 600; }
+input { box-sizing: border-box; width: 100%; padding: 10px; margin: 8px 0; }
+button { padding: 10px; margin: 4px 0; cursor: pointer; }
+#copy { color: white; background: #8a2626; border: 1px solid #8a2626; }
+button:disabled { opacity: .6; cursor: wait; }
+#status { min-height: 42px; }

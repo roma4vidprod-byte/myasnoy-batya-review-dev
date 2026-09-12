@@ -37,9 +37,10 @@ DEV service key, генерация AES-256 keyring только в памяти
 preflight. Владелец подтвердил setup/all checks PASS; ожидается ручной session input.
 Исправлена диагностика отказа до prompt: PowerShell 5.1 получает понятную ошибку;
 prompt в PowerShell 7 проверен без ввода секрета. `& .ps1` сохраняет env в том же процессе.
-[Browser cookie helper v2](docs/YANDEX_BROWSER_SESSION_HELPER.md) принимает весь Cookie
-одной скрытой вставкой, без JSON. Общие метаданные нужно подтвердить; если они различаются
-или неизвестны, импорт останавливается. Универсальный one-step импорт пока не реализован.
+[Browser cookie helper v3](docs/YANDEX_BROWSER_SESSION_HELPER.md) принимает Cookie скрыто;
+локальное unpacked-расширение сопоставляет метаданные каждого имени без экспорта values.
+[Исходники и security review](docs/YANDEX_METADATA_EXTENSION_SECURITY_REVIEW.md).
+Реальная установка/session import ещё не выполнены; ручной JSON не требуется.
 Helper переиспользует
 `scripts/import-yandex-session.ps1` и существующий CLI, не запускает GET/alerts.
 

@@ -153,8 +153,8 @@ Do not run health/probe/dry-run or set `YANDEX_LIVE_READ_APPROVAL` at this stage
 ## 5. Later manual hidden session import — not authorized by this setup step
 
 Current operator workflow: [browser cookie helper](YANDEX_BROWSER_SESSION_HELPER.md),
-which accepts one hidden Cookie header paste plus shared metadata, not hand-written JSON.
-Mixed/unknown metadata stops this conditional fast path. Use it in
+which accepts a hidden Cookie header and metadata-only block from the approved
+local extension, not hand-written JSON. Missing/ambiguous metadata stops. Use it in
 the same configured PowerShell 7. The raw JSON procedure below is historical/reference.
 
 Only after the separate keys-configured confirmation:
