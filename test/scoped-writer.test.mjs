@@ -5,6 +5,7 @@ import { PGlite } from '@electric-sql/pglite';
 
 const read=path=>readFileSync(new URL(path,import.meta.url),'utf8');
 const migration=read('../supabase/migrations/20260913090000_yandex_scoped_persistence_atomic_writer_04.sql');
+const idempotencyMigration=read('../supabase/migrations/20260913100000_yandex_persistence_idempotency_05a.sql');
 const A='11111111-1111-4111-8111-111111111111',B='22222222-2222-4222-8222-222222222222';
 const LA='33333333-3333-4333-8333-333333333333',LB='44444444-4444-4444-8444-444444444444';
 const LA2='55555555-5555-4555-8555-555555555555';
@@ -22,7 +23,7 @@ async function setup(t){
   await db.exec(`insert into public.review_companies values ('${A}'),('${B}');
     insert into public.review_locations values ('${LA}','${A}'),('${LB}','${B}'),('${LA2}','${A}');
     update cron.job set active=false;`);
-  await db.exec(migration);
+  await db.exec(migration); await db.exec(idempotencyMigration);
   return db;
 }
 async function call(db,s=scope,rows=batch()){
@@ -32,15 +33,23 @@ async function call(db,s=scope,rows=batch()){
     await db.exec('commit');return value;
   }catch(error){await db.exec('rollback');throw error;}
 }
-test('scoped writer: 67 inserts, replay unchanged, one provider-owned change updates one',async t=>{
+test('scoped writer: 67 inserts, strict no-op replay, one provider-owned change updates one',async t=>{
   const db=await setup(t);const first=await call(db);assert.deepEqual(first,{inserted:67,updated:0,unchanged:0,seen:67,persistence_enabled:true});
   assert.equal((await db.query('select count(*)::int n from public.review_external_reviews')).rows[0].n,67);
   assert.equal((await db.query("select count(*)::int n from public.review_external_reviews where owner_reply_text is not null and reply_state='NONE'")).rows[0].n,54);
-  const replay=await call(db);assert.deepEqual(replay,{inserted:0,updated:0,unchanged:67,seen:67,persistence_enabled:true});
+  await db.exec("update public.review_external_reviews set reply_state='DRAFT',owner_reply_external_id='local-10' where external_review_id='id-10'");
+  const replay=await call(db,scope,batch().map(r=>({...r,observed_at:'2026-09-14T00:00:00Z'})));
+  assert.deepEqual(replay,{inserted:0,updated:0,unchanged:67,seen:67,persistence_enabled:true});
   const changed=batch();changed[10]={...changed[10],review_text:'Synthetic changed'};
   const update=await call(db,scope,changed);assert.deepEqual(update,{inserted:0,updated:1,unchanged:66,seen:67,persistence_enabled:true});
   const preserved=(await db.query("select reply_state,owner_reply_external_id from public.review_external_reviews where external_review_id='id-10'")).rows[0];
-  assert.deepEqual(preserved,{reply_state:'NONE',owner_reply_external_id:null});
+  assert.deepEqual(preserved,{reply_state:'DRAFT',owner_reply_external_id:'local-10'});
+});
+test('rating, review text and owner reply changes each update exactly one row',async t=>{
+  const db=await setup(t);await call(db,scope,[row(1)]);
+  assert.deepEqual(await call(db,scope,[{...row(1),rating:4,observed_at:'2026-09-14T00:00:00Z'}]),{inserted:0,updated:1,unchanged:0,seen:1,persistence_enabled:true});
+  assert.deepEqual(await call(db,scope,[{...row(1),rating:4,review_text:'Changed text',observed_at:'2026-09-14T00:00:01Z'}]),{inserted:0,updated:1,unchanged:0,seen:1,persistence_enabled:true});
+  assert.deepEqual(await call(db,scope,[{...row(1),rating:4,review_text:'Changed text',owner_reply_text:'Changed reply',owner_replied_at:'2024-12-31T17:57:23.063Z',observed_at:'2026-09-14T00:00:02Z'}]),{inserted:0,updated:1,unchanged:0,seen:1,persistence_enabled:true});
 });
 test('scoped identity allows same provider ID in another company/location and isolates providers',async t=>{
   const db=await setup(t);await call(db,scope,[row(1)]);

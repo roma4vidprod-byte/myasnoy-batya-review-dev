@@ -8,6 +8,8 @@ service-role RPC, but it is **not wired into the live Yandex dry-run path** and
 no real reviews were persisted. `review_external_reviews` remains empty,
 `review-provider-due-check-hourly` remains PAUSED, and no Yandex write was made.
 See [the 04 audit and handoff](docs/YANDEX_SCOPED_PERSISTENCE_04.md).
+The idempotency correction and controlled no-op replay are recorded in
+[05A](docs/YANDEX_PERSISTENCE_IDEMPOTENCY_05A.md).
 
 Изолированный Review Activator DEV: интерфейс `v0.4 BRAND` и последующая server foundation.
 
