@@ -1,5 +1,16 @@
 # Мясной Батя — Review Activator DEV
 
+## Current checkpoint — Asbest admin reviews read-only UI 06
+
+The existing admin page now reads the 67 persisted Asbest Yandex reviews through
+the scoped `review_admin_reviews_scoped` RPC. It is paginated, newest-first,
+shows owner replies and the 13 unanswered reviews, and has no reply/matching/
+promo mutation path. The DEV-only migration and security contract are documented
+in [Yandex Admin Reviews UI 06](docs/YANDEX_ADMIN_REVIEWS_UI_06.md).
+
+The legacy unscoped browser RPC is revoked. Scheduler remains PAUSED; Business OS
+and production are outside this repository and were not changed.
+
 ## Current checkpoint — Yandex scoped persistence + atomic writer 04
 
 DEV-only scoped persistence hardening is complete and applied to the dedicated
