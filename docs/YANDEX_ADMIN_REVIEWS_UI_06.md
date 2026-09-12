@@ -46,7 +46,8 @@ unanswered rows show a disabled response area.
 - persistence, matching and promo mutations: unchanged and not invoked.
 - Yandex writes: zero.
 
-Migration: `20260913110000_yandex_admin_reviews_scoped_read_06.sql`.
+Migrations: `20260913110000_yandex_admin_reviews_scoped_read_06.sql` and the
+DEV-only follow-up `20260913112000_yandex_admin_reviews_scope_ambiguity_fix_06a.sql`.
 
 Browser smoke requires an existing valid admin session. If the magic-link flow
 is unavailable, unauthenticated behavior can still be checked locally, but an

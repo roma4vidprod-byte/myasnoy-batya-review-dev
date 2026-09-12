@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const admin = readFileSync(new URL('../admin.html', import.meta.url), 'utf8');
 const migration = readFileSync(new URL('../supabase/migrations/20260913110000_yandex_admin_reviews_scoped_read_06.sql', import.meta.url), 'utf8');
+const fixMigration = readFileSync(new URL('../supabase/migrations/20260913112000_yandex_admin_reviews_scope_ambiguity_fix_06a.sql', import.meta.url), 'utf8');
 
 test('admin reviews UI uses the Asbest DEV scoped read path', () => {
   for (const literal of [
@@ -56,4 +57,9 @@ test('scoped admin RPC is admin-gated, read-only, paginated and projection-safe'
 
 test('legacy unscoped browser RPC is revoked by the migration', () => {
   assert.match(migration, /revoke all on function public\.review_admin_reviews\(text,integer,integer,boolean,integer\) from public,anon,authenticated,service_role/i);
+});
+
+test('scoped RPC location validation is alias-qualified against PL/pgSQL output names', () => {
+  assert.match(fixMigration, /from public\.review_locations as l_check\s+where l_check\.id=p_location_id and l_check\.company_id=p_company_id/i);
+  assert.doesNotMatch(fixMigration, /where id=p_location_id/);
 });
