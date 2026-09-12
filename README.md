@@ -8,6 +8,9 @@
 
 ## Scope
 
+[Full dry-run 03](docs/YANDEX_FULL_DRY_RUN_03.md): безопасный отчёт подготовлен;
+ожидается один запуск оператором. Единицы timestamp и итоговые counts пока не подтверждены.
+
 Текущий live checkpoint: [probe 02 PASS](docs/YANDEX_PAGINATION_PROBE_02.md),
 Асбест base=1, page=0 alias первой страницы; session READY/revision 3 по отчёту
 оператора. Full fetch не запускался, persistence OFF, scheduler не включён.
