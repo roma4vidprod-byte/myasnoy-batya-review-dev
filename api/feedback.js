@@ -1,4 +1,5 @@
 import { rpc } from './_supabase.js';
+import { sendTelegramMessage } from './_telegram.js';
 
 function clean(value, max = 2000) {
   return typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -26,25 +27,7 @@ async function sendTelegram({ reason, text, contact, feedbackId }) {
     `<b>Время:</b> ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Yekaterinburg' })}`
   ].join('\n');
 
-  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: message,
-      parse_mode: 'HTML',
-      disable_web_page_preview: true
-    })
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok || !data.ok) {
-    const error = new Error(data.description || 'TELEGRAM_SEND_FAILED');
-    error.status = response.status;
-    throw error;
-  }
-
-  return { status: 'SENT', messageId: data.result?.message_id || null };
+  return sendTelegramMessage({ text: message, parseMode: 'HTML' });
 }
 
 async function sendEmail({ reason, text, contact, feedbackId }) {

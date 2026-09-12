@@ -6,7 +6,7 @@
 
 - Клиентский интерфейс: `index.html`, административный: `admin.html`.
 - Server endpoints используют отдельный Review Activator Supabase DEV, не Business OS.
-- Yandex read foundation тестируется на синтетических fixtures; session/auth transport не реализован.
+- Yandex server-only session transport реализован и тестируется на fixtures; реальные session/read не включены.
 - Business OS API, рекламные кабинеты и production-интеграции не входят в scope.
 - QR в этой версии — визуальный preview; локальные ссылки с `#r=TOKEN` работают в браузере.
 
@@ -30,7 +30,14 @@ git diff --check
 dev-only PGlite в памяти, без подключения к DEV БД. Check компилирует JS/inline scripts
 и проверяет JSON без выполнения кода.
 
-## Sync Boundary Remediation 02 — current
+## Yandex Session Transport v1 — current
+
+[Архитектура, private storage, privileges, безопасный import и live smoke](docs/YANDEX_SESSION_TRANSPORT_V1.md).
+AES-GCM, scoped CAS и fail-closed read используют существующий YandexProvider.
+Session не импортирована; реальных запросов нет. Persistence OFF, scheduler PAUSED.
+Первый live import/read требует отдельного подтверждения и проверенного company/location mapping.
+
+## Sync Boundary Remediation 02
 
 [Аудит, права, callers, scheduler и persistence plan](docs/SYNC_BOUNDARY_REMEDIATION_02.md).
 В DEV применена RPC security migration: public enqueue закрыт, существующий engine

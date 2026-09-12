@@ -17,7 +17,7 @@ export async function sendResendEmail({to,subject,html,text,idempotencyKey}){
   if(!recipients.length) return {status:'NOT_CONFIGURED'};
   const headers={Authorization:`Bearer ${apiKey}`,'Content-Type':'application/json'};
   if(idempotencyKey) headers['Idempotency-Key']=String(idempotencyKey).slice(0,256);
-  const response=await fetch('https://api.resend.com/emails',{method:'POST',headers,body:JSON.stringify({from,to:recipients,subject,html,text})});
+  const response=await fetch('https://api.resend.com/emails',{method:'POST',headers,signal:AbortSignal.timeout(10000),redirect:'error',body:JSON.stringify({from,to:recipients,subject,html,text})});
   const data=await response.json().catch(()=>({}));
   if(!response.ok||data.error){const e=new Error(data.message||data.error?.message||'RESEND_SEND_FAILED');e.status=response.status;e.details=data;throw e}
   return {status:'SENT',emailId:data.id||null};

@@ -1,5 +1,11 @@
 # Review Activator — v0.6 BACKEND FOUNDATION
 
+Current addition: [Yandex Session Transport v1](docs/YANDEX_SESSION_TRANSPORT_V1.md).
+Private encrypted storage + trusted operator CLI; existing provider/queue/preflight and
+Telegram/Resend reused. No new public import/read endpoint, real session or Yandex request.
+Review persistence OFF; Matching/rewards are not called; hourly job remains paused.
+The implementation adds no Business OS connection or deployment.
+
 Current server-only sync boundary:
 [Remediation 02](docs/SYNC_BOUNDARY_REMEDIATION_02.md). This checkpoint predates
 the DEV RPC security migration and scheduler pause.

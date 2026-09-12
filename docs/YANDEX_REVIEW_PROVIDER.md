@@ -1,5 +1,11 @@
 # Yandex Foundation Remediation 01
 
+Current addition: [Yandex Session Transport v1](YANDEX_SESSION_TRANSPORT_V1.md) injects
+a server-only encrypted-session GET transport into this SAME provider. No real session
+or Yandex request was used. Model/parser unchanged. PAGE BASE LIVE CONFIRMATION PENDING
+and TYPE CONFIRMATION PENDING remain; probe collects count-only evidence after permission.
+The original stage-specific statements below describe Remediation 01, not current transport.
+
 Historical checkpoint. Current RPC security, centralized page-base adapter and paused
 scheduler are documented in [Remediation 02](SYNC_BOUNDARY_REMEDIATION_02.md).
 The public enqueue risk described below has since been closed. Persistence/index
