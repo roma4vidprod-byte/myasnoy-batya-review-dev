@@ -9,6 +9,16 @@ import { encryptSession } from '../lib/server/yandex-session/crypto.js';
 const item=JSON.parse(readFileSync(new URL('./fixtures/yandex/single-review.json',import.meta.url))).list.items[0];
 const payload=(offset,total=8)=>({list:{pager:{limit:2,offset,total},items:Array.from({length:Math.min(2,total-offset)},(_,i)=>({...item,id:'private-id-'+(offset+i),cmnt_entity_id:'private-id-'+(offset+i)}))}});
 const org='54309413522';
+test('operator live aggregate evidence replays with synthetic review values',async()=>{
+  const offsets=[0,0,20];
+  const r=await probePagination(async page=>({list:{pager:{limit:20,offset:offsets[page],total:67},
+    items:Array.from({length:20},(_,i)=>({...item,id:'synthetic-'+(offsets[page]+i),
+      cmnt_entity_id:'synthetic-'+(offsets[page]+i),time_created:1900000000,public_rating:true}))}}),org);
+  assert.equal(r.rule,'ONE_BASED_PAGE_ZERO_ALIAS');assert.equal(r.pageBase,1);
+  assert.deepEqual(r.pages.map(p=>p.offset),offsets);
+  assert.equal(createYandexPageNumbering(r.pageBase).pageAt(0),1);
+  // Numeric timestamp is synthetic: live primitive type is confirmed, units are not.
+});
 for(const [offsets,rule,base] of [
   [[0,2],'ZERO_BASED',0],[[0,0,2],'ONE_BASED_PAGE_ZERO_ALIAS',1],
   [[0,0,4],'OTHER_CONTRACT',null],[[0,0,0,0],'OTHER_CONTRACT_ALL_FIRST_PAGE',null]
@@ -60,6 +70,7 @@ test('service limited probe: alias confirmation READY, no snapshot/full fetch, s
   const f=setup();const r=await f.service.run(scope,{mode:'pagination_probe'});
   assert.equal(r.ok,true);assert.equal(r.state,'READY');assert.equal(r.reviewPersistence,'OFF');
   assert.equal(r.paginationProbe.pageBase,1);assert.equal(f.result().calls,3);
+  assert.equal(r.pageBaseStatus,'PAGE BASE CONFIRMED BY LIMITED PROBE');
   assert.equal(f.result().transitions[0].sync_ok,false);assert.equal(f.result().alerts,0);
   assert.equal(r.evidence.idConsistency.equal,6);
   assert.doesNotMatch(JSON.stringify(r),/SYNTHETIC_PRIVATE|private-id|full_text|business_answer_csrf_token/);

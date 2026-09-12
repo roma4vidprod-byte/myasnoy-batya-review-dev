@@ -8,9 +8,9 @@
 
 ## Scope
 
-Текущий live checkpoint: первый probe остановлен на PAGE_BASE_AMBIGUOUS;
-[ограниченный probe 02](docs/YANDEX_PAGINATION_PROBE_02.md) подготовлен для запуска
-в PowerShell оператора. Full fetch не включён, live page base пока не подтверждён.
+Текущий live checkpoint: [probe 02 PASS](docs/YANDEX_PAGINATION_PROBE_02.md),
+Асбест base=1, page=0 alias первой страницы; session READY/revision 3 по отчёту
+оператора. Full fetch не запускался, persistence OFF, scheduler не включён.
 
 - Клиентский интерфейс: `index.html`, административный: `admin.html`.
 - Server endpoints используют отдельный Review Activator Supabase DEV, не Business OS.

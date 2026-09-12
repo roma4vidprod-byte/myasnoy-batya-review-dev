@@ -1,5 +1,10 @@
 # Yandex Foundation Remediation 01
 
+Current live evidence: [probe 02](YANDEX_PAGINATION_PROBE_02.md) confirms Asbest
+base 1 with page 0 alias (pages 0,1,2 only); time_created number, public_rating boolean.
+Timestamp units and owner reply time types remain unconfirmed. Existing tolerant
+parser/default base 1 retained. Uncertainty statements below are historical.
+
 Current addition: [Yandex Session Transport v1](YANDEX_SESSION_TRANSPORT_V1.md) injects
 a server-only encrypted-session GET transport into this SAME provider. No real session
 or Yandex request was used. Model/parser unchanged. PAGE BASE LIVE CONFIRMATION PENDING

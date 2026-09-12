@@ -1,6 +1,36 @@
 # Yandex live pagination probe 02
 
-## Status: PREPARED — awaiting operator execution, no live rule confirmed
+## Status: PASS — owner-reported limited live confirmation
+
+Post-result verification: 270/270 tests PASS, 72 checks PASS, diff-check PASS.
+
+Operator result at 2026-09-12T18:55:51.843242+00:00: READY, revision 3,
+errorCode null, lastSuccessfulSyncAt null, reviewPersistence OFF.
+
+| Requested page | limit | offset | total | items |
+| --- | --- | --- | --- | --- |
+| 0 | 20 | 0 | 67 | 20 |
+| 1 | 20 | 0 | 67 | 20 |
+| 2 | 20 | 20 | 67 | 20 |
+
+Confirmed for Asbest 54309413522: ONE_BASED_PAGE_ZERO_ALIAS. Use page 1 then 2;
+page 0 aliases page 1 (all ordered ID fingerprints compared internally). Three GETs,
+no page 3 request or full fetch. Later pages remain untested. 67 is reported total,
+not fetched/unique count; four canonical pages are expected, not fully verified.
+
+Observed time_created: number (60); public_rating: boolean (60).
+ID consistency: equal 60 / different 0 / missing 0. These counts include the repeated
+alias page, NOT 60 unique reviews. Timestamp units/precision and owner_comment types
+remain unconfirmed. Synthetic replay uses fabricated IDs/text and numeric timestamp;
+that timestamp/unit is not a captured live value. No raw response or credentials saved.
+
+The output's static PENDING label was stale: successful bounded probes now report
+PAGE BASE CONFIRMED BY LIMITED PROBE. Generic provider status remains pending rather
+than claiming all orgs/bases verified. Existing default base 1/parser are unchanged.
+No new live request in this post-result update. Scheduler unchanged, persistence OFF,
+no real alerts, no Business OS/production changes or full fetch.
+
+## Historical preparation checkpoint (superseded by evidence above)
 
 Owner reported successful session import and the prior probe result: ERROR,
 revision 2, PAGE_BASE_AMBIGUOUS, mocked alerts, persistence OFF. Existing code
