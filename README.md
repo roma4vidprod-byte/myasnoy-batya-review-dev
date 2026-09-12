@@ -32,6 +32,10 @@ dev-only PGlite в памяти, без подключения к DEV БД. Chec
 
 ## Yandex Session Transport v1 — current
 
+[Live Read Smoke 01](docs/YANDEX_LIVE_READ_SMOKE_01.md): отдельный synthetic DEV scope
+Асбеста подготовлен; session отсутствует. Ожидается ручной server-side import.
+Реального smoke ещё не было; persistence OFF, scheduler PAUSED.
+
 [Архитектура, private storage, privileges, безопасный import и live smoke](docs/YANDEX_SESSION_TRANSPORT_V1.md).
 AES-GCM, scoped CAS и fail-closed read используют существующий YandexProvider.
 Session не импортирована; реальных запросов нет. Persistence OFF, scheduler PAUSED.

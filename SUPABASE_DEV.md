@@ -1,5 +1,10 @@
 # Review Activator — dedicated Supabase DEV
 
+[Live Read Smoke 01](docs/YANDEX_LIVE_READ_SMOKE_01.md) добавил ровно одну synthetic
+DEV-компанию и одну неактивную точку Асбеста. Старые строки не изменены; новые QR,
+provider connections, session и review rows не создавались. Session import ожидается.
+Это данные fixture в существующей схеме, не новая schema migration.
+
 Current addition: [Yandex Session Transport v1](docs/YANDEX_SESSION_TRANSPORT_V1.md)
 documents applied migration `20260912103803` and actual privilege verification (PASS).
 One encrypted session table, forced RLS, server-only INVOKER RPC; no client grants.

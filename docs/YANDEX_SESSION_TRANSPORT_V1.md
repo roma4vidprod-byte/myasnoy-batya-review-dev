@@ -1,5 +1,9 @@
 # Yandex Session Transport v1 — isolated DEV
 
+Next checkpoint: [Live Read Smoke 01](YANDEX_LIVE_READ_SMOKE_01.md) prepared an explicitly
+synthetic Asbest company/location under new owner authorization. Manual session import
+is pending; no live request yet. The missing-location evidence below is the v1 snapshot.
+
 Date: 2026-09-12. Baseline: `1289c043efcf736f586497b6ae532f7cadd0a6f5`.
 Repository: myasnoy-batya-review-dev. Supabase: `ykiubttldgyjpajmsuas` ONLY.
 Business OS and production were not queried or modified. Pointer is not a dependency.
