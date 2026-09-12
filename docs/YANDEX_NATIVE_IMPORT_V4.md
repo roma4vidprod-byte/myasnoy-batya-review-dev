@@ -1,6 +1,33 @@
 # Yandex operator import v4 — pre-use security review
 
-## Current checkpoint: eligible-name duplicate counts 0.2.3
+## Current checkpoint: approved unpartitioned selection 0.2.4
+
+Owner confirmed 140 records: 118 partitioned, 22 metadata-eligible, zero eligible
+duplicate groups/excess; values remain unchecked and import_calls=0. Owner explicitly
+approved excluding partitioned records before the count/duplicate gates. This
+supersedes the earlier fail-all-partitioned policy below, not any server validation.
+
+Import and diagnostics share selectUnpartitioned: inspect at most 10,000 raw
+records (larger batches FAIL without truncation), require exact store/domain even
+for excluded records, exclude records with an own object partitionKey. Malformed
+partition status fails. Require 1..100 remaining records BEFORE prohibited-name
+filtering; remaining duplicate names, invalid metadata/values still fail. No guessed
+subset or deduplication. projectCookie and server validateSession stay unchanged.
+Raw diagnostic counts retain partitioned/rejected totals; metadata-only PASS does
+not validate credentials or authentication. Excluded value properties are never read
+by selection; Chrome's API necessarily returns them transiently in memory. Both
+raw/selected arrays are cleared best-effort, not a promise of physical memory erasure.
+
+Permissions/CSP/native registration are unchanged. No real import, browser cookie
+read, Yandex GET, DB access, scheduler/persistence activation, push/deploy this change.
+Synthetic tests cover 140 -> 22 -> existing encrypted service with mocked storage,
+malformed partition status, foreign scope, limits, cancellation and value traps.
+Reload the extension to 0.2.4 only; keep importer stopped for diagnostic verification.
+
+Verification: full suite **257/257 PASS**, **69 checks PASS**, diff-check PASS.
+Server session engine and all native/import PowerShell scripts are unchanged.
+
+## Previous checkpoint: eligible-name duplicate counts 0.2.3
 
 Owner-reported 0.2.2 result: total/examined=140, prohibited_names=0,
 metadata_eligible=22, metadata_rejected=118, duplicate_name_groups=4,
@@ -162,7 +189,7 @@ is not an OS authentication boundary: Chrome's allowlist and pipe ACL do that wo
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "minimum_chrome_version": "132",
   "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
   "permissions": ["cookies", "nativeMessaging"],
@@ -220,8 +247,10 @@ Query only cookies matching the full /sprav/api/54309413522/reviews URL, in that
 including partitions so ambiguity cannot be hidden. This is a deterministic
 URL-applicable eligible set, NOT proof of the minimal authentication cookie set or
 the exact historic Request Cookie header. No all-domain/browser-profile dump.
-Duplicate names, any partition key, invalid domain/store, missing or invalid
-attributes fail closed. Prohibited CSRF/XSRF/password/authorization/2FA/SMS names
+As of approved 0.2.4, partitioned records are excluded before the 100-record gate.
+Malformed partition status, invalid domain/store (including excluded records),
+remaining duplicate names and missing/invalid retained attributes fail closed.
+Prohibited CSRF/XSRF/password/authorization/2FA/SMS names
 are excluded; an all-excluded set fails. Retained cookies must pass existing
 domain/path/secure/httpOnly/expiry/value checks, and validateSession again server-side.
 No attribute guessing, value decoding, authentication-list guesses or validator changes.

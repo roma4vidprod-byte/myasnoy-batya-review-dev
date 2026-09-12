@@ -1,6 +1,6 @@
 // Read-only diagnostic: no session assembly, value access, import or metadata export.
 import {EXTENSION_ID,nativeChannel} from './connect.js';
-import {TARGET,projectCookie} from './metadata.js';
+import {TARGET,projectCookie,selectUnpartitioned} from './metadata.js';
 const paths=new Set(['/','/sprav','/sprav/','/sprav/api','/sprav/api/']);
 const forbidden=/csrf|xsrf|password|authorization|2fa|sms/i;
 const nativeCodes=new Set(['NATIVE_HOST_NOT_FOUND','NATIVE_HOST_FORBIDDEN','NATIVE_HOST_START_FAILED',
@@ -8,7 +8,8 @@ const nativeCodes=new Set(['NATIVE_HOST_NOT_FOUND','NATIVE_HOST_FORBIDDEN','NATI
 const result=(stage,code)=>({stage,code,import_calls:0});
 
 // Counts are not an importability verdict: values are never inspected and
-// duplicate names/partitioning still block the unchanged importer.
+// duplicate names in the selected set still block import; partitioned records
+// remain visible in this raw census although selection now excludes them.
 export function countMetadata(batch,storeId,now,cancelled=()=>false){
   const counts={total:batch.length,examined:0,prohibited_names:0,metadata_eligible:0,
     metadata_rejected:0,duplicate_name_groups:0,duplicate_name_excess:0,
@@ -56,7 +57,8 @@ function metadataFailure(c,now){
 }
 
 export async function diagnose(runtime,api,{now=Date.now,cancelled=()=>false,openChannel=nativeChannel}={}){
-  let channel,batch,stage='EXTENSION';
+  let channel,batch,selected,counts,stage='EXTENSION';
+  const report=(stage,code)=>counts?{...result(stage,code),counts}:result(stage,code);
   const cancel=()=>cancelled()?result('CANCELLED','CANCELLED'):null;
   try {
     if(cancelled())return cancel();
@@ -93,31 +95,38 @@ export async function diagnose(runtime,api,{now=Date.now,cancelled=()=>false,ope
     if(!Array.isArray(batch))return result(stage,'COOKIE_RESPONSE_INVALID');
     if(!batch.length)return result(stage,'COOKIE_SET_EMPTY');
     if(batch.length>100){
-      const counts=countMetadata(batch,storeId,now(),cancelled);
+      counts=countMetadata(batch,storeId,now(),cancelled);
       if(!counts)return result('CANCELLED','CANCELLED');
-      return {...result(stage,'COOKIE_SET_TOO_LARGE'),counts};
+    }
+    stage='COOKIE_SELECTION';
+    try{selected=selectUnpartitioned(batch,storeId,cancelled);}
+    catch(error){
+      const codes=new Set(['COOKIE_RESPONSE_INVALID','COOKIE_RAW_SCAN_LIMIT','COOKIE_METADATA_DRIFT',
+        'COOKIE_STORE_MISMATCH','COOKIE_DOMAIN_INVALID','COOKIE_PARTITION_STATUS_INVALID','NO_UNPARTITIONED_COOKIES','COOKIE_SET_TOO_LARGE','CANCELLED']);
+      return report(stage,codes.has(error?.code)?error.code:'CHECK_FAILED');
     }
     stage='COOKIE_METADATA';
     const names=new Set();let retained=0;
-    for(const c of batch){
+    for(const c of selected){
       if(cancelled())return cancel();
-      if(!c||typeof c.name!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(c.name))return result(stage,'COOKIE_NAME_INVALID');
-      if(names.has(c.name))return result(stage,'COOKIE_NAME_DUPLICATE');
+      if(!c||typeof c.name!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(c.name))return report(stage,'COOKIE_NAME_INVALID');
+      if(names.has(c.name))return report(stage,'COOKIE_NAME_DUPLICATE');
       names.add(c.name);
-      if(c.storeId!==storeId)return result(stage,'COOKIE_STORE_MISMATCH');
-      if(!['yandex.ru','.yandex.ru'].includes(c.domain))return result(stage,'COOKIE_DOMAIN_INVALID');
-      if(Object.hasOwn(c,'partitionKey'))return result(stage,'COOKIE_PARTITIONED');
+      if(c.storeId!==storeId)return report(stage,'COOKIE_STORE_MISMATCH');
+      if(!['yandex.ru','.yandex.ru'].includes(c.domain))return report(stage,'COOKIE_DOMAIN_INVALID');
+      if(Object.hasOwn(c,'partitionKey'))return report(stage,'COOKIE_PARTITIONED');
       if(forbidden.test(c.name))continue;
-      try{projectCookie(c,c.name,storeId,now());}catch{return result(stage,metadataFailure(c,now()));}
+      try{projectCookie(c,c.name,storeId,now());}catch{return report(stage,metadataFailure(c,now()));}
       retained++;
     }
-    if(!retained)return result(stage,'NO_ELIGIBLE_COOKIES');
-    return result('METADATA_ONLY','PASS_VALUES_NOT_CHECKED');
+    if(!retained)return report(stage,'NO_ELIGIBLE_COOKIES');
+    return report('METADATA_ONLY','PASS_VALUES_NOT_CHECKED');
   } catch(error){
     return result(stage,stage==='NATIVE_CHANNEL'&&nativeCodes.has(error?.code)?error.code:'CHECK_FAILED');
   } finally {
     try{channel?.close();}catch{ }
     if(Array.isArray(batch))batch.fill(null);
-    batch=null;channel=null;
+    if(selected)selected.fill(null);
+    batch=null;selected=null;channel=null;
   }
 }

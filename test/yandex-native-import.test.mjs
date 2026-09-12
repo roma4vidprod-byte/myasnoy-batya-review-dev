@@ -20,6 +20,42 @@ function fixture(change=()=>{}){
   }};
 }
 const hello=()=>({version:1,nonce:Buffer.alloc(32).toString('base64'),expiresAt:now+30000});
+test('140 records: exclude 118 partitioned before limit/duplicates and encrypt 22 through existing service',async()=>{
+  const f=fixture(b=>{
+    b.length=0;
+    for(let i=0;i<22;i++)b.push(cookie('fixture_'+i));
+    for(let i=0;i<118;i++){
+      const c={...cookie('fixture_'+(i%4)),partitionKey:{}};
+      Object.defineProperty(c,'value',{get(){throw new Error('EXCLUDED_VALUE_READ');}});b.push(c);
+    }
+  });
+  const scope={companyId:'13f3cb80-487a-4a19-96a1-fb3103200230',locationId:'9a95f63b-18e6-447b-a449-8530b67ddbae',organizationId:'54309413522'};
+  const keyring={currentKid:'fixture',keys:{fixture:Buffer.alloc(32)}};let writes=0;
+  const service=createYandexSessionService({keyring,now:()=>new Date(now),store:{replace:async(s,rev,envelope)=>{
+    assert.deepEqual(s,scope);assert.equal(rev,0);
+    assert.equal(decryptSession(scope,envelope,keyring,now).cookies.length,22);
+    assert.ok(!JSON.stringify(envelope).includes('synthetic-cookie'));writes++;
+    return {state:'NOT_CONFIGURED',revision:1};
+  }}});
+  const channel={exchange:async m=>{
+    if(m.op==='hello')return hello();
+    await service.importSession(scope,m.session,0);return {ok:true,state:'NOT_CONFIGURED'};
+  },close(){}};
+  await connectBusiness(f.api,channel,{now:()=>now});assert.equal(writes,1);
+  assert.ok(f.batch.every(c=>c===null));
+});
+test('partition selection fails closed for malformed status, foreign scope, empty and excessive sets',async()=>{
+  const {selectUnpartitioned}=await import('../tools/yandex-cookie-metadata/metadata.js');
+  for(const partitionKey of [null,undefined,false,'partition',[]])
+    assert.throws(()=>selectUnpartitioned([{...cookie(),partitionKey}],'main'));
+  for(const change of [{domain:'other.test'},{storeId:'other'}])
+    assert.throws(()=>selectUnpartitioned([{...cookie(),partitionKey:{},...change}],'main'));
+  assert.throws(()=>selectUnpartitioned([{...cookie(),partitionKey:{}}],'main'));
+  assert.throws(()=>selectUnpartitioned(Array.from({length:101},()=>cookie()),'main'));
+  assert.throws(()=>selectUnpartitioned(Array.from({length:10001},()=>({...cookie(),partitionKey:{}})),'main'));
+  assert.throws(()=>selectUnpartitioned([cookie()],'main',()=>true));
+  assert.equal(selectUnpartitioned(Array.from({length:100},()=>cookie()),'main').length,100);
+});
 test('automatic URL-applicable set: forbidden excluded, heterogeneous metadata, unchanged validator/encryption',async()=>{
   const f=fixture();
   const session=await collectSession(f.api,{now:()=>now});
@@ -43,11 +79,11 @@ test('automatic URL-applicable set: forbidden excluded, heterogeneous metadata, 
     assert.equal(writes,1);
   }
 });
-for(const mode of ['duplicate','partition','domain','path','secure','expiry','no_expiry','empty','prohibited_only','value','store']){
+for(const mode of ['duplicate','partition_invalid','domain','path','secure','expiry','no_expiry','empty','prohibited_only','value','store']){
   test(`automatic collection rejects ${mode} before native import`,async()=>{
     const f=fixture(b=>{
       if(mode==='duplicate')b.push(cookie());
-      if(mode==='partition')b[0].partitionKey={};
+      if(mode==='partition_invalid')b[0].partitionKey=null;
       if(mode==='domain')b[0].domain='other.test';
       if(mode==='path')b[0].path='/mail';
       if(mode==='secure')b[0].secure=false;

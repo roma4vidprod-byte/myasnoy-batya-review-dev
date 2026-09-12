@@ -7,6 +7,19 @@ import {diagnose,countMetadata} from '../tools/yandex-cookie-metadata/diagnostic
 import {EXTENSION_ID,nativeChannel} from '../tools/yandex-cookie-metadata/connect.js';
 const now=1900000000000;
 const nativePass={version:1,diagnostic:true,stage:'NATIVE_HOST',code:'PASS',import_calls:0};
+test('140-record diagnostic selects 22 without reading any values or importing',async()=>{
+  const f=fixture(b=>{
+    b.length=0;
+    for(let i=0;i<22;i++)b.push(countedCookie('fixture_'+i));
+    for(let i=0;i<118;i++)b.push(countedCookie('fixture_'+(i%4),{partitionKey:{}}));
+  });
+  const r=await f.run();
+  assert.equal(r.code,'PASS_VALUES_NOT_CHECKED');assert.equal(r.import_calls,0);
+  assert.equal(r.counts.total,140);assert.equal(r.counts.partitioned,118);
+  assert.equal(r.counts.metadata_eligible,22);
+  assert.deepEqual(f.requests,[{version:1,op:'diagnose'}]);
+  assert.ok(f.batch.every(c=>c===null));
+});
 function countedCookie(name,change={}){
   const c={name,domain:'.yandex.ru',path:'/',secure:true,httpOnly:true,session:true,storeId:'main',...change};
   Object.defineProperty(c,'value',{get(){throw new Error('PRIVATE_VALUE_ACCESSED');},enumerable:true});
@@ -21,7 +34,7 @@ test('oversized metadata census gives exact counts, no credential access or tran
   assert.deepEqual(r.counts,{total:107,examined:107,prohibited_names:1,metadata_eligible:102,metadata_rejected:4,
     duplicate_name_groups:1,duplicate_name_excess:1,eligible_duplicate_name_groups:1,eligible_duplicate_name_excess:1,
     partitioned:1,scope_mismatch:1,not_secure:1,expired:1,complete:true});
-  assert.equal(r.code,'COOKIE_SET_TOO_LARGE');assert.equal(r.import_calls,0);
+  assert.equal(r.code,'COOKIE_DOMAIN_INVALID');assert.equal(r.import_calls,0);
   assert.deepEqual(f.requests,[{version:1,op:'diagnose'}]);assert.ok(f.batch.every(c=>c===null));
   assert.doesNotMatch(JSON.stringify(r),/fixture|elsewhere|PRIVATE/);
   assert.ok(Object.values(r.counts).every(x=>typeof x==='number'||typeof x==='boolean'));
@@ -55,7 +68,7 @@ test('census CPU bound marks incomplete, cancellation returns no partial counts'
   assert.equal(c.total,10001);assert.equal(c.examined,10000);assert.equal(c.complete,false);
   let calls=0;assert.equal(countMetadata(batch,'main',now,()=>++calls>3),null);
 });
-test('existing native import still rejects more than 100 before filtering',async()=>{
+test('native import still rejects more than 100 unpartitioned records before prohibited-name filtering',async()=>{
   const {collectSession}=await import('../tools/yandex-cookie-metadata/connect.js');
   const f=fixture(b=>{b.length=0;for(let i=0;i<101;i++)b.push(countedCookie('csrf_'+i));});
   await assert.rejects(collectSession(f.api,{now:()=>now}),{message:'IMPORT_NOT_CONFIRMED'});
@@ -90,7 +103,7 @@ const cases={
   COOKIE_DOMAIN_INVALID:b=>b[0].domain='elsewhere.test',
   COOKIE_STORE_MISMATCH:b=>b[0].storeId='other',
   COOKIE_NAME_INVALID:b=>b[0].name='bad=name',
-  COOKIE_PARTITIONED:b=>b[0].partitionKey={},
+  NO_UNPARTITIONED_COOKIES:b=>b[0].partitionKey={},
   COOKIE_NAME_DUPLICATE:b=>b.push(b[0]),
   NO_ELIGIBLE_COOKIES:b=>b[0].name='csrf_fixture',
   COOKIE_SET_EMPTY:b=>b.length=0,

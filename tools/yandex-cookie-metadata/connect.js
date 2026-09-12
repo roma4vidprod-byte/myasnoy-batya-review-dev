@@ -1,4 +1,4 @@
-import { TARGET, projectCookie } from './metadata.js';
+import { TARGET, projectCookie, selectUnpartitioned } from './metadata.js';
 
 export const EXTENSION_ID='gdjhmlbffahmpnphfoogegihhnfkoojm';
 export const NATIVE_HOST='com.review_activator.dev_yandex';
@@ -8,7 +8,7 @@ const stop=() => { throw new Error('IMPORT_NOT_CONFIRMED'); };
 // This is the URL-applicable eligible set, NOT a guessed minimal auth-cookie list.
 // Account ownership cannot be proved offline; the UI explicitly states the account.
 export async function collectSession(api,{now=Date.now,cancelled=()=>false}={}) {
-  let batch, cookies=[];
+  let batch, selected, cookies=[];
   const check=()=>{if(cancelled())stop();};
   try {
     check();
@@ -23,13 +23,13 @@ export async function collectSession(api,{now=Date.now,cancelled=()=>false}={}) 
     if(matches.length!==1||typeof matches[0].id!=='string'||!matches[0].id)stop();
     const storeId=matches[0].id;
     batch=await api.getCookies({url:TARGET,storeId,partitionKey:{}}); check();
-    if(!Array.isArray(batch)||!batch.length||batch.length>100)stop();
+    selected=selectUnpartitioned(batch,storeId,cancelled);
     const names=new Set();
-    for(const c of batch) {
+    for(const c of selected) {
       check();
       if(!c||typeof c.name!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(c.name)||names.has(c.name))stop();
       names.add(c.name);
-      // Reject all ambiguity/partition/scope drift even for a filtered name.
+      // Partitioned records were excluded above. Never ignore remaining ambiguity.
       if(c.storeId!==storeId||!['yandex.ru','.yandex.ru'].includes(c.domain)||Object.hasOwn(c,'partitionKey'))stop();
       if(forbidden.test(c.name))continue;
       const m=projectCookie(c,c.name,storeId,now());
@@ -42,7 +42,7 @@ export async function collectSession(api,{now=Date.now,cancelled=()=>false}={}) 
     if(new TextEncoder().encode(JSON.stringify(session)).length>60000)stop();
     check(); cookies=[]; return session;
   } catch { stop(); }
-  finally { if(Array.isArray(batch))batch.fill(null); batch=null; cookies.length=0; }
+  finally { if(Array.isArray(batch))batch.fill(null); if(selected)selected.fill(null); batch=null;selected=null;cookies.length=0; }
 }
 
 export function nativeChannel(runtime) {

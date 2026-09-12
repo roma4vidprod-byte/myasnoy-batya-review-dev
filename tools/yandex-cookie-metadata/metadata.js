@@ -2,6 +2,32 @@
 export const TARGET = 'https://yandex.ru/sprav/api/54309413522/reviews';
 const PATHS = new Set(['/','/sprav','/sprav/','/sprav/api','/sprav/api/']);
 const forbidden = /csrf|xsrf|password|authorization|2fa|sms/i;
+
+// Owner-approved policy: select unpartitioned records BEFORE the 100-item/name
+// gates. No values accessed, no guessed subset, no truncation of a large batch.
+export function selectUnpartitioned(batch,storeId,cancelled=()=>false){
+  const selected=[];
+  const reject=code=>{throw Object.assign(new Error('COOKIE_SELECTION_FAILED'),{code});};
+  try{
+    if(!Array.isArray(batch))reject('COOKIE_RESPONSE_INVALID');
+    if(batch.length>10000)reject('COOKIE_RAW_SCAN_LIMIT');
+    for(const c of batch){
+      if(cancelled())reject('CANCELLED');
+      if(!c||typeof c!=='object'||Array.isArray(c))reject('COOKIE_METADATA_DRIFT');
+      // Scope drift is never hidden by exclusion.
+      if(c.storeId!==storeId)reject('COOKIE_STORE_MISMATCH');
+      if(!['yandex.ru','.yandex.ru'].includes(c.domain))reject('COOKIE_DOMAIN_INVALID');
+      if(Object.hasOwn(c,'partitionKey')){
+        if(!c.partitionKey||typeof c.partitionKey!=='object'||Array.isArray(c.partitionKey))reject('COOKIE_PARTITION_STATUS_INVALID');
+        continue;
+      }
+      selected.push(c);
+    }
+    if(!selected.length)reject('NO_UNPARTITIONED_COOKIES');
+    if(selected.length>100)reject('COOKIE_SET_TOO_LARGE');
+    return selected;
+  }catch(error){selected.fill(null);throw error;}
+}
 const stop = () => { throw new Error('METADATA_EXPORT_STOPPED'); };
 const exact = (o, keys) => o && !Array.isArray(o) && typeof o === 'object' &&
   Object.keys(o).sort().join(',') === [...keys].sort().join(',');

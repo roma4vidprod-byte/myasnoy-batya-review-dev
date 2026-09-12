@@ -2,6 +2,10 @@
 
 Изолированный Review Activator DEV: интерфейс `v0.4 BRAND` и последующая server foundation.
 
+Локальное расширение 0.2.4: по явному разрешению partitioned cookies исключаются
+до лимита 100 и проверки дубликатов. Server validator не изменён; реальные import/GET
+не выполнялись в этом изменении. [Security review и порядок проверки](docs/YANDEX_NATIVE_IMPORT_V4.md).
+
 ## Scope
 
 - Клиентский интерфейс: `index.html`, административный: `admin.html`.
