@@ -32,6 +32,10 @@ dev-only PGlite в памяти, без подключения к DEV БД. Chec
 
 ## Yandex Session Transport v1 — current
 
+[Локальная настройка server-only ключей](docs/YANDEX_LOCAL_DEV_KEYS.md): скрытый ввод
+DEV service key, генерация AES-256 keyring только в памяти процесса, безопасный read-only
+preflight. Ручной setup ещё не выполнен; import запрещён до отдельного подтверждения.
+
 [Live Read Smoke 01](docs/YANDEX_LIVE_READ_SMOKE_01.md): отдельный synthetic DEV scope
 Асбеста подготовлен; session отсутствует. Ожидается ручной server-side import.
 Реального smoke ещё не было; persistence OFF, scheduler PAUSED.

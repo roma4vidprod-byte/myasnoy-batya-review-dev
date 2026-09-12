@@ -1,5 +1,10 @@
 # Review Activator — dedicated Supabase DEV
 
+[Local DEV keys](docs/YANDEX_LOCAL_DEV_KEYS.md): process-only setup procedure prepared;
+manual service key entry/real connection check pending. No secret files, session import,
+new DB boundary or scheduler changes. The same private PowerShell must retain the
+ephemeral AES key through the later approved import/smoke.
+
 [Live Read Smoke 01](docs/YANDEX_LIVE_READ_SMOKE_01.md) добавил ровно одну synthetic
 DEV-компанию и одну неактивную точку Асбеста. Старые строки не изменены; новые QR,
 provider connections, session и review rows не создавались. Session import ожидается.

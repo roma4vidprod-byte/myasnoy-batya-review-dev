@@ -63,6 +63,10 @@ was performed. Future removal requires checking dependencies and exact UUIDs fir
 
 ## Manual import instruction — trusted operator only
 
+Current gate: [local DEV key setup](YANDEX_LOCAL_DEV_KEYS.md) must succeed, then the
+owner must separately confirm keys are configured **before running the import below**.
+This stage prepares the instruction only; it does not authorize automatic import/read.
+
 ### Recheck before this manual handoff
 
 2026-09-12 12:00:12 UTC: private session rows=0; exact company/location scope intact;
@@ -112,11 +116,11 @@ Do NOT paste session material, service keys or encryption keys into Codex chat.
 Do NOT send a HAR, whole browser export, Copy-as-cURL, password, SMS/2FA or CSRF.
 Do NOT call health/probe/dry-run yet. Import alone does not contact Yandex or alert channels.
 
-1. On a trusted operator/server host, provision SUPABASE_SERVICE_ROLE_KEY for the
-   dedicated DEV plus YANDEX_SESSION_KEYS_JSON and YANDEX_SESSION_ACTIVE_KID through
-   its protected secret manager. The keyring is a kid -> base64 random 32-byte key map;
-   retain the encryption key outside DB or the encrypted session cannot be recovered.
-   Do not type secrets in shell commands/history or put them into project files.
+1. Complete the [process-only DEV setup](YANDEX_LOCAL_DEV_KEYS.md) and confirm it to
+   the owner/agent before importing. Keep the same private PowerShell window open:
+   its ephemeral AES key is lost on close/restart. No secret manager, .env file or
+   persistent local secret file is configured by this stage. Never type secrets in
+   shell commands/history or put them into project files.
 2. From the owner's already authorized technical-account session, prepare ONLY the
    narrow session JSON accepted by the existing CLI:
 
@@ -160,7 +164,7 @@ try {
     if (-not [Environment]::GetEnvironmentVariable($smokeConfigName,'Process')) { throw 'IMPORT_CONFIG_MISSING' }
   }
   $smokeStart = [Diagnostics.ProcessStartInfo]::new()
-  $smokeStart.FileName = (Get-Command node -CommandType Application -ErrorAction Stop).Source
+  $smokeStart.FileName = (Get-Command node -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
   $smokeStart.WorkingDirectory = $smokeRepo
   $smokeStart.ArgumentList.Add('scripts/yandex-session.mjs')
   $smokeStart.ArgumentList.Add('import')
@@ -169,7 +173,12 @@ try {
   $smokeStart.RedirectStandardInput = $true
   $smokeStart.RedirectStandardOutput = $true
   $smokeStart.RedirectStandardError = $true
-  $smokeStart.Environment.Remove('YANDEX_LIVE_READ_APPROVAL') | Out-Null
+  $smokeStart.Environment.Clear()
+  foreach ($smokeConfigName in @('PATH','SystemRoot','WINDIR','TEMP','TMP','PATHEXT','USERPROFILE','LOCALAPPDATA','APPDATA','SUPABASE_SERVICE_ROLE_KEY','YANDEX_SESSION_KEYS_JSON','YANDEX_SESSION_ACTIVE_KID')) {
+    $smokeConfigValue = [Environment]::GetEnvironmentVariable($smokeConfigName,'Process')
+    if ($smokeConfigValue) { $smokeStart.Environment[$smokeConfigName] = $smokeConfigValue }
+  }
+  $smokeConfigValue = $null
   $smokeSecure = Read-Host 'Authorized technical-account session JSON (hidden; not a password)' -AsSecureString
   $smokeBstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($smokeSecure)
   $smokePlain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($smokeBstr)
@@ -196,6 +205,7 @@ try {
   if ($smokeBstr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($smokeBstr) }
   if ($null -ne $smokeSecure) { $smokeSecure.Dispose() }
   if ($null -ne $smokeProcess) { $smokeProcess.Dispose() }
+  if ($null -ne $smokeStart) { $smokeStart.Environment.Clear() }
   $smokePlain = $null; $smokeSessionObject = $null; $smokePayload = $null; $smokeOutput = $null; $smokeError = $null
 }
 ```
@@ -203,7 +213,9 @@ try {
 The plaintext exists briefly in operator/Node memory. Clearing references is not a
 guarantee of wiping immutable .NET/JS strings. This flow avoids disk/argv/stdout exposure,
 but does not defend against a compromised host or memory capture. Do not run it if the
-operator environment captures stdin. Close the private terminal after completion.
+operator environment captures stdin. Keep this private terminal open through the
+separately approved smoke: closing it loses the only AES key. Durable key retention
+and later session cleanup/replacement require a separate decision, not a secret file.
 
 4. Report only: “Session imported server-side; NOT_CONFIGURED, revision 1” (or a safe
    failure status). Do not attach the input, keyring, cookies or encrypted envelope.
