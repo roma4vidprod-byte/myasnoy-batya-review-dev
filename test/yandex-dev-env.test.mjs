@@ -140,3 +140,23 @@ test('PowerShell hidden-input setup: CSPRNG, process-only publication, rollback 
   // Do not include raw child output in assertion diagnostics, even on a regression.
   assert.equal(child.status === 0 && child.stderr === '' && child.stdout.trim() === 'PASS: private DEV key setup offline checks', true);
 });
+
+for (const noInput of [false, true]) {
+  test(noInput ? 'actual & entrypoint: noninteractive host gives a safe explicit error before RPC' :
+    'actual & entrypoint: secure input, exact 7-line result, retained env, child inheritance, transcript/history safe', t => {
+    const env = { ...process.env };
+    for (const name of [...ENV_NAMES, 'YANDEX_LIVE_READ_APPROVAL', 'NODE_OPTIONS', 'NODE_DEBUG', 'SSLKEYLOGFILE']) delete env[name];
+    const args = ['-NoLogo', '-NoProfile', ...(noInput ? ['-NonInteractive'] : []),
+      '-File', 'test/support/yandex-dev-keys-entry.test.ps1', ...(noInput ? ['-NoInput'] : [])];
+    const marker = 'SYNTHETIC_INPUT_INVALID_AS_A_SERVICE_KEY';
+    const child = spawnSync('pwsh', args, {
+      cwd: fileURLToPath(new URL('..', import.meta.url)), env,
+      input: '', encoding: 'utf8', timeout: 20000
+    });
+    if (child.error?.code === 'ENOENT') { t.skip('PowerShell 7 not installed'); return; }
+    // Raw child stdout/stderr never appear in failure diagnostics.
+    const expected = noInput ? 'PASS: noninteractive prompt refusal is explicit and atomic' :
+      'PASS: secure input, exact output, same-process env, child inheritance, transcript and history';
+    assert.equal(child.status === 0 && child.stderr === '' && child.stdout.includes(expected) && !child.stdout.includes(marker), true);
+  });
+}

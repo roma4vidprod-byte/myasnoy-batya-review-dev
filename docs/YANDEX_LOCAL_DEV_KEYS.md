@@ -13,6 +13,34 @@ Scope: company `13f3cb80-487a-4a19-96a1-fb3103200230`, location
 The agent has NOT run operational setup or obtained a service key. Real connection
 check with the owner's key is PENDING. Offline mock checks are not live credentials.
 
+## Setup prompt remediation — root cause and verification
+
+The old script checked `PSVersionTable.PSVersion.Major < 7` **before** Read-Host, then
+hid `POWERSHELL_7_REQUIRED` in its generic catch. An unsupported Windows PowerShell
+5.1 therefore produced only `SETUP STOPPED` and three false env flags, with no prompt.
+The same catch also hid live-approval/preconfigured-env guards and unavailable secure
+input. The owner's actual failing host/version is **NOT VERIFIED**: the old output
+discarded that evidence, so it is not proof of which pre-input condition was hit.
+The confirmed code defect is loss of actionable pre-prompt diagnostics, not a missing
+Supabase key being deliberately skipped by Read-Host.
+
+Now every failure prints a fixed stage code and an actionable explanation, never an
+exception/input. Windows PowerShell 5.1 gets `POWERSHELL_7_REQUIRED` before input;
+noninteractive Read-Host failure gets `SECURE_INPUT_UNAVAILABLE`. Existing AES state,
+live approval, missing Node, checker failure and failed env publication are distinct.
+The version-5 branch is covered via a version-provider fixture, not claimed as a
+successful native Windows PowerShell 5.1 execution.
+
+Actual PowerShell **7.6.5** console/PTY verification reached:
+`Review Activator DEV SUPABASE_SERVICE_ROLE_KEY (hidden):`
+and was cancelled **before any input**. No key generation/RPC/import ran in that probe.
+Redirected stdin is not a substitute for this console: the secure ConsoleHost input
+path cannot be reliably exercised by piping a string. Automated success tests instead
+inject a synthetic SecureString and mocked checker through the actual `& .ps1` entry.
+They prove the exact seven output lines, same caller PID, retained env, later child
+inheritance, no fixture/key in transcript/history, and rollback when publication fails
+after its first successful env write. No genuine key or session is used in those tests.
+
 ## 1. Prepare a private operator console
 
 Use a trusted local **PowerShell 7** window, outside Codex/agent-controlled terminals.
@@ -57,8 +85,16 @@ Set-Location -LiteralPath 'C:\Users\tasfo\BusinessOS\myasnoy-batya-review-dev'
 & .\scripts\setup-yandex-dev-keys.ps1
 ```
 
-Use `&` as shown, **not** a separate `pwsh -File` process that exits and loses its keys.
-The script takes no key arguments. Enter only the DEV service key into Read-Host's
+Use `&` as shown: a `.ps1` invoked this way runs in a child **scope**, not a child
+**process**. Process environment remains in the calling PowerShell after return.
+Do **not** launch a separate `pwsh -File` or `powershell -File`, background job, or
+Start-Process for setup. There is no auto-relaunch into another PowerShell. Keep this
+window open for later import. [PowerShell process environment](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_environment_variables).
+
+The script takes no key arguments. If the service key is absent, it always requests
+native secure input after passing the explicit preflight gates. If only a service
+key is already configured, it is reused without a prompt; no service key is generated.
+Enter only the DEV service key into Read-Host's
 SecureString prompt. It generates 32 cryptographically random bytes locally with
 .NET RandomNumberGenerator, a new non-secret KID, and the existing v1 JSON map format
 `kid -> base64(32 bytes)`. The matching KID goes into `YANDEX_SESSION_ACTIVE_KID`.
@@ -74,20 +110,29 @@ Supabase HTTP POST to an RPC whose selected SQL branch is SELECT-only, **not** a
 Yandex POST or a DB mutation. It does not call enqueue/import/transition/alerts.
 Redirects are forbidden, timeout=15s, no retries. Setup waits at most 25s.
 
-It prints only:
+After successful input/checks it prints exactly these seven lines, no JSON or values:
 
-- Presence booleans for the three environment variables.
-- `keyring_parse = PASS/FAIL` (v1 shape, canonical Base64, 32 bytes).
-- `active_kid_exists = PASS/FAIL`.
-- `service_role_connection = PASS/FAIL`.
-- A fixed `SETUP PASS` or `SETUP STOPPED` instruction, without exception details.
+```text
+SUPABASE_SERVICE_ROLE_KEY present = true
+YANDEX_SESSION_KEYS_JSON present = true
+YANDEX_SESSION_ACTIVE_KID present = true
+keyring parse = PASS
+active kid = PASS
+service role connection = PASS
+SETUP PASS
+```
+
+On failure it prints one fixed `SETUP STOPPED [CODE]` explanation, not this success
+block, no raw exception/stdout/stderr, and no misleading all-false catch-all JSON.
 
 On PASS, all three variables are present **in this PowerShell process**. They are not
 available in Codex's process or another terminal. On failure, no new configuration
-is retained. Existing env configuration is never overwritten by another setup run.
-If a session already exists, connection can PASS but setup still STOPS: this prevents
-silently adopting a fresh key for old ciphertext. A FAIL may mean a check was not run
-because an earlier prerequisite failed; it is not proof that Supabase is down.
+is retained. Existing AES configuration is never overwritten by another setup run.
+An existing service key alone is preserved on failure. Publication restores the exact
+previous state if any write/check fails; rollback is in finally to cover interruption.
+If a session already exists, setup STOPS with `EXISTING_SESSION`: this prevents silently
+adopting a fresh key for old ciphertext. A preflight failure is not proof that Supabase
+is down. The Supabase boundary/RPC and permissions were not modified by this fix.
 
 The child gets only essential OS variables and these three configuration variables;
 NODE_OPTIONS, debug/TLS key logging, proxy env, live-read approval and alert credentials
@@ -136,7 +181,7 @@ Run `npm test`, `npm run check`, `git diff --check` in a separate secret-free te
 No schema/grants/indexes/client/provider runtime changes. Supabase least-privilege
 guidance led to reuse of the existing read RPC, with no extra public/admin boundary.
 
-Checkpoint: `npm test` **117/117 PASS** (101 existing + 16 setup checks, zero skipped);
+Initial checkpoint `a023ca2`: `npm test` **117/117 PASS** (101 existing + 16 setup checks, zero skipped);
 `npm run check` **45 PASS**; both documented PowerShell blocks parse without execution.
 `git diff --cached --check` PASS for all eight changed files; no JWT/AES key literals
 found in the changed sources/docs. This scan is supplemental, not proof against all
@@ -144,3 +189,17 @@ possible secret formats; no real secret was supplied to the agent or tests.
 The actual Node child launcher was tested with invalid configuration (zero RPC),
 including multiple Node executables on PATH and removal of inherited NODE_OPTIONS.
 No operational key generation/import or live service-role credential test was performed.
+
+Prompt-remediation checkpoint: `npm test` **119/119 PASS**, zero skipped;
+`npm run check` **45 PASS**, `git diff --cached --check` **PASS** for all six changed
+files; supplemental JWT/AES key-literal scan found zero matches. Actual `&` entrypoint tests now cover caller/child env,
+exact output and transcript/history filtering in addition to the fixture-based
+version guard, preexisting service key, partial AES refusal, empty input, safe errors
+and publication rollback. The real PS7 console prompt was observed without entering
+any value; no live Supabase credential check, Yandex request or session import occurred.
+
+An aborted redirected-input test left a 720-byte synthetic transcript in the OS temp
+directory (outside Git); read-only inspection confirmed its supplied fixture input
+was absent. Cleanup was blocked by the execution host. No actual secret was supplied
+to that test and no AES key was generated before it was stopped. Completed transcript
+tests remove their own exact temporary file/directory normally.
