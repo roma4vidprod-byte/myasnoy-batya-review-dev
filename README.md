@@ -8,6 +8,10 @@
 
 ## Scope
 
+Текущий live checkpoint: первый probe остановлен на PAGE_BASE_AMBIGUOUS;
+[ограниченный probe 02](docs/YANDEX_PAGINATION_PROBE_02.md) подготовлен для запуска
+в PowerShell оператора. Full fetch не включён, live page base пока не подтверждён.
+
 - Клиентский интерфейс: `index.html`, административный: `admin.html`.
 - Server endpoints используют отдельный Review Activator Supabase DEV, не Business OS.
 - Yandex server-only session transport реализован и тестируется на fixtures; реальные session/read не включены.

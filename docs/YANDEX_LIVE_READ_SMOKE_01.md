@@ -15,7 +15,15 @@ Baseline: `2b5689f4f96ca8c6974030f89f6bcce4a970ee93`. Date: 2026-09-12.
 Only myasnoy-batya-review-dev / Supabase `ykiubttldgyjpajmsuas` are in scope.
 Business OS and production were not queried or modified. No push/deploy performed.
 
-## Outcome: preparation only, NOT a successful live smoke
+## Later operator evidence and continuation
+
+Owner has now reported successful native import and a first live probe stopping at
+PAGE_BASE_AMBIGUOUS / ERROR / revision 2. Full smoke is NOT complete. Earlier
+missing-session statements below are historical. See
+[bounded pagination probe 02](YANDEX_PAGINATION_PROBE_02.md) for the next isolated
+operator step; page base and live types remain unconfirmed.
+
+## Historical outcome: preparation only, NOT a successful live smoke
 
 The owner authorized one real GET-only Asbest smoke, but explicitly required stopping
 for manual import when session material is absent. Private storage contains zero rows.
