@@ -23,13 +23,31 @@ After the first email-based sign-in the owner can create a password from the acc
 
 ## Required Supabase Auth URL configuration
 
-Before email links are considered production-ready, Supabase Auth must allow the deployed Review Activator URL:
+For the current DEV local smoke, the Supabase DEV project must use the exact
+HTTP local callback configuration:
 
-- Site URL: `https://myasnoy-batya-review-dev.vercel.app`
-- Redirect URL: `https://myasnoy-batya-review-dev.vercel.app/admin`
-- Redirect URL: `https://myasnoy-batya-review-dev.vercel.app/admin?recovery=1`
+- Site URL: `http://127.0.0.1:4173`;
+- Redirect URL: `http://127.0.0.1:4173/admin.html`;
+- Redirect URL: `http://127.0.0.1:4173/admin.html?recovery=1`.
 
-For future production, replace/add the final production domain and keep DEV separate.
+The frontend only accepts this exact local origin. It rejects other origins,
+including `javascript:` URLs and arbitrary external redirect targets. It uses
+`/admin.html` for the local static server and does not create self-signed HTTPS.
+
+If the deployed DEV preview is enabled later, add only these exact redirect
+URLs to the same DEV project after verifying the deployment:
+
+- Redirect URL: `https://myasnoy-batya-review-dev.vercel.app/admin`;
+- Redirect URL: `https://myasnoy-batya-review-dev.vercel.app/admin?recovery=1`.
+
+The current local smoke does not use the deployed preview and does not change
+its URL configuration. Do not replace the local DEV Site URL with a deployed
+URL, and do not change any Business OS or production project.
+
+Supabase JS processes the callback fragment/query after session establishment;
+the page then calls `history.replaceState` to remove token-bearing URL state.
+Tokens are never logged or rendered. Recovery keeps only `?recovery=1` until
+the new password is saved, then the query is removed.
 
 ## Security rules
 
