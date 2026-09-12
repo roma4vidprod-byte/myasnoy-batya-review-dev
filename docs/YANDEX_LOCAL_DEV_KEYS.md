@@ -1,4 +1,4 @@
-# Local DEV keys — procedure ready; operator setup PENDING
+# Local DEV keys — operator reports setup PASS; waiting for session input
 
 2026-09-12. Only `myasnoy-batya-review-dev`, Supabase `ykiubttldgyjpajmsuas`.
 No deployment, DDL, session import, Yandex request, review persistence or alert delivery.
@@ -10,8 +10,10 @@ Final read-only recheck at 12:21:56 UTC: the same counts/state, unchanged.
 Scope: company `13f3cb80-487a-4a19-96a1-fb3103200230`, location
 `9a95f63b-18e6-447b-a449-8530b67ddbae`, Yandex org `54309413522`.
 
-The agent has NOT run operational setup or obtained a service key. Real connection
-check with the owner's key is PENDING. Offline mock checks are not live credentials.
+The owner now confirms setup and all checks PASS in the same open private PowerShell.
+The agent has NOT obtained a service key; this is an operator-reported result, not an
+env transfer or an independently repeated credential check. Historical setup notes below
+describe the procedure. The next gate is manual session input, not another key setup.
 
 ## Setup prompt remediation — root cause and verification
 
@@ -158,8 +160,10 @@ Only after the separate keys-configured confirmation:
 2. Follow the [exact cookie scope/shape and hidden import block](YANDEX_LIVE_READ_SMOKE_01.md#manual-import-instruction--trusted-operator-only).
    Use only the documented eligible cookie metadata; do not guess names, bypass
    compatibility failures, include CSRF, or save a plaintext JSON file. If preparing
-   a one-line hidden input is impractical, stop for a field-by-field helper.
-3. In the **same still-open private PowerShell**, run that existing wrapper. It passes
+   JSON input is impractical, stop for a field-by-field helper.
+3. In the **same still-open private PowerShell**, run `scripts/import-yandex-session.ps1`
+   as documented there. Its hidden input supports long/multiline JSON, Ctrl+D to submit,
+   Ctrl+C to cancel; Enter does not submit. It passes
    session JSON through redirected stdin to the existing `scripts/yandex-session.mjs
    import`, with fixed Asbest scope and `expectedRevision=0`, never through argv/history.
    Paste the session only at its hidden prompt, never into this conversation.

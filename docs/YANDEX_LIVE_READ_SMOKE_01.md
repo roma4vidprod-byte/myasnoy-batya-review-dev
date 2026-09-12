@@ -1,5 +1,12 @@
 # Yandex Live Read Smoke 01 — WAITING_FOR_MANUAL_SESSION_IMPORT
 
+Current handoff (2026-09-12): owner confirmed keys configured / all checks PASS in
+the same still-open private PowerShell. This does not transfer keys to the agent.
+Manual session import and subsequent GET-only smoke are authorized. Session material
+has not been entered yet; no live authentication/contract result is claimed.
+DEV metadata rechecked at 14:11:33 UTC: private sessions=0 (including Asbest scope),
+external reviews=0, exact location/company linkage present, scheduler active=false.
+
 Baseline: `2b5689f4f96ca8c6974030f89f6bcce4a970ee93`. Date: 2026-09-12.
 Only myasnoy-batya-review-dev / Supabase `ykiubttldgyjpajmsuas` are in scope.
 Business OS and production were not queried or modified. No push/deploy performed.
@@ -63,18 +70,20 @@ was performed. Future removal requires checking dependencies and exact UUIDs fir
 
 ## Manual import instruction — trusted operator only
 
-Current gate: [local DEV key setup](YANDEX_LOCAL_DEV_KEYS.md) must succeed, then the
-owner must separately confirm keys are configured **before running the import below**.
-This stage prepares the instruction only; it does not authorize automatic import/read.
+The owner has confirmed [local DEV key setup](YANDEX_LOCAL_DEV_KEYS.md) succeeded.
+Run the import below only in that SAME still-open private PowerShell. Do not rerun
+key setup, start another PowerShell, expose env, or send session JSON to the agent.
 
-### Recheck before this manual handoff
+### Historical preflight and current handoff
 
 2026-09-12 12:00:12 UTC: private session rows=0; exact company/location scope intact;
 review rows=0; job1 PAUSED. anon/authenticated still have no private schema/table/RPC
 access; service_role retains server access. No secrets were read. Current process has
 none of SUPABASE_SERVICE_ROLE_KEY, YANDEX_SESSION_KEYS_JSON, YANDEX_SESSION_ACTIVE_KID.
-They must be securely provisioned before the import block can run. This is a real
-configuration blocker, not permission to fetch secret values into a tool/chat response.
+This was the earlier configuration blocker, not permission to fetch secret values
+into a tool/chat response. It is now resolved in the OWNER'S still-open PowerShell
+according to the owner's PASS report; it is not resolved in the agent's process.
+The current 14:11:33 UTC metadata-only recheck is recorded at the top of this runbook.
 
 ### Obtain cookies manually from the already authorized browser
 
@@ -100,7 +109,7 @@ configuration blocker, not permission to fetch secret values into a tool/chat re
    Do not capture unrelated origins, local/session storage, passwords, CSRF or whole headers.
 6. Never use Export HAR, Copy as cURL, an exporter extension, a disk editor's temporary
    document, browser snippets or pasted Console code to assemble session material.
-   If assembling a one-line JSON in hidden input is not practical, stop and request a
+   If assembling JSON in hidden input is not practical, stop and request a
    field-by-field hidden-input helper; do not save plaintext to make the process easier.
 7. Send the session object only to the existing import block below on the trusted
    server/operator host. Clear any transient clipboard contents afterward. Return to
@@ -144,71 +153,49 @@ CSRF, authorization, SMS/2FA-named cookies are rejected. Only /, /sprav, /sprav/
 /sprav/api, /sprav/api/ paths are currently supported. This template is not runnable
 fixture data or proof of actual Yandex cookie compatibility.
 
-3. Run the following in a private **PowerShell 7** terminal on the trusted host
+3. Run the following in the SAME private **PowerShell 7** terminal on the trusted host
    (not a recorded/shared terminal; no transcript, stdin tracing or process dumps).
-   Only enter compact single-line session JSON at the hidden prompt. This uses the EXISTING Node CLI,
-   passes no secret command arguments, writes no plaintext file and pins the scope.
+   The local adapter below still calls the EXISTING Node CLI `yandex-session.mjs import`;
+   it does not implement another importer, transport, normalizer or storage boundary.
    The first import uses expectedRevision=0; if another import happened meanwhile,
-   SESSION_CHANGED must stop the operation—never automatically overwrite it.
+   SESSION_CHANGED stops it—never automatically overwrite or retry.
 
 ```powershell
-$smokeRepo = 'C:\Users\tasfo\BusinessOS\myasnoy-batya-review-dev'
-$smokeBstr = [IntPtr]::Zero
-$smokeSecure = $null
-$smokePlain = $null
-$smokeSessionObject = $null
-$smokePayload = $null
-$smokeProcess = $null
-try {
-  foreach ($smokeConfigName in @('SUPABASE_SERVICE_ROLE_KEY','YANDEX_SESSION_KEYS_JSON','YANDEX_SESSION_ACTIVE_KID')) {
-    if (-not [Environment]::GetEnvironmentVariable($smokeConfigName,'Process')) { throw 'IMPORT_CONFIG_MISSING' }
-  }
-  $smokeStart = [Diagnostics.ProcessStartInfo]::new()
-  $smokeStart.FileName = (Get-Command node -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
-  $smokeStart.WorkingDirectory = $smokeRepo
-  $smokeStart.ArgumentList.Add('scripts/yandex-session.mjs')
-  $smokeStart.ArgumentList.Add('import')
-  $smokeStart.UseShellExecute = $false
-  $smokeStart.CreateNoWindow = $true
-  $smokeStart.RedirectStandardInput = $true
-  $smokeStart.RedirectStandardOutput = $true
-  $smokeStart.RedirectStandardError = $true
-  $smokeStart.Environment.Clear()
-  foreach ($smokeConfigName in @('PATH','SystemRoot','WINDIR','TEMP','TMP','PATHEXT','USERPROFILE','LOCALAPPDATA','APPDATA','SUPABASE_SERVICE_ROLE_KEY','YANDEX_SESSION_KEYS_JSON','YANDEX_SESSION_ACTIVE_KID')) {
-    $smokeConfigValue = [Environment]::GetEnvironmentVariable($smokeConfigName,'Process')
-    if ($smokeConfigValue) { $smokeStart.Environment[$smokeConfigName] = $smokeConfigValue }
-  }
-  $smokeConfigValue = $null
-  $smokeSecure = Read-Host 'Authorized technical-account session JSON (hidden; not a password)' -AsSecureString
-  $smokeBstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($smokeSecure)
-  $smokePlain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($smokeBstr)
-  $smokeSessionObject = $smokePlain | ConvertFrom-Json -AsHashtable -ErrorAction Stop
-  $smokePayload = @{
-    scope = @{ companyId='13f3cb80-487a-4a19-96a1-fb3103200230'; locationId='9a95f63b-18e6-447b-a449-8530b67ddbae'; organizationId='54309413522' }
-    expectedRevision = 0
-    session = $smokeSessionObject
-  } | ConvertTo-Json -Depth 12 -Compress -WarningAction Stop
-  $smokeProcess = [Diagnostics.Process]::Start($smokeStart)
-  $smokeProcess.StandardInput.Write($smokePayload)
-  $smokeProcess.StandardInput.Close()
-  $smokeOutput = $smokeProcess.StandardOutput.ReadToEnd()
-  $smokeError = $smokeProcess.StandardError.ReadToEnd()
-  $smokeProcess.WaitForExit()
-  if ($smokeProcess.ExitCode -ne 0) { throw 'IMPORT_FAILED_CHECK_SAFE_STATUS' }
-  # Do not forward raw child output: print only validated lifecycle metadata.
-  $smokeResult = $smokeOutput | ConvertFrom-Json -ErrorAction Stop
-  if ($smokeResult.state -ne 'NOT_CONFIGURED' -or $smokeResult.revision -ne 1) { throw 'IMPORT_STATUS_UNEXPECTED' }
-  Write-Output 'Import complete: NOT_CONFIGURED, revision=1. No Yandex read performed.'
-} catch {
-  Write-Output 'Import did not confirm success. Stop; check safe state/configuration. Do not retry blindly.'
-} finally {
-  if ($smokeBstr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($smokeBstr) }
-  if ($null -ne $smokeSecure) { $smokeSecure.Dispose() }
-  if ($null -ne $smokeProcess) { $smokeProcess.Dispose() }
-  if ($null -ne $smokeStart) { $smokeStart.Environment.Clear() }
-  $smokePlain = $null; $smokeSessionObject = $null; $smokePayload = $null; $smokeOutput = $null; $smokeError = $null
-}
+& 'C:\Users\tasfo\BusinessOS\myasnoy-batya-review-dev\scripts\import-yandex-session.ps1'
 ```
+
+The old inline Read-Host block is retired: Microsoft documents a **1022-character
+limit**, unsuitable for a potentially larger session JSON. The replacement is only
+a bounded local input adapter: [Read-Host limit](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/read-host).
+
+Wait for `Session JSON input is HIDDEN`. Type/paste the narrow JSON above **only into
+that prompt**, never as a shell command. Text is not echoed (not even the cookie names).
+Multiline JSON and multiple paste fragments are accepted up to 60,000 characters.
+Enter adds a newline; **Ctrl+D submits** the completed JSON; **Ctrl+C cancels**.
+Backspace deletes one character. Do not use arrows/other editing shortcuts; unsupported
+control sequences or oversized input fail closed on submission. Standard bracketed
+paste delimiters are handled without treating pasted lines as shell commands.
+
+The adapter collects into a SecureString using Console.ReadKey(intercept=true), then
+briefly converts in memory and passes a fixed-scope payload via redirected UTF-8 stdin.
+The existing CLI validates cookie/schema/account scope and encrypts AES-256-GCM before
+the existing CAS RPC. No plaintext/key file, argv value, env mutation, clipboard read,
+Yandex request or alert call is added. The child inherits only the essential OS vars
+and three existing server-key vars, not live-read approval or alert/tracing credentials.
+Input transfer is bounded to 10 seconds; child completion to 25 seconds, no retry.
+
+Successful import prints ONLY:
+
+```text
+session imported = true
+state = NOT_CONFIGURED
+revision = 1
+```
+
+An unconfirmed child result prints `session imported = NOT_CONFIRMED`, `state = UNKNOWN`
+and a fixed safe error code: it is NOT proof the DB write failed. Stop for a metadata-only
+check; do not rerun the import. Failures before starting the child print imported=false,
+state=UNKNOWN and a fixed code. Raw CLI stdout/stderr/exception/input is never forwarded.
 
 The plaintext exists briefly in operator/Node memory. Clearing references is not a
 guarantee of wiping immutable .NET/JS strings. This flow avoids disk/argv/stdout exposure,
@@ -217,7 +204,7 @@ operator environment captures stdin. Keep this private terminal open through the
 separately approved smoke: closing it loses the only AES key. Durable key retention
 and later session cleanup/replacement require a separate decision, not a secret file.
 
-4. Report only: “Session imported server-side; NOT_CONFIGURED, revision 1” (or a safe
+4. Report only the three safe success lines above (or the safe
    failure status). Do not attach the input, keyring, cookies or encrypted envelope.
    Then resume this task for health/probe/dry-run; do not enable scheduler/persistence.
 
@@ -225,8 +212,9 @@ Import success is NOT authentication success. The existing CLI correctly leaves 
 NOT_CONFIGURED until a GET validates the session. Do not label this READY, REAUTH_REQUIRED
 or ERROR merely to fit a report format. Those are health/failure outcomes after a real
 check. Current handoff: session imported=false; NOT_CONFIGURED before/after; live read
-NOT RUN. User authorization for a GET-only smoke exists, but session and protected
-server configuration are still missing. No live types/fixtures/defaults were changed.
+NOT RUN. User authorization for a GET-only smoke exists, and the owner confirmed server
+configuration is present in their console; manual session input is still missing.
+No live types/fixtures/defaults were changed.
 
 ## Live result fields — not measured, not zero-review success
 
@@ -253,6 +241,25 @@ against configured notification credentials. No collector or parallel engine was
 while stopped for missing session.
 
 ## Checks and remaining gates
+
+### Current manual-input adapter checkpoint
+
+- npm test: **127/127 PASS**, zero skips/failures; external requests mocked/blocked.
+- npm run check: **47 PASS**. No build script is defined in this project.
+- Working and staged diff checks: PASS; only the seven listed local files changed.
+- Regression covers 2,048/60,000-character input, multiline/bracketed paste,
+  cancellation/oversize/invalid input, missing config without prompt, parent env
+  preservation, restricted child env, existing CLI AES encryption with one mocked
+  CAS RPC, and safe failure/uncertain-result output without retries.
+- Native PowerShell hidden prompt was also opened and ended with Ctrl+D on EMPTY
+  input: no session value was entered and the CLI was not started in that probe.
+- Manual real import: NOT RUN. Live GET: NOT RUN. Awaiting the owner's local input.
+- Changes: this runbook, README.md, docs/YANDEX_LOCAL_DEV_KEYS.md,
+  scripts/import-yandex-session.ps1, test/yandex-import.test.mjs,
+  test/support/yandex-import.test.ps1, test/support/yandex-import-rpc.mock.mjs.
+  No change to the existing CLI, provider, session service, DB schema or scheduler.
+
+### Historical initial scope-preparation checkpoint
 
 - npm test: 101/101 PASS (97 baseline + fixture parent/3 cases), external Fetch disabled.
 - npm run check: 43 PASS; git diff --check PASS. No frontend build script.
