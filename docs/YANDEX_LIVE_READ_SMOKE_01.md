@@ -63,6 +63,51 @@ was performed. Future removal requires checking dependencies and exact UUIDs fir
 
 ## Manual import instruction — trusted operator only
 
+### Recheck before this manual handoff
+
+2026-09-12 12:00:12 UTC: private session rows=0; exact company/location scope intact;
+review rows=0; job1 PAUSED. anon/authenticated still have no private schema/table/RPC
+access; service_role retains server access. No secrets were read. Current process has
+none of SUPABASE_SERVICE_ROLE_KEY, YANDEX_SESSION_KEYS_JSON, YANDEX_SESSION_ACTIVE_KID.
+They must be securely provisioned before the import block can run. This is a real
+configuration blocker, not permission to fetch secret values into a tool/chat response.
+
+### Obtain cookies manually from the already authorized browser
+
+1. Use a private, unrecorded local desktop with no screen sharing, screenshots or
+   DevTools AI assistance. If clipboard history/sync or a clipboard manager is enabled,
+   do not copy cookie values until that capture is disabled. Do not use an online JSON tool.
+2. Stay on the ALREADY OPEN Yandex Business tab belonging to technical account
+   myasnoibatya-zakaz. Confirm the account visually. Do not log in through automation,
+   reload the page, publish a reply, replay a request or change any cookies.
+3. Open DevTools (F12 or Ctrl+Shift+I), then Application -> Storage -> Cookies and select
+   the existing https://yandex.ru origin. These steps inspect local browser state;
+   they do not require making a test request. Do not use Console/document.cookie:
+   that is not a complete source for HttpOnly cookies and can leak values into history.
+4. Inspect rows with Domain exactly yandex.ru or .yandex.ru, Secure checked, an applicable
+   Path accepted below, and unexpired Expires/Max-Age. Preserve the actual metadata.
+   A duplicate name with different scope or a required unsupported/partitioned cookie
+   is a STOP for compatibility review, not permission to rewrite its domain/path/flags.
+   The mandatory Yandex authentication-cookie set is NOT VERIFIED; do not invent names.
+5. For each eligible row, transfer Name, Value, Domain, Path, Secure, HttpOnly and expiry
+   into the narrow session object below using only private in-memory input. Keep
+   "Show URL-decoded" OFF; preserve the raw Value. For Expires="Session", use -1;
+   for a dated expiry use that same instant as Unix seconds, not a fabricated extension.
+   Do not capture unrelated origins, local/session storage, passwords, CSRF or whole headers.
+6. Never use Export HAR, Copy as cURL, an exporter extension, a disk editor's temporary
+   document, browser snippets or pasted Console code to assemble session material.
+   If assembling a one-line JSON in hidden input is not practical, stop and request a
+   field-by-field hidden-input helper; do not save plaintext to make the process easier.
+7. Send the session object only to the existing import block below on the trusted
+   server/operator host. Clear any transient clipboard contents afterward. Return to
+   this task with safe lifecycle status only, never the cookie values or key material.
+
+Browser UI references: [Chrome Cookies pane](https://developer.chrome.com/docs/devtools/application/cookies/),
+[Edge Cookies pane](https://learn.microsoft.com/en-us/microsoft-edge/devtools/storage/cookies).
+No browser state/cookies were inspected by the agent during this handoff.
+
+### Server-side import and state semantics
+
 Do NOT paste session material, service keys or encryption keys into Codex chat.
 Do NOT send a HAR, whole browser export, Copy-as-cURL, password, SMS/2FA or CSRF.
 Do NOT call health/probe/dry-run yet. Import alone does not contact Yandex or alert channels.
@@ -163,6 +208,13 @@ operator environment captures stdin. Close the private terminal after completion
 4. Report only: “Session imported server-side; NOT_CONFIGURED, revision 1” (or a safe
    failure status). Do not attach the input, keyring, cookies or encrypted envelope.
    Then resume this task for health/probe/dry-run; do not enable scheduler/persistence.
+
+Import success is NOT authentication success. The existing CLI correctly leaves state
+NOT_CONFIGURED until a GET validates the session. Do not label this READY, REAUTH_REQUIRED
+or ERROR merely to fit a report format. Those are health/failure outcomes after a real
+check. Current handoff: session imported=false; NOT_CONFIGURED before/after; live read
+NOT RUN. User authorization for a GET-only smoke exists, but session and protected
+server configuration are still missing. No live types/fixtures/defaults were changed.
 
 ## Live result fields — not measured, not zero-review success
 
