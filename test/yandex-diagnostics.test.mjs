@@ -3,10 +3,45 @@ import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
-import {diagnose} from '../tools/yandex-cookie-metadata/diagnostics.js';
+import {diagnose,countMetadata} from '../tools/yandex-cookie-metadata/diagnostics.js';
 import {EXTENSION_ID,nativeChannel} from '../tools/yandex-cookie-metadata/connect.js';
 const now=1900000000000;
 const nativePass={version:1,diagnostic:true,stage:'NATIVE_HOST',code:'PASS',import_calls:0};
+function countedCookie(name,change={}){
+  const c={name,domain:'.yandex.ru',path:'/',secure:true,httpOnly:true,session:true,storeId:'main',...change};
+  Object.defineProperty(c,'value',{get(){throw new Error('PRIVATE_VALUE_ACCESSED');},enumerable:true});
+  return c;
+}
+test('oversized metadata census gives exact counts, no credential access or transmission',async()=>{
+  const batch=Array.from({length:101},(_,i)=>countedCookie('fixture_'+i));
+  batch.push(countedCookie('csrf_fixture'),countedCookie('fixture_0'),countedCookie('partition',{partitionKey:{}}),
+    countedCookie('insecure',{secure:false}),countedCookie('expired',{session:false,expirationDate:1}),
+    countedCookie('foreign',{domain:'elsewhere.test'}));
+  const f=fixture(b=>b.splice(0,b.length,...batch));const r=await f.run();
+  assert.deepEqual(r.counts,{total:107,examined:107,prohibited_names:1,metadata_eligible:102,metadata_rejected:4,
+    duplicate_name_groups:1,duplicate_name_excess:1,partitioned:1,scope_mismatch:1,not_secure:1,expired:1,complete:true});
+  assert.equal(r.code,'COOKIE_SET_TOO_LARGE');assert.equal(r.import_calls,0);
+  assert.deepEqual(f.requests,[{version:1,op:'diagnose'}]);assert.ok(f.batch.every(c=>c===null));
+  assert.doesNotMatch(JSON.stringify(r),/fixture|elsewhere|PRIVATE/);
+  assert.ok(Object.values(r.counts).every(x=>typeof x==='number'||typeof x==='boolean'));
+});
+test('counts preserve case-sensitive duplicate rules including prohibited names; no import verdict',()=>{
+  const c=countMetadata([countedCookie('csrf_a'),countedCookie('csrf_a'),countedCookie('csrf_a'),
+    countedCookie('CSRF_a'),countedCookie('valid'),countedCookie('valid'),null], 'main',now);
+  assert.equal(c.prohibited_names,4);assert.equal(c.duplicate_name_groups,2);assert.equal(c.duplicate_name_excess,3);
+  assert.equal(c.metadata_eligible,2);assert.equal(c.metadata_rejected,1);assert.equal(c.complete,true);
+});
+test('census CPU bound marks incomplete, cancellation returns no partial counts',()=>{
+  const batch=Array.from({length:10001},(_,i)=>countedCookie('fixture_'+i));
+  const c=countMetadata(batch,'main',now);
+  assert.equal(c.total,10001);assert.equal(c.examined,10000);assert.equal(c.complete,false);
+  let calls=0;assert.equal(countMetadata(batch,'main',now,()=>++calls>3),null);
+});
+test('existing native import still rejects more than 100 before filtering',async()=>{
+  const {collectSession}=await import('../tools/yandex-cookie-metadata/connect.js');
+  const f=fixture(b=>{b.length=0;for(let i=0;i<101;i++)b.push(countedCookie('csrf_'+i));});
+  await assert.rejects(collectSession(f.api,{now:()=>now}),{message:'IMPORT_NOT_CONFIRMED'});
+});
 function fixture(change=()=>{}){
   const cookie={name:'fixture',domain:'.yandex.ru',path:'/',secure:true,httpOnly:true,session:true,storeId:'main'};
   Object.defineProperty(cookie,'value',{enumerable:true,get(){throw new Error('SYNTHETIC_PRIVATE_VALUE_ACCESSED');}});
@@ -46,7 +81,7 @@ const cases={
 for(const [code,change] of Object.entries(cases))test(`diagnostic safe reason ${code}; zero import`,async()=>{
   const f=fixture(change);const r=await f.run();
   assert.equal(r.code,code);assert.equal(r.import_calls,0);assert.equal(f.requests.length,1);
-  assert.deepEqual(Object.keys(r).sort(),['code','import_calls','stage']);assert.ok(f.batch.every(c=>c===null));
+  assert.deepEqual(Object.keys(r).sort(),code==='COOKIE_SET_TOO_LARGE'?['code','counts','import_calls','stage']:['code','import_calls','stage']);assert.ok(f.batch.every(c=>c===null));
 });
 test('native unavailable: explicit allowlisted code; no cookie access, raw errors discarded',async()=>{
   for(const code of ['NATIVE_HOST_NOT_FOUND','NATIVE_HOST_FORBIDDEN','NATIVE_HOST_EXITED','PRIVATE_SECRET']){

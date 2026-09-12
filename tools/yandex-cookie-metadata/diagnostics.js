@@ -7,6 +7,36 @@ const nativeCodes=new Set(['NATIVE_HOST_NOT_FOUND','NATIVE_HOST_FORBIDDEN','NATI
   'NATIVE_HOST_EXITED','NATIVE_PROTOCOL_FAILED','NATIVE_DISCONNECTED','NATIVE_CONNECT_FAILED','NATIVE_TIMEOUT','NATIVE_SEND_FAILED']);
 const result=(stage,code)=>({stage,code,import_calls:0});
 
+// Counts are not an importability verdict: values are never inspected and
+// duplicate names/partitioning still block the unchanged importer.
+export function countMetadata(batch,storeId,now,cancelled=()=>false){
+  const counts={total:batch.length,examined:0,prohibited_names:0,metadata_eligible:0,
+    metadata_rejected:0,duplicate_name_groups:0,duplicate_name_excess:0,
+    partitioned:0,scope_mismatch:0,not_secure:0,expired:0,complete:false};
+  const names=new Map();
+  try {
+    for(let i=0;i<Math.min(batch.length,10000);i++){
+      if(cancelled())return null;
+      const c=batch[i];counts.examined++;
+      if(!c||typeof c.name!=='string'||!/^[A-Za-z0-9_-]{1,128}$/.test(c.name)){
+        counts.metadata_rejected++;continue;
+      }
+      const previous=names.get(c.name)||0;names.set(c.name,previous+1);
+      if(previous===1)counts.duplicate_name_groups++;
+      if(previous>0)counts.duplicate_name_excess++;
+      if(Object.hasOwn(c,'partitionKey'))counts.partitioned++;
+      if(c.storeId!==storeId||!['yandex.ru','.yandex.ru'].includes(c.domain))counts.scope_mismatch++;
+      if(c.secure!==true)counts.not_secure++;
+      if(c.session===false&&Number.isFinite(c.expirationDate)&&c.expirationDate*1000<=now)counts.expired++;
+      if(forbidden.test(c.name)){counts.prohibited_names++;continue;}
+      try{projectCookie(c,c.name,storeId,now);counts.metadata_eligible++;}
+      catch{counts.metadata_rejected++;}
+    }
+    counts.complete=counts.examined===counts.total;
+    return counts;
+  }finally{names.clear();}
+}
+
 function metadataFailure(c,now){
   if(!paths.has(c.path))return 'COOKIE_PATH_INVALID';
   if(c.secure!==true)return 'COOKIE_NOT_SECURE';
@@ -55,7 +85,11 @@ export async function diagnose(runtime,api,{now=Date.now,cancelled=()=>false,ope
     if(cancelled())return cancel();
     if(!Array.isArray(batch))return result(stage,'COOKIE_RESPONSE_INVALID');
     if(!batch.length)return result(stage,'COOKIE_SET_EMPTY');
-    if(batch.length>100)return result(stage,'COOKIE_SET_TOO_LARGE');
+    if(batch.length>100){
+      const counts=countMetadata(batch,storeId,now(),cancelled);
+      if(!counts)return result('CANCELLED','CANCELLED');
+      return {...result(stage,'COOKIE_SET_TOO_LARGE'),counts};
+    }
     stage='COOKIE_METADATA';
     const names=new Set();let retained=0;
     for(const c of batch){

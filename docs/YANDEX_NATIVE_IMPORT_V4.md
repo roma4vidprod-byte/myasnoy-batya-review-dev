@@ -1,6 +1,47 @@
 # Yandex operator import v4 — pre-use security review
 
-## Current checkpoint: read-only diagnostic 0.2.1
+## Current checkpoint: aggregate metadata counts 0.2.2
+
+The owner reported stage COOKIE_READ / COOKIE_SET_TOO_LARGE / import calls=0
+from 0.2.1. This confirms a CURRENT blocker: Chrome returned more than 100
+URL-matching records, and the gate runs before prohibited-name filtering. The
+number of eligible cookies and any later validation failures remain unverified.
+
+The owner authorized a diagnostic census only, NOT a larger import limit,
+automatic filtering fix, subset selection or another import. Version 0.2.2 adds
+aggregate counts to the same diagnostic result only for an oversized set:
+
+- total / examined: returned and inspected record counts;
+- prohibited_names: records whose valid names match the existing prohibited rule;
+- metadata_eligible: non-prohibited records individually passing projectCookie;
+- metadata_rejected: remaining records failing name/metadata validation;
+- duplicate_name_groups / duplicate_name_excess: repeated names and records beyond
+  the first, case-sensitive across valid names INCLUDING prohibited names;
+- partitioned / scope_mismatch / not_secure / expired: overlapping indicators,
+  not additional mutually exclusive buckets (counted for valid names);
+- counts_complete: false if the 10,000-record diagnostic work cap is reached;
+- values_checked=false: no credential property is inspected.
+
+prohibited_names + metadata_eligible + metadata_rejected equals examined.
+Metadata-eligible records may share duplicate names and are NOT a count of
+importable credentials or authenticated sessions. No names, values, domains,
+paths or per-cookie objects are displayed/exported. The native channel still
+receives ONLY the fixed diagnose message, never the counts or cookie data.
+Cancellation discards partial counts; raw references clear in the existing finally.
+
+The actual import limit remains 100 BEFORE filtering and validateSession is
+unchanged. COOKIE_SET_TOO_LARGE remains the diagnostic code; no PASS or automatic
+import follows the census. No actual cookie read, DB access, registry change,
+Yandex request, scheduler/persistence activation or push/deploy by the agent.
+Reload only the extension to 0.2.2; do not start importer or reinstall the host.
+Use the same **Диагностика без импорта** button and report the scalar result.
+
+Verification: **252/252 full tests PASS**, **69 checks PASS**, diff-check PASS.
+Targeted tests cover exact aggregate arithmetic, value getters that throw on
+access, case-sensitive duplicates including prohibited names, cancellation,
+bounded/incomplete scans and the unchanged import gate.
+
+## Previous checkpoint: read-only diagnostic 0.2.1
 
 The owner registered the native host and loaded extension 0.2.0. A real import
 attempt stopped at NATIVE_CANCELLED_EXPIRED_OR_INVALID, before the CLI dispatch
@@ -95,7 +136,7 @@ is not an OS authentication boundary: Chrome's allowlist and pipe ACL do that wo
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "minimum_chrome_version": "132",
   "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
   "permissions": ["cookies", "nativeMessaging"],

@@ -37,6 +37,16 @@ diagnosticButton.addEventListener('click',async()=>{
       channel=nativeChannel(runtime);return channel;
     }});
     status.textContent=`diagnostic stage = ${output.stage}\ndiagnostic code = ${output.code}\nimport calls = 0`;
+    if(output.counts){
+      // Fixed labels/scalars only. Never render objects, names or raw metadata.
+      for(const key of ['total','examined','prohibited_names','metadata_eligible','metadata_rejected',
+        'duplicate_name_groups','duplicate_name_excess','partitioned','scope_mismatch','not_secure','expired']){
+        const count=output.counts[key];
+        if(!Number.isSafeInteger(count)||count<0)throw new Error('COUNT_INVALID');
+        status.textContent+=`\n${key} = ${count}`;
+      }
+      status.textContent+=`\ncounts_complete = ${output.counts.complete===true}\nvalues_checked = false`;
+    }
   } catch {
     status.textContent='diagnostic stage = UI\ndiagnostic code = CHECK_FAILED\nimport calls = 0';
   } finally {channel=null;}
