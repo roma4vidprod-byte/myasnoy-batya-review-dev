@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "minimum_chrome_version": "132",
   "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
   "permissions": ["cookies", "nativeMessaging"],

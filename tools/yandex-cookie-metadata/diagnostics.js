@@ -12,8 +12,9 @@ const result=(stage,code)=>({stage,code,import_calls:0});
 export function countMetadata(batch,storeId,now,cancelled=()=>false){
   const counts={total:batch.length,examined:0,prohibited_names:0,metadata_eligible:0,
     metadata_rejected:0,duplicate_name_groups:0,duplicate_name_excess:0,
+    eligible_duplicate_name_groups:0,eligible_duplicate_name_excess:0,
     partitioned:0,scope_mismatch:0,not_secure:0,expired:0,complete:false};
-  const names=new Map();
+  const names=new Map(),eligibleNames=new Map();
   try {
     for(let i=0;i<Math.min(batch.length,10000);i++){
       if(cancelled())return null;
@@ -29,12 +30,18 @@ export function countMetadata(batch,storeId,now,cancelled=()=>false){
       if(c.secure!==true)counts.not_secure++;
       if(c.session===false&&Number.isFinite(c.expirationDate)&&c.expirationDate*1000<=now)counts.expired++;
       if(forbidden.test(c.name)){counts.prohibited_names++;continue;}
-      try{projectCookie(c,c.name,storeId,now);counts.metadata_eligible++;}
+      try{
+        projectCookie(c,c.name,storeId,now);counts.metadata_eligible++;
+        const previousEligible=eligibleNames.get(c.name)||0;
+        eligibleNames.set(c.name,previousEligible+1);
+        if(previousEligible===1)counts.eligible_duplicate_name_groups++;
+        if(previousEligible>0)counts.eligible_duplicate_name_excess++;
+      }
       catch{counts.metadata_rejected++;}
     }
     counts.complete=counts.examined===counts.total;
     return counts;
-  }finally{names.clear();}
+  }finally{names.clear();eligibleNames.clear();}
 }
 
 function metadataFailure(c,now){

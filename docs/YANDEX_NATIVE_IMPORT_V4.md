@@ -1,6 +1,32 @@
 # Yandex operator import v4 — pre-use security review
 
-## Current checkpoint: aggregate metadata counts 0.2.2
+## Current checkpoint: eligible-name duplicate counts 0.2.3
+
+Owner-reported 0.2.2 result: total/examined=140, prohibited_names=0,
+metadata_eligible=22, metadata_rejected=118, duplicate_name_groups=4,
+duplicate_name_excess=114, partitioned=118, scope_mismatch/not_secure/expired=0,
+counts_complete=true, values_checked=false, import_calls=0. This does not prove
+the eligible 22 have unique names or establish successful authentication.
+
+With explicit approval, 0.2.3 adds ONLY eligible_duplicate_name_groups and
+eligible_duplicate_name_excess. These count case-sensitive repeated names and
+records beyond the first INSIDE metadata_eligible, after the existing prohibited
+name exclusion and projectCookie gate. Rejected/partitioned matches do not enter
+these two diagnostic counters; global duplicate counters remain unchanged.
+No cookie values, names or metadata records are exported. Value-access traps and
+mixed/synthetic 140-record tests verify isolation of the eligible counters.
+
+This is not permission to drop partitioned cookies, deduplicate a session, raise
+the 100-record import cap or retry import. All engine/selection rules are unchanged.
+No actual cookie reads, DB access, Yandex GET, registry change, push or deploy.
+Reload extension only to 0.2.3; importer stays stopped. Use the diagnostic button.
+
+Verification: full rerun **254/254 PASS**, **69 checks PASS**, diff-check PASS.
+The first concurrent test/check run had one native-host startup timeout at the
+8-second test budget (253/254); rerun without concurrent checks passed unchanged.
+No runtime or test timeouts were raised; this remains a timing-sensitive harness.
+
+## Previous checkpoint: aggregate metadata counts 0.2.2
 
 The owner reported stage COOKIE_READ / COOKIE_SET_TOO_LARGE / import calls=0
 from 0.2.1. This confirms a CURRENT blocker: Chrome returned more than 100
@@ -136,7 +162,7 @@ is not an OS authentication boundary: Chrome's allowlist and pipe ACL do that wo
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "minimum_chrome_version": "132",
   "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
   "permissions": ["cookies", "nativeMessaging"],

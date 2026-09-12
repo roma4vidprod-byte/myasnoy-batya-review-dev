@@ -19,7 +19,8 @@ test('oversized metadata census gives exact counts, no credential access or tran
     countedCookie('foreign',{domain:'elsewhere.test'}));
   const f=fixture(b=>b.splice(0,b.length,...batch));const r=await f.run();
   assert.deepEqual(r.counts,{total:107,examined:107,prohibited_names:1,metadata_eligible:102,metadata_rejected:4,
-    duplicate_name_groups:1,duplicate_name_excess:1,partitioned:1,scope_mismatch:1,not_secure:1,expired:1,complete:true});
+    duplicate_name_groups:1,duplicate_name_excess:1,eligible_duplicate_name_groups:1,eligible_duplicate_name_excess:1,
+    partitioned:1,scope_mismatch:1,not_secure:1,expired:1,complete:true});
   assert.equal(r.code,'COOKIE_SET_TOO_LARGE');assert.equal(r.import_calls,0);
   assert.deepEqual(f.requests,[{version:1,op:'diagnose'}]);assert.ok(f.batch.every(c=>c===null));
   assert.doesNotMatch(JSON.stringify(r),/fixture|elsewhere|PRIVATE/);
@@ -30,6 +31,23 @@ test('counts preserve case-sensitive duplicate rules including prohibited names;
     countedCookie('CSRF_a'),countedCookie('valid'),countedCookie('valid'),null], 'main',now);
   assert.equal(c.prohibited_names,4);assert.equal(c.duplicate_name_groups,2);assert.equal(c.duplicate_name_excess,3);
   assert.equal(c.metadata_eligible,2);assert.equal(c.metadata_rejected,1);assert.equal(c.complete,true);
+});
+test('eligible duplicate counts exclude rejected/partitioned/prohibited matches without reading values',()=>{
+  const c=countMetadata([countedCookie('same'),countedCookie('same',{partitionKey:{}}),
+    countedCookie('same',{secure:false}),countedCookie('csrf_a'),countedCookie('csrf_a'),
+    countedCookie('good'),countedCookie('good'),countedCookie('good'),countedCookie('Good')],'main',now);
+  assert.equal(c.duplicate_name_groups,3);assert.equal(c.duplicate_name_excess,5);
+  assert.equal(c.metadata_eligible,5);assert.equal(c.eligible_duplicate_name_groups,1);
+  assert.equal(c.eligible_duplicate_name_excess,2);
+});
+test('22 individually valid unique names stay zero eligible duplicates alongside 118 partitioned records',()=>{
+  // Synthetic distribution only: does not assume the owner's 22 names are unique.
+  const batch=Array.from({length:22},(_,i)=>countedCookie('fixture_'+i));
+  for(let i=0;i<118;i++)batch.push(countedCookie('partition_'+(i%4),{partitionKey:{}}));
+  const c=countMetadata(batch,'main',now);
+  assert.equal(c.total,140);assert.equal(c.metadata_eligible,22);assert.equal(c.partitioned,118);
+  assert.equal(c.duplicate_name_groups,4);assert.equal(c.duplicate_name_excess,114);
+  assert.equal(c.eligible_duplicate_name_groups,0);assert.equal(c.eligible_duplicate_name_excess,0);
 });
 test('census CPU bound marks incomplete, cancellation returns no partial counts',()=>{
   const batch=Array.from({length:10001},(_,i)=>countedCookie('fixture_'+i));
