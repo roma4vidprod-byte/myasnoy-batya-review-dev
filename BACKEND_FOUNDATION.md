@@ -1,5 +1,11 @@
 # Review Activator — v0.6 BACKEND FOUNDATION
 
+Historical checkpoint. Current Yandex remediation and verified DEV schema are in
+[YANDEX_REVIEW_PROVIDER.md](docs/YANDEX_REVIEW_PROVIDER.md) and
+[REVIEW_EXTERNAL_REVIEWS_SCHEMA.md](docs/REVIEW_EXTERNAL_REVIEWS_SCHEMA.md).
+The no-database statements below are superseded by the dedicated DEV connection
+documented in SUPABASE_DEV.md; Business OS remains separate.
+
 Status: DEV-safe foundation. No production database, email or Telegram mutation is enabled yet.
 
 ## Added server endpoints

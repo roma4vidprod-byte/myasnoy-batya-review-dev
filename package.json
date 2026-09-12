@@ -1,0 +1,9 @@
+{
+  "name": "myasnoy-batya-review-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --import ./test/support/no-network.mjs --test test/*.test.mjs",
+    "check": "node scripts/check.mjs"
+  }
+}

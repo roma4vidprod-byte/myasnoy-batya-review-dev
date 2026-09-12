@@ -1,0 +1,21 @@
+{
+  "list": {
+    "items": [{
+      "id": "fixture-review-004",
+      "cmnt_entity_id": "fixture-review-004",
+      "author": { "user": "Гость 004" },
+      "full_text": "Тестовый отзыв с ответом компании.",
+      "rating": 5,
+      "time_created": "2026-09-01T10:00:00Z",
+      "owner_comment": {
+        "text": "Тестовый ответ: спасибо за обратную связь.",
+        "time_created": "2026-09-02T11:00:00Z",
+        "moderation_status": "approved"
+      },
+      "comments_count": 1,
+      "lang": "ru",
+      "public_rating": 5
+    }],
+    "pager": { "limit": 20, "offset": 0, "total": 1 }
+  }
+}

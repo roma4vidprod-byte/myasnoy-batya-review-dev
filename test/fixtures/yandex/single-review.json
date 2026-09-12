@@ -1,0 +1,17 @@
+{
+  "list": {
+    "items": [{
+      "id": "fixture-review-001",
+      "cmnt_entity_id": "fixture-review-001",
+      "author": { "user": "Гость 001" },
+      "full_text": "Тестовый отзыв: заказ приготовили вовремя.",
+      "rating": 5,
+      "time_created": "2026-09-01T10:00:00Z",
+      "owner_comment": null,
+      "comments_count": 0,
+      "lang": "ru",
+      "public_rating": 5
+    }],
+    "pager": { "limit": 20, "offset": 0, "total": 1 }
+  }
+}

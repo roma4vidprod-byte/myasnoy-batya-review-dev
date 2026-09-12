@@ -1,0 +1,9 @@
+{
+  "list": {
+    "items": [
+      { "id": "fixture-review-002", "cmnt_entity_id": "fixture-review-002", "author": { "user": "Гость 002" }, "full_text": "Повтор второй записи.", "rating": 4, "time_created": "2026-09-01T09:00:00Z" },
+      { "id": "fixture-review-003", "cmnt_entity_id": "fixture-review-003", "author": { "user": "Гость 003" }, "full_text": "Тестовая третья запись.", "rating": 3, "time_created": "2026-09-01T08:00:00Z" }
+    ],
+    "pager": { "limit": 2, "offset": 2, "total": 4 }
+  }
+}

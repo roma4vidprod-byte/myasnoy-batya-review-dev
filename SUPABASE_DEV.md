@@ -1,5 +1,11 @@
 # Review Activator — dedicated Supabase DEV
 
+2026-09-12 read-only verification: see
+[REVIEW_EXTERNAL_REVIEWS_SCHEMA.md](docs/REVIEW_EXTERNAL_REVIEWS_SCHEMA.md) for the
+subsequent external reviews/reply columns, migrations, RPCs and existing pg_cron.
+The foundation table list/status below is historical, not the full current schema.
+No schema/data mutations were applied in Yandex Foundation Remediation 01.
+
 Project: `myasnoy-batya-review-dev`
 Project ref: `ykiubttldgyjpajmsuas`
 Region: `eu-central-1`
