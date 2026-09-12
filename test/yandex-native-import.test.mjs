@@ -110,14 +110,14 @@ test('missing env/args: importer never listens; native host wrong origin produce
 });
 test('v4 security source inventory: no TCP/clipboard/storage/mutations; exact native origin and same-user pipes',()=>{
   const root=new URL('../tools/yandex-cookie-metadata/',import.meta.url);
-  assert.deepEqual(readdirSync(root).sort(),['connect.js','manifest.json','metadata.js','popup.css','popup.html','popup.js']);
+  assert.deepEqual(readdirSync(root).sort(),['connect.js','diagnostics.js','manifest.json','metadata.js','popup.css','popup.html','popup.js']);
   const manifest=JSON.parse(readFileSync(new URL('manifest.json',root),'utf8'));
   assert.deepEqual(manifest.permissions,['cookies','nativeMessaging']);
   assert.deepEqual(manifest.host_permissions,['https://yandex.ru/*']);
   assert.equal(manifest.incognito,'not_allowed');
   assert.match(manifest.content_security_policy.extension_pages,/connect-src 'none'/);
   for(const field of ['background','content_scripts','externally_connectable','web_accessible_resources','optional_permissions'])assert.equal(Object.hasOwn(manifest,field),false);
-  const source=['connect.js','popup.js','metadata.js'].map(f=>readFileSync(new URL(f,root),'utf8')).join('\n');
+  const source=['connect.js','diagnostics.js','popup.js','metadata.js'].map(f=>readFileSync(new URL(f,root),'utf8')).join('\n');
   assert.doesNotMatch(source,/fetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|clipboard|localStorage|sessionStorage|indexedDB|chrome\.storage|console\.|cookies\.(set|remove)|eval\(/);
   for(const file of ['start-yandex-local-import.ps1','yandex-native-host.ps1','yandex-native-protocol.ps1']){
     const s=readFileSync(new URL('../scripts/'+file,import.meta.url),'utf8');
@@ -128,7 +128,7 @@ test('v4 security source inventory: no TCP/clipboard/storage/mutations; exact na
   const html=readFileSync(new URL('popup.html',root),'utf8');assert.doesNotMatch(html,/<input|<form|<iframe|https?:\/\//);
 });
 test('actual v4 popup: click invokes native port, shows only safe success, no secret inputs',async()=>{
-  const elements=new Map(['copy','cancel','status'].map(id=>[id,{disabled:false,textContent:'',events:{},addEventListener(n,f){this.events[n]=f;}}]));
+  const elements=new Map(['copy','diagnose','cancel','status'].map(id=>[id,{disabled:false,textContent:'',events:{},addEventListener(n,f){this.events[n]=f;}}]));
   const saved={document:globalThis.document,window:globalThis.window,chrome:globalThis.chrome};
   let onMessage,exchanges=0;
   const f=fixture();f.batch[1].expirationDate=4070934000;

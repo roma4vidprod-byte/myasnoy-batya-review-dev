@@ -38,10 +38,13 @@ preflight. Владелец подтвердил setup/all checks PASS; ожид
 Исправлена диагностика отказа до prompt: PowerShell 5.1 получает понятную ошибку;
 prompt в PowerShell 7 проверен без ввода секрета. `& .ps1` сохраняет env в том же процессе.
 [Native import v4: исходники и security review](docs/YANDEX_NATIVE_IMPORT_V4.md).
+Текущий шаг — кнопка «Диагностика без импорта» в 0.2.1: только проверка канала
+Chrome→адаптер и метаданных, без values/CLI/БД. Причина первого отказа ещё не установлена.
 После разовой регистрации локального адаптера: запустить importer в прежнем PS7 и
 нажать «Подключить Яндекс Бизнес». Cookies/header/JSON/metadata вручную не переносятся.
 Native Messaging + Windows same-user pipe; никакого HTTP/clipboard/browser network.
-Реальная session не импортирована; обновление Chrome/native registration ещё не проверено.
+Первая попытка остановилась до CLI; регистрация и локальный адаптер проверены.
+Результат диагностической кнопки 0.2.1 в настоящем Chrome ещё ожидается.
 Helper переиспользует
 `scripts/import-yandex-session.ps1` и существующий CLI, не запускает GET/alerts.
 

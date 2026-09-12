@@ -11,6 +11,11 @@ function Invoke-YandexNativeHost([string] $Origin) {
     $deadline=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()+120000
     $message=Read-YandexNativeFrame $inputStream $deadline
     Assert-YandexNativeKeys $message @('version','op')
+    # Diagnostic terminates HERE: no pipe/importer connection, nonce, keys or RPC.
+    if (($message.version -is [int] -or $message.version -is [long]) -and $message.version -eq 1 -and $message.op -ceq 'diagnose') {
+      Write-YandexNativeFrame $outputStream @{version=1;diagnostic=$true;stage='NATIVE_HOST';code='PASS';import_calls=0} $deadline
+      return
+    }
     if ($message.version -cne 1 -or $message.op -cne 'hello') { throw 'STOP' }
     # CurrentUserOnly on CLIENT verifies server owner AND elevation; no TCP fallback.
     $options=[IO.Pipes.PipeOptions]::Asynchronous -bor [IO.Pipes.PipeOptions]::CurrentUserOnly

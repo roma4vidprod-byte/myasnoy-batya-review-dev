@@ -1,5 +1,67 @@
 # Yandex operator import v4 — pre-use security review
 
+## Current checkpoint: read-only diagnostic 0.2.1
+
+The owner registered the native host and loaded extension 0.2.0. A real import
+attempt stopped at NATIVE_CANCELLED_EXPIRED_OR_INVALID, before the CLI dispatch
+marker. This code does not distinguish timeout, framing, connection or metadata
+failure. The actual root cause remains NOT VERIFIED. No live GET was authorized.
+The supplied /sprav/54309413522/p/edit/reviews/ URL passes the static scope rule.
+
+Read-only local checks confirmed the registered name/origin and executed its
+actual launcher: synthetic hello roundtrip and cancellation succeeded, with zero
+cookie reads/import calls/Yandex requests. This is not proof of the full Chrome
+connection or the real cookie set, and does not query existing session state.
+
+The owner approved a separate **Диагностика без импорта** button in 0.2.1.
+It sends exactly {version:1,op:diagnose} to the registered native adapter. That
+branch returns a fixed diagnostic acknowledgement and exits BEFORE connecting
+to any importer pipe, issuing a nonce, loading keys or invoking a CLI/RPC. Unknown
+fields (including session) reject the message. Trailing import frames are ignored
+because the diagnostic host exits. No import is retried and no DB status is read.
+
+Only after that acknowledgement does the extension check the active Asbest tab,
+cookie store and metadata for the existing exact reviews URL. Chrome's API still
+returns values transiently in memory, but the diagnostic never accesses value,
+constructs a session, exports metadata/names, or sends any cookie data to the host.
+The existing projectCookie metadata gate is reused without changing its rules.
+Raw batch references clear in finally; best-effort memory limitations still apply.
+
+Output is exactly three safe fields: diagnostic stage, diagnostic code, import
+calls=0. Stages distinguish extension ID, Chrome/native channel, tab, store,
+cookie read and metadata. Codes distinguish duplicate/partitioned/insecure/expired/
+invalid metadata. Only fixed Chrome error strings map to predefined native codes;
+unknown exceptions become CHECK_FAILED, never raw output. No cookie names/values.
+
+PASS_VALUES_NOT_CHECKED means ONLY native acknowledgement + metadata success:
+credential contents, keyring, current importer pipe, TTL under a real import,
+server storage, account identity and Yandex authentication are NOT checked.
+Diagnosis cannot establish READY or stored revision. The original import engine,
+its safety rules and its uncertain-result handling are unchanged.
+
+New source: [diagnostics.js](../tools/yandex-cookie-metadata/diagnostics.js).
+No permissions added. Existing registration points to the updated local host
+script; do NOT reinstall/register again. Reload only the unpacked extension to
+version 0.2.1. Do not start PowerShell importer. On the existing Yandex tab click
+**Диагностика без импорта**, keep the popup open and report only its three fields.
+Do not refresh Yandex or click Connect. Both buttons lock after a diagnostic starts;
+there is no automatic follow-up import.
+
+Verification: **248/248 full tests PASS**, **69 checks PASS**, diff-check PASS.
+The already registered WindowsApps PowerShell launcher also returned the exact
+new diagnostic response and exited with empty stderr, without cookie reads, any
+importer listener or RPC. Registration was inspected, not modified/reinstalled.
+Native Chrome 0.2.1 diagnostic click still awaits the owner; do not infer its result.
+
+23 targeted diagnostics tests cover value-access traps, safe codes, metadata
+failures, malformed native replies, cancellation, actual host binary stdio without
+env/listener and a trailing-import rejection. Full-suite/check results are recorded
+in the handoff. This checkpoint has no real cookie read or import by the agent,
+no Yandex request, scheduler/persistence change, registry change or push/deploy.
+
+The original v4 design snapshot follows; its historical installation/testing
+statements below are superseded by this current checkpoint.
+
 Only myasnoy-batya-review-dev. Real import is NOT authorized by this implementation
 checkpoint. Do not refresh Yandex, run GET, enable scheduler/review persistence,
 send alerts, push/deploy, or operate Business OS/production.
@@ -33,7 +95,7 @@ is not an OS authentication boundary: Chrome's allowlist and pipe ACL do that wo
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "minimum_chrome_version": "132",
   "description": "Operator-initiated local native import for Asbest DEV. No Yandex requests.",
   "permissions": ["cookies", "nativeMessaging"],

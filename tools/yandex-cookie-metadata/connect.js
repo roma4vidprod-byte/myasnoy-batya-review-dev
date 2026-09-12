@@ -47,10 +47,24 @@ export async function collectSession(api,{now=Date.now,cancelled=()=>false}={}) 
 
 export function nativeChannel(runtime) {
   if(runtime.id!==EXTENSION_ID)stop();
-  const port=runtime.connectNative(NATIVE_HOST);
+  const failure=code=>Object.assign(new Error('IMPORT_NOT_CONFIRMED'),{code});
+  const publicErrors={
+    'Specified native messaging host not found.':'NATIVE_HOST_NOT_FOUND',
+    'Access to the specified native messaging host is forbidden.':'NATIVE_HOST_FORBIDDEN',
+    'Failed to start native messaging host.':'NATIVE_HOST_START_FAILED',
+    'Native host has exited.':'NATIVE_HOST_EXITED',
+    'Error when communicating with the native messaging host.':'NATIVE_PROTOCOL_FAILED'
+  };
+  const classify=message=>typeof message==='string'&&Object.hasOwn(publicErrors,message)?publicErrors[message]:'NATIVE_DISCONNECTED';
+  let port;
+  try {port=runtime.connectNative(NATIVE_HOST);} catch {throw failure('NATIVE_CONNECT_FAILED');}
   let pending=null, closed=false;
-  function reject(){closed=true;if(pending){clearTimeout(pending.timer);pending.reject(new Error('IMPORT_NOT_CONFIRMED'));pending=null;}}
-  port.onDisconnect.addListener(()=>{void runtime.lastError;reject();});
+  function reject(code='NATIVE_DISCONNECTED'){closed=true;if(pending){clearTimeout(pending.timer);pending.reject(failure(code));pending=null;}}
+  port.onDisconnect.addListener(()=>{
+    let code='NATIVE_DISCONNECTED';
+    try {code=classify(runtime.lastError?.message);} catch { }
+    reject(code);
+  });
   port.onMessage.addListener(message=>{
     if(!pending){reject();port.disconnect();return;}
     const p=pending;pending=null;clearTimeout(p.timer);p.resolve(message);
@@ -59,8 +73,8 @@ export function nativeChannel(runtime) {
     exchange(message){
       if(closed||pending)return Promise.reject(new Error('IMPORT_NOT_CONFIRMED'));
       return new Promise((resolve,rejectPromise)=>{
-        pending={resolve,reject:rejectPromise,timer:setTimeout(()=>{reject();port.disconnect();},120000)};
-        try{port.postMessage(message);}catch{reject();port.disconnect();}
+        pending={resolve,reject:rejectPromise,timer:setTimeout(()=>{reject('NATIVE_TIMEOUT');port.disconnect();},120000)};
+        try{port.postMessage(message);}catch{reject('NATIVE_SEND_FAILED');port.disconnect();}
       });
     },
     close(){reject();port.disconnect();}
