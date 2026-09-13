@@ -143,7 +143,7 @@ SUPABASE_SERVICE_ROLE_KEY, YANDEX_SESSION_KEYS_JSON (kid -> base64 32-byte key),
 YANDEX_SESSION_ACTIVE_KID. Existing Telegram/Resend environment names are reused.
 No new environment values were installed in this stage.
 
-Operator commands: `node scripts/yandex-session.mjs status|import|health|probe|dry-run|rotate-key|disable`.
+Operator commands: `node scripts/yandex-session.mjs status|import|preflight|health|probe|dry-run|rotate-key|disable`.
 Choose one command, not the literal pipe expression. Input is bounded noninteractive
 stdin JSON; no secret command arguments, disk export or terminal echo. Envelope:
 

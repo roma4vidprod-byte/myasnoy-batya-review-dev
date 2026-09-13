@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import {
   ASBEST_SYNC_SCOPE, ASBEST_SYNC_ACCOUNT, ASBEST_PAGE_BASE,
-  createReviewSyncWorker, authorizedWorkerRequest, createReviewSyncWorkerHandler
+  createReviewSyncWorker, createReviewSyncHealth, authorizedWorkerRequest, createReviewSyncWorkerHandler
 } from '../lib/server/review-sync-worker.js';
 
 const runId = '11111111-1111-4111-8111-111111111111';
@@ -109,6 +109,123 @@ test('worker diagnostic_only is secret-protected, does not claim queue and retur
   assert.equal(good.statusCode, 503);
   assert.equal(good.body.error, 'SESSION_DECRYPT_FAILED');
   assert.equal(runs, 0);
+});
+
+test('server health operations are secret-protected and never enter the claim path', async () => {
+  let runs = 0;
+  const responses = [];
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret',
+    run: async () => { runs += 1; throw new Error('claim path must not run'); },
+    preflight: async () => ({
+      pretransport: 'PASS', session_decrypt: 'PASS', scope: 'PASS', mode: 'PASS', page_base: 'PASS',
+      endpoint: 'PASS', keyring_parse: 'PASS', active_kid: 'PASS', env_present: {},
+      runtime_location: 'vercel-server', session_state: 'NOT_CONFIGURED', revision: 8, error: null
+    }),
+    health: async () => ({
+      ok: true, operation: 'health', pretransport: 'PASS', decrypt: 'PASS', validation: 'PASS',
+      health_get: 'PASS', state_before: 'NOT_CONFIGURED', revision_before: 8,
+      state_after: 'READY', revision_after: 9, yandex_requests: 1, review_persistence: 'OFF'
+    })
+  });
+  const denied = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer wrong' }, body: { operation: 'preflight' } }, denied);
+  assert.equal(denied.statusCode, 401);
+  const preflight = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'preflight' } }, preflight);
+  assert.equal(preflight.statusCode, 200);
+  assert.equal(preflight.body.operation, 'preflight');
+  assert.equal(preflight.body.yandex_requests, 0);
+  const health = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'health' } }, health);
+  assert.equal(health.statusCode, 200);
+  assert.equal(health.body.state_after, 'READY');
+  assert.equal(health.body.review_persistence, 'OFF');
+  assert.equal(runs, 0);
+  responses.push(preflight.body, health.body);
+  assert.equal(JSON.stringify(responses).includes('secret'), false);
+});
+
+test('health operation rejects extra parameters and does not create another boundary', async () => {
+  let preflightCalls = 0;
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret',
+    preflight: async () => { preflightCalls += 1; return { pretransport: 'PASS' }; },
+    health: async () => ({ ok: true })
+  });
+  const bad = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'health', page: 1 } }, bad);
+  assert.equal(bad.statusCode, 400);
+  assert.deepEqual(bad.body, { ok: false, error: 'INVALID_OPERATION' });
+  assert.equal(preflightCalls, 0);
+});
+
+test('server health stops before keyring/service when preflight fails', async () => {
+  let keyrings = 0;
+  let services = 0;
+  const health = createReviewSyncHealth({
+    preflight: async () => ({
+      pretransport: 'FAIL', session_decrypt: 'FAIL', scope: 'PASS', mode: 'PASS', page_base: 'PASS',
+      endpoint: 'PASS', keyring_parse: 'PASS', active_kid: 'PASS', env_present: {},
+      runtime_location: 'vercel-server', session_state: 'NOT_CONFIGURED', revision: 8,
+      error: 'SESSION_DECRYPT_FAILED'
+    }),
+    keyringFactory: () => { keyrings += 1; throw new Error('must not run'); },
+    serviceFactory: () => { services += 1; throw new Error('must not run'); }
+  });
+  const result = await health();
+  assert.equal(result.ok, false);
+  assert.equal(result.operation, 'health');
+  assert.equal(result.error, 'SESSION_DECRYPT_FAILED');
+  assert.equal(result.health_get, undefined);
+  assert.equal(result.yandex_requests, 0);
+  assert.equal(keyrings, 0);
+  assert.equal(services, 0);
+});
+
+test('server health performs exactly the existing service health path after preflight', async () => {
+  const calls = [];
+  const keyring = { currentKid: 'fixture', keys: { fixture: Buffer.alloc(32) } };
+  const health = createReviewSyncHealth({
+    preflight: async () => ({
+      pretransport: 'PASS', session_decrypt: 'PASS', scope: 'PASS', mode: 'PASS', page_base: 'PASS',
+      endpoint: 'PASS', keyring_parse: 'PASS', active_kid: 'PASS', env_present: {},
+      runtime_location: 'vercel-server', session_state: 'NOT_CONFIGURED', revision: 8, error: null
+    }),
+    keyringFactory: () => keyring,
+    storeFactory: () => ({ read: async () => { calls.push('store.read'); return null; } }),
+    serviceFactory: options => {
+      calls.push('service.create');
+      assert.equal(options.allowRead, true);
+      assert.equal(options.persistenceWriter, undefined);
+      return { run: async (scope, options) => {
+        calls.push(['service.run', scope, options]);
+        return { ok: true, state: 'READY', revision: 9,
+          lastSessionCheckAt: '2026-09-13T00:00:00.000Z', lastSuccessfulSyncAt: null,
+          seen: 20, pagesFetched: 1 };
+      } };
+    }
+  });
+  const result = await health();
+  assert.equal(result.ok, true);
+  assert.equal(result.state_before, 'NOT_CONFIGURED');
+  assert.equal(result.revision_before, 8);
+  assert.equal(result.state_after, 'READY');
+  assert.equal(result.revision_after, 9);
+  assert.equal(result.health_get, 'PASS');
+  assert.equal(result.review_persistence, 'OFF');
+  assert.equal(result.yandex_requests, 0);
+  assert.equal(calls[0], 'service.create');
+  assert.deepEqual(calls[1], ['service.run', ASBEST_SYNC_SCOPE, { mode: 'health', pageBase: 1 }]);
+  assert.deepEqual(keyring.keys.fixture, Buffer.alloc(32));
 });
 
 test('worker migration defines server-only claim/complete/fail and no Vercel cron', () => {
