@@ -32,6 +32,19 @@ boundary. It requires the server-only `REVIEW_WORKER_SECRET`, fixed Asbest scope
 and `YANDEX_LIVE_READ_APPROVAL=asbest-read-only-v1`. It returns only safe counts
 and fixed error codes. Browser code cannot call it with a service credential.
 
+Before a new controlled enqueue, the DEV-only reconciliation boundary can clear
+the stale connection error left by a previous session decrypt incident:
+
+`POST /api/internal/review-sync-worker` with
+`{"operation":"reconcile_connection"}`.
+
+This reuses the existing server boundary and calls
+`review_reconcile_yandex_connection(uuid,uuid,text)`. It requires a `READY`
+private session and the exact Asbest scope, changes only `status` and
+`last_error`, and is idempotent. It does not change `next_sync_at`, create a
+run, call Yandex or enable the paused scheduler. A separate read-only audit is
+required before any future enqueue.
+
 For DEV-only runtime diagnosis, the existing worker endpoint accepts the strict JSON
 body `{"diagnostic_only":true}` with the same worker secret. This branch only reads
 the scoped encrypted session and returns key fingerprints, envelope metadata and

@@ -1,5 +1,13 @@
 # Мясной Батя — Review Activator DEV
 
+## Current checkpoint — Yandex connection reconciliation 07A.4B
+
+The Asbest DEV provider connection has a server-only, fixed-scope reconciliation
+boundary for clearing the stale `SESSION_DECRYPT_FAILED` connection state after
+the private session is verified `READY`. It does not enqueue, fetch from Yandex,
+write reviews or enable the paused scheduler. See
+[Yandex connection reconciliation 07A.4B](docs/YANDEX_CONNECTION_RECONCILIATION_07A4B.md).
+
 ## Current checkpoint — Asbest admin reviews read-only UI 06
 
 The existing admin page now reads the 67 persisted Asbest Yandex reviews through

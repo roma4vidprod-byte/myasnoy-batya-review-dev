@@ -151,6 +151,35 @@ test('server health operations are secret-protected and never enter the claim pa
   assert.equal(JSON.stringify(responses).includes('secret'), false);
 });
 
+test('connection reconciliation is protected, fixed-scope and never claims a run', async () => {
+  let reconciliations = 0;
+  let runs = 0;
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret',
+    run: async () => { runs += 1; throw new Error('must not claim'); },
+    reconcileConnection: async () => {
+      reconciliations += 1;
+      return { ok: true, operation: 'reconcile_connection', changed: true, status: 'READY', session_state: 'READY' };
+    }
+  });
+  const denied = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer wrong' }, body: { operation: 'reconcile_connection' } }, denied);
+  assert.equal(denied.statusCode, 401);
+  const allowed = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'reconcile_connection' } }, allowed);
+  assert.equal(allowed.statusCode, 200);
+  assert.deepEqual(allowed.body, { ok: true, operation: 'reconcile_connection', changed: true, status: 'READY', session_state: 'READY' });
+  const extra = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'reconcile_connection', company_id: 'attacker' } }, extra);
+  assert.equal(extra.statusCode, 400);
+  assert.equal(reconciliations, 1);
+  assert.equal(runs, 0);
+});
+
 test('health operation rejects extra parameters and does not create another boundary', async () => {
   let preflightCalls = 0;
   const res = () => ({ statusCode: 200, headers: {}, body: null,
