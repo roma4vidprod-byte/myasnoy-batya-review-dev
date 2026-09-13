@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import {
   normalizeYandexReview, parseYandexReviewsPayload, fetchYandexReviews,
-  dedupeYandexReviews, toReviewExternalReview
+  dedupeYandexReviews, toReviewExternalReview, inspectYandexReviewsPayload,
+  diagnoseYandexReviewsPayload
 } from '../lib/providers/yandex.js';
 
 const location = '54309413522';
@@ -120,6 +121,36 @@ test('contract drift: broken/missing/legacy envelope fails instead of returning 
   const errorPayload = fixture('empty');
   errorPayload.error = 'synthetic error';
   drift(() => parseYandexReviewsPayload(errorPayload));
+});
+
+test('contract diagnostic reports safe schema and exact parser field without values', () => {
+  const payload = fixture('single-review');
+  payload.list.items[0].full_text = 'synthetic-secret-review-text';
+  payload.list.items[0].author.user = 'synthetic-secret-author';
+  const report = diagnoseYandexReviewsPayload(payload, location);
+  assert.equal(report.ok, true);
+  assert.deepEqual(report.parser, { code: null, failure_point: null });
+  assert.deepEqual(report.pagination, { limit: 20, offset: 0, total: 1, hasMore: false });
+  assert.equal(report.schema.fields['full_text'].types.string, 1);
+  assert.equal(report.schema.fields['author.user'].types.string, 1);
+  assert.equal(JSON.stringify(report).includes('synthetic-secret'), false);
+
+  const broken = fixture('broken-schema');
+  const driftReport = diagnoseYandexReviewsPayload(broken, location);
+  assert.equal(driftReport.ok, false);
+  assert.deepEqual(driftReport.parser, { code: 'YANDEX_CONTRACT_DRIFT', failure_point: 'list.items' });
+  assert.deepEqual(driftReport.schema.item_keys, []);
+  assert.equal(Object.hasOwn(driftReport, 'raw_payload'), false);
+});
+
+test('contract diagnostic schema exposes unexpected keys but never payload values', () => {
+  const payload = fixture('single-review');
+  payload.extra = 'synthetic-secret-top-level';
+  payload.list.items[0].unexpected = 'synthetic-secret-item';
+  const schema = inspectYandexReviewsPayload(payload);
+  assert.deepEqual(schema.unexpected_keys.top_level, ['extra']);
+  assert.deepEqual(schema.unexpected_keys.item, ['unexpected']);
+  assert.equal(JSON.stringify(schema).includes('synthetic-secret'), false);
 });
 
 test('required item fields and malformed owner/author shapes fail explicitly', () => {

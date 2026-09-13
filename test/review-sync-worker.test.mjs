@@ -4,7 +4,8 @@ import test from 'node:test';
 import {
   ASBEST_SYNC_SCOPE, ASBEST_SYNC_ACCOUNT, ASBEST_PAGE_BASE,
   createReviewSyncWorker, createReviewSyncHealth, createYandexSessionImportPrepare,
-  createYandexSessionImport, authorizedWorkerRequest, createReviewSyncWorkerHandler
+  createYandexSessionImport, authorizedWorkerRequest, createReviewSyncWorkerHandler,
+  createReviewContractDiagnostic
 } from '../lib/server/review-sync-worker.js';
 
 const runId = '11111111-1111-4111-8111-111111111111';
@@ -149,6 +150,67 @@ test('server health operations are secret-protected and never enter the claim pa
   assert.equal(runs, 0);
   responses.push(preflight.body, health.body);
   assert.equal(JSON.stringify(responses).includes('secret'), false);
+});
+
+test('contract diagnostic is secret-protected, read-only and does not enter claim path', async () => {
+  let runs = 0;
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const diagnostic = async () => ({
+    ok: false, operation: 'contract_diagnostic', pretransport: 'PASS', decrypt: 'PASS',
+    validation: 'PASS', yandex_requests: 1, http_status: 200, content_type: 'application/json',
+    parser: { code: 'YANDEX_CONTRACT_DRIFT', failure_point: 'list.items' },
+    schema: { top_level_keys: ['list'], item_keys: [], pagination: { limit: 20, offset: 0, total: 0, items: 0 } },
+    review_persistence: 'OFF'
+  });
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret',
+    run: async () => { runs += 1; throw new Error('claim path must not run'); },
+    contractDiagnostic: diagnostic
+  });
+  const bad = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer wrong' }, body: { operation: 'contract_diagnostic' } }, bad);
+  assert.equal(bad.statusCode, 401);
+  const good = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'contract_diagnostic' } }, good);
+  assert.equal(good.statusCode, 503);
+  assert.equal(good.body.parser.failure_point, 'list.items');
+  assert.equal(good.body.review_persistence, 'OFF');
+  assert.equal(runs, 0);
+  assert.equal(JSON.stringify(good.body).includes('secret'), false);
+});
+
+test('contract diagnostic factory invokes only injected service diagnostic after preflight', async () => {
+  let keyrings = 0;
+  let serviceCalls = 0;
+  const ring = { currentKid: 'fixture', keys: { fixture: Buffer.alloc(32, 9) } };
+  const diagnostic = createReviewContractDiagnostic({
+    preflight: async () => ({
+      pretransport: 'PASS', session_decrypt: 'PASS', scope: 'PASS', mode: 'PASS', page_base: 'PASS',
+      endpoint: 'PASS', keyring_parse: 'PASS', active_kid: 'PASS', env_present: {},
+      runtime_location: 'vercel-server', session_state: 'ERROR', revision: 11, error: null
+    }),
+    keyringFactory: () => { keyrings += 1; return ring; },
+    serviceFactory: options => {
+      assert.equal(options.allowRead, true);
+      return { contractDiagnostic: async scope => {
+        serviceCalls += 1;
+        assert.deepEqual(scope, ASBEST_SYNC_SCOPE);
+        return { ok: false, operation: 'contract_diagnostic', yandex_requests: 1,
+          parser: { code: 'YANDEX_CONTRACT_DRIFT', failure_point: 'list.items' },
+          schema: {}, pagination: {}, review_persistence: 'OFF' };
+      } };
+    },
+    allowRead: () => true
+  });
+  const result = await diagnostic();
+  assert.equal(result.operation, 'contract_diagnostic');
+  assert.equal(result.error, undefined);
+  assert.equal(serviceCalls, 1);
+  assert.equal(keyrings, 1);
+  assert.deepEqual(ring.keys.fixture, Buffer.alloc(32));
 });
 
 test('connection reconciliation is protected, fixed-scope and never claims a run', async () => {

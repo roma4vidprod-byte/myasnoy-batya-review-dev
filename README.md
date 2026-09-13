@@ -1,5 +1,16 @@
 # Мясной Батя — Review Activator DEV
 
+## Current checkpoint — Yandex contract diagnostic 07A.5
+
+The existing protected worker boundary now has a read-only
+`contract_diagnostic` operation for one Asbest page-1 GET. It reports only
+safe response schema and the allowlisted parser failure point; it does not
+claim runs, persist reviews, change session/connection state or enable the
+paused scheduler. Live drift evidence remains pending the single operator
+diagnostic request.
+
+See [Yandex contract diagnostic 07A.5](docs/YANDEX_CONTRACT_DIAGNOSTIC_07A5.md).
+
 ## Current checkpoint — Yandex connection reconciliation 07A.4B
 
 The Asbest DEV provider connection has a server-only, fixed-scope reconciliation
