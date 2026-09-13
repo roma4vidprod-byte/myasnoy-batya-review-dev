@@ -90,6 +90,27 @@ test('worker HTTP boundary is POST-only, secret-protected and safe', async () =>
   assert.equal(good.statusCode, 200); assert.deepEqual(good.body, { ok: true, claimed: false });
 });
 
+test('worker diagnostic_only is secret-protected, does not claim queue and returns safe decrypt status', async () => {
+  let runs = 0;
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret',
+    run: async () => { runs += 1; return { ok: true, claimed: false }; },
+    diagnose: async () => ({ ok: false, decrypt: 'FAIL', error: 'SESSION_DECRYPT_FAILED', yandex_requests: 0, review_persistence: 'OFF' })
+  });
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const bad = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer wrong' }, body: { diagnostic_only: true } }, bad);
+  assert.equal(bad.statusCode, 401);
+  const good = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { diagnostic_only: true } }, good);
+  assert.equal(good.statusCode, 503);
+  assert.equal(good.body.error, 'SESSION_DECRYPT_FAILED');
+  assert.equal(runs, 0);
+});
+
 test('worker migration defines server-only claim/complete/fail and no Vercel cron', () => {
   const migration = readFileSync(new URL('../supabase/migrations/20260913150000_yandex_hourly_sync_07.sql', import.meta.url), 'utf8');
   for (const name of ['review_claim_next_sync_run','review_complete_sync_run','review_fail_sync_run']) assert.match(migration, new RegExp(name));

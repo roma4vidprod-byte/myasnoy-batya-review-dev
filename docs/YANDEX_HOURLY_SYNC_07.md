@@ -32,10 +32,11 @@ boundary. It requires the server-only `REVIEW_WORKER_SECRET`, fixed Asbest scope
 and `YANDEX_LIVE_READ_APPROVAL=asbest-read-only-v1`. It returns only safe counts
 and fixed error codes. Browser code cannot call it with a service credential.
 
-For DEV-only runtime diagnosis, `POST /api/internal/yandex-session-runtime-status`
-uses the same worker secret and only reads the scoped encrypted session. It returns
-key fingerprints, envelope metadata and decrypt status; it never returns cookies,
-envelopes, key material or performs a Yandex request.
+For DEV-only runtime diagnosis, the existing worker endpoint accepts the strict JSON
+body `{"diagnostic_only":true}` with the same worker secret. This branch only reads
+the scoped encrypted session and returns key fingerprints, envelope metadata and
+decrypt status; it never returns cookies, envelopes, key material or performs a
+Yandex request. The normal worker path is unchanged for all other bodies.
 
 ## Scheduler gate
 
