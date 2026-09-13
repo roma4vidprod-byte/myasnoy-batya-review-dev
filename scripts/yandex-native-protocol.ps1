@@ -52,10 +52,20 @@ function Write-YandexNativeFrame([IO.Stream] $Stream, $Message, [long] $Deadline
     $Stream.Flush()
   } finally { if ($bytes) { [Array]::Clear($bytes,0,$bytes.Length) }; $text=$null; $buffer=$null; $task=$null }
 }
-function New-YandexNativeChallenge($Hello, [long] $Deadline) {
+function New-YandexNativeChallenge($Hello, [long] $Deadline, $RemoteApproval = $null) {
   Assert-YandexNativeKeys $Hello @('version','op','origin')
   if (($Hello.version -isnot [int] -and $Hello.version -isnot [long]) -or $Hello.version -ne 1 -or $Hello.op -cne 'hello' -or $Hello.origin -cne $script:YandexNativeOrigin -or
       [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() -ge $Deadline) { throw 'NATIVE_DENIED' }
+  if ($null -ne $RemoteApproval) {
+    if ($RemoteApproval.nonce -isnot [string] -or $RemoteApproval.nonce -notmatch '^[A-Za-z0-9+/]{43}=$' -or
+        ($RemoteApproval.expiresAt -isnot [long] -and $RemoteApproval.expiresAt -isnot [int]) -or
+        $RemoteApproval.expiresAt -le [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() -or
+        $RemoteApproval.expiresAt -gt $Deadline -or $RemoteApproval.capability -isnot [string] -or
+        ($RemoteApproval.expectedRevision -isnot [long] -and $RemoteApproval.expectedRevision -isnot [int]) -or
+        $RemoteApproval.expectedRevision -lt 0) { throw 'NATIVE_DENIED' }
+    return @{ nonce=$RemoteApproval.nonce; deadline=[long]$RemoteApproval.expiresAt;
+      capability=$RemoteApproval.capability; expectedRevision=[long]$RemoteApproval.expectedRevision; used=$false }
+  }
   $random = [byte[]]::new(32)
   try {
     [Security.Cryptography.RandomNumberGenerator]::Fill($random)
@@ -77,6 +87,7 @@ function Invoke-YandexNativeImportMessage($Message, $Challenge) {
   $material=$null; $result=$null
   try {
     $material=Take-YandexNativeSession $Message $Challenge
+    if ($Challenge.capability) { return (Invoke-YandexRemoteSessionImport -Message $Message -Challenge $Challenge) }
     $result=@(Invoke-YandexManualImport -InputReader {
       $json=$null
       try {

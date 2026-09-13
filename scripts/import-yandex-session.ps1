@@ -1,5 +1,61 @@
-# Manual operator input adapter ONLY; the existing Node CLI owns validation/encryption/CAS.
-# Run with & in the already configured private PowerShell 7. No session/key arguments.
+# Manual operator input adapter and the DEV remote import adapter.
+# The canonical encryption/validation/CAS boundary is the Vercel Preview runtime.
+# No session/key arguments; plaintext exists only in process memory during transfer.
+
+$script:YandexPreviewWorkerUrl = 'https://myasnoy-batya-review-dev-preview.vercel.app/api/internal/review-sync-worker'
+
+function Invoke-YandexPreviewWorkerJson {
+  param([string] $Json)
+  $client=$null; $request=$null; $response=$null; $content=$null; $secret=$null
+  try {
+    $secret=[Environment]::GetEnvironmentVariable('REVIEW_WORKER_SECRET','Process')
+    if (-not $secret) { throw 'REMOTE_IMPORT_NOT_CONFIGURED' }
+    $client=[Net.Http.HttpClient]::new(); $client.Timeout=[TimeSpan]::FromSeconds(15)
+    $request=[Net.Http.HttpRequestMessage]::new([Net.Http.HttpMethod]::Post,$script:YandexPreviewWorkerUrl)
+    $request.Headers.Authorization=[Net.Http.Headers.AuthenticationHeaderValue]::new('Bearer',$secret)
+    $request.Content=[Net.Http.StringContent]::new($Json,[Text.Encoding]::UTF8,'application/json')
+    $response=$client.SendAsync($request).GetAwaiter().GetResult()
+    $content=$response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+    if (-not $response.IsSuccessStatusCode) { throw 'REMOTE_IMPORT_FAILED' }
+    return ($content | ConvertFrom-Json -AsHashtable -ErrorAction Stop)
+  } catch { throw 'REMOTE_IMPORT_FAILED' }
+  finally {
+    if ($request) { $request.Dispose() }; if ($response) { $response.Dispose() }
+    if ($client) { $client.Dispose() }; $content=$null; $secret=$null; $Json=$null
+  }
+}
+
+function Get-YandexRemoteImportApproval {
+  $result=Invoke-YandexPreviewWorkerJson -Json '{"operation":"import_prepare"}'
+  if ($result -isnot [Collections.IDictionary] -or $result.ok -ne $true -or
+      $result.operation -cne 'import_prepare' -or $result.nonce -isnot [string] -or
+      $result.nonce -notmatch '^[A-Za-z0-9+/]{43}=$' -or
+      $result.capability -isnot [string] -or $result.capability -notmatch '^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$' -or
+      ($result.expiresAt -isnot [long] -and $result.expiresAt -isnot [int]) -or
+      ($result.expectedRevision -isnot [long] -and $result.expectedRevision -isnot [int])) { throw 'REMOTE_IMPORT_INVALID' }
+  $remaining=[long]$result.expiresAt-[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
+  if ($remaining -le 0 -or $remaining -gt 120000 -or [long]$result.expectedRevision -lt 0) { throw 'REMOTE_IMPORT_EXPIRED' }
+  return @{ nonce=[string]$result.nonce; expiresAt=[long]$result.expiresAt;
+    expectedRevision=[long]$result.expectedRevision; capability=[string]$result.capability }
+}
+
+function Invoke-YandexRemoteSessionImport {
+  param($Message,$Challenge)
+  $payload=$null; $json=$null; $result=$null
+  try {
+    if (-not $Challenge.capability -or -not $Message.session) { throw 'REMOTE_IMPORT_INVALID' }
+    $payload=@{ operation='import'; capability=$Challenge.capability; nonce=$Challenge.nonce; session=$Message.session }
+    $json=$payload | ConvertTo-Json -Compress -Depth 12 -WarningAction Stop
+    if ([Text.Encoding]::UTF8.GetByteCount($json) -gt 70000) { throw 'REMOTE_IMPORT_TOO_LARGE' }
+    $result=Invoke-YandexPreviewWorkerJson -Json $json
+    if ($result -isnot [Collections.IDictionary] -or $result.ok -ne $true -or
+        $result.operation -cne 'import' -or $result.state -cne 'NOT_CONFIGURED' -or
+        ($result.revision -isnot [long] -and $result.revision -isnot [int]) -or
+        [long]$result.revision -ne ([long]$Challenge.expectedRevision+1)) { throw 'REMOTE_IMPORT_FAILED' }
+    return @{ ok=$true; state='NOT_CONFIGURED'; revision=[long]$result.revision }
+  } catch { throw 'REMOTE_IMPORT_FAILED' }
+  finally { $payload=$null; $json=$null; $result=$null }
+}
 
 function Read-YandexImportBuffer {
   param([scriptblock] $ReadKey)

@@ -161,6 +161,11 @@ test('v4 security source inventory: no TCP/clipboard/storage/mutations; exact na
   }
   for(const file of ['start-yandex-local-import.ps1','yandex-native-host.ps1'])assert.match(readFileSync(new URL('../scripts/'+file,import.meta.url),'utf8'),/CurrentUserOnly/);
   assert.match(readFileSync(new URL('../scripts/yandex-native-protocol.ps1',import.meta.url),'utf8'),new RegExp(EXTENSION_ID));
+  const liveImporter=readFileSync(new URL('../scripts/start-yandex-local-import.ps1',import.meta.url),'utf8');
+  assert.match(liveImporter,/REVIEW_WORKER_SECRET/);
+  assert.doesNotMatch(liveImporter,/SUPABASE_SERVICE_ROLE_KEY|YANDEX_SESSION_KEYS_JSON|YANDEX_SESSION_ACTIVE_KID/);
+  assert.match(liveImporter,/NATIVE_REMOTE_APPROVAL_FAILED/);
+  assert.match(readFileSync(new URL('../scripts/import-yandex-session.ps1',import.meta.url),'utf8'),/myasnoy-batya-review-dev-preview\.vercel\.app/);
   const html=readFileSync(new URL('popup.html',root),'utf8');assert.doesNotMatch(html,/<input|<form|<iframe|https?:\/\//);
 });
 test('actual v4 popup: click invokes native port, shows only safe success, no secret inputs',async()=>{

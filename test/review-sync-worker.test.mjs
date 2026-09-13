@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import {
   ASBEST_SYNC_SCOPE, ASBEST_SYNC_ACCOUNT, ASBEST_PAGE_BASE,
-  createReviewSyncWorker, createReviewSyncHealth, authorizedWorkerRequest, createReviewSyncWorkerHandler
+  createReviewSyncWorker, createReviewSyncHealth, createYandexSessionImportPrepare,
+  createYandexSessionImport, authorizedWorkerRequest, createReviewSyncWorkerHandler
 } from '../lib/server/review-sync-worker.js';
 
 const runId = '11111111-1111-4111-8111-111111111111';
@@ -226,6 +227,101 @@ test('server health performs exactly the existing service health path after pref
   assert.equal(calls[0], 'service.create');
   assert.deepEqual(calls[1], ['service.run', ASBEST_SYNC_SCOPE, { mode: 'health', pageBase: 1 }]);
   assert.deepEqual(keyring.keys.fixture, Buffer.alloc(32));
+});
+
+test('remote session import uses a fixed short-lived capability and Vercel keyring', async () => {
+  const secret = 'worker-secret-fixture';
+  const now = 1900000000000;
+  const prepare = createYandexSessionImportPrepare({
+    getSecret: () => secret,
+    now: () => now,
+    serviceFactory: () => ({ status: async scope => {
+      assert.deepEqual(scope, ASBEST_SYNC_SCOPE);
+      return { state: 'NOT_CONFIGURED', revision: 8 };
+    } })
+  });
+  const approval = await prepare();
+  assert.equal(approval.ok, true);
+  assert.equal(approval.operation, 'import_prepare');
+  assert.match(approval.nonce, /^[A-Za-z0-9+/]{43}=$/);
+  assert.equal(approval.expectedRevision, 8);
+  assert.ok(approval.expiresAt > now && approval.expiresAt <= now + 120000);
+  assert.doesNotMatch(JSON.stringify(approval), /cookie|ciphertext|keyring/i);
+
+  let writes = 0;
+  const ring = { currentKid: 'fixture', keys: { fixture: Buffer.alloc(32, 7) } };
+  const importer = createYandexSessionImport({
+    getSecret: () => secret,
+    now: () => now,
+    keyringFactory: () => ring,
+    serviceFactory: () => ({ importSession: async (scope, session, revision) => {
+      writes += 1;
+      assert.deepEqual(scope, ASBEST_SYNC_SCOPE);
+      assert.equal(session.account, ASBEST_SYNC_ACCOUNT);
+      assert.equal(revision, 8);
+      if (writes > 1) throw Object.assign(new Error(), { code: 'SESSION_CHANGED' });
+      return { state: 'NOT_CONFIGURED', revision: 9 };
+    } })
+  });
+  const session = { account: ASBEST_SYNC_ACCOUNT, cookies: [{ name: 'fixture', value: 'safe', domain: 'yandex.ru', path: '/', secure: true }] };
+  const first = await importer({ capability: approval.capability, nonce: approval.nonce, session });
+  assert.deepEqual(first, { ok: true, operation: 'import', state: 'NOT_CONFIGURED', revision: 9 });
+  await assert.rejects(importer({ capability: approval.capability, nonce: approval.nonce, session }), { code: 'SESSION_IMPORT_FAILED' });
+  assert.equal(writes, 2);
+  assert.deepEqual(ring.keys.fixture, Buffer.alloc(32));
+});
+
+test('remote session import rejects wrong nonce and expired capability before keyring or session work', async () => {
+  let keyrings = 0;
+  const now = 1900000000000;
+  const prepare = createYandexSessionImportPrepare({
+    getSecret: () => 'worker-secret-fixture', now: () => now,
+    serviceFactory: () => ({ status: async () => ({ state: 'NOT_CONFIGURED', revision: 8 }) })
+  });
+  const approval = await prepare();
+  const importer = createYandexSessionImport({
+    getSecret: () => 'worker-secret-fixture', now: () => now,
+    keyringFactory: () => { keyrings += 1; throw new Error('must not run'); }
+  });
+  const input = { capability: approval.capability, nonce: approval.nonce, session: {} };
+  await assert.rejects(importer({ ...input, nonce: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' }), { code: 'SESSION_IMPORT_INVALID' });
+  const expired = createYandexSessionImport({
+    getSecret: () => 'worker-secret-fixture', now: () => now + 120001,
+    keyringFactory: () => { keyrings += 1; throw new Error('must not run'); }
+  });
+  await assert.rejects(expired(input), { code: 'SESSION_IMPORT_INVALID' });
+  assert.equal(keyrings, 0);
+});
+
+test('worker import operation is protected, fixed-scope and body-bounded', async () => {
+  let imported = 0;
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret', run: async () => { throw new Error('must not claim'); },
+    importPrepare: async () => ({ ok: true, operation: 'import_prepare', nonce: 'safe', expiresAt: 1, expectedRevision: 8, capability: 'safe.token' }),
+    importSession: async input => { imported += 1; assert.equal(input.session.account, ASBEST_SYNC_ACCOUNT); return { ok: true, operation: 'import', state: 'NOT_CONFIGURED', revision: 9 }; }
+  });
+  const denied = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer wrong' }, body: { operation: 'import_prepare' } }, denied);
+  assert.equal(denied.statusCode, 401);
+  const prepared = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'import_prepare' } }, prepared);
+  assert.equal(prepared.statusCode, 200);
+  const importedResponse = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: {
+    operation: 'import', capability: 'safe.token', nonce: 'safe', session: { account: ASBEST_SYNC_ACCOUNT, cookies: [] }
+  } }, importedResponse);
+  assert.equal(importedResponse.statusCode, 200);
+  assert.equal(imported, 1);
+  const oversized = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: {
+    operation: 'import', capability: 'safe.token', nonce: 'safe', session: { value: 'x'.repeat(80000) }
+  } }, oversized);
+  assert.equal(oversized.statusCode, 413);
+  assert.equal(imported, 1);
 });
 
 test('worker migration defines server-only claim/complete/fail and no Vercel cron', () => {

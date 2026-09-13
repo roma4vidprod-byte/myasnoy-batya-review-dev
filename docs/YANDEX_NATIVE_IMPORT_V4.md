@@ -1,5 +1,21 @@
 # Yandex operator import v4 — pre-use security review
 
+## Superseding DEV runtime boundary — 07A.3F
+
+For the live Review Activator DEV operator flow, the Vercel Preview keyring is
+now canonical. `scripts/start-yandex-local-import.ps1` no longer requires or
+reads `SUPABASE_SERVICE_ROLE_KEY`, `YANDEX_SESSION_KEYS_JSON` or
+`YANDEX_SESSION_ACTIVE_KID`; it requires only the process-only
+`REVIEW_WORKER_SECRET` to obtain a short-lived import capability and submit the
+session to the protected Preview worker. Vercel performs the existing
+validation, AES-256-GCM encryption and CAS replace. The detailed superseding
+boundary is documented in
+[YANDEX_CANONICAL_SERVER_KEYRING_07A3F](YANDEX_CANONICAL_SERVER_KEYRING_07A3F.md).
+
+The remainder of this document is historical v4 design evidence and synthetic
+test coverage. Any instruction below that says the local CLI owns live
+encryption/import is superseded for the live DEV operator flow.
+
 ## Current checkpoint: revision-aware reimport 07A.3
 
 The existing native/import boundary now reads the current scoped session status
