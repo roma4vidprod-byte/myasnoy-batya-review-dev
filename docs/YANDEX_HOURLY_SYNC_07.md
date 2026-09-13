@@ -17,6 +17,11 @@ organization and whose private session is `READY`. Reauthentication errors may b
 re-queued only after the private session returns to `READY`; contract and database
 errors remain fail-closed.
 
+Migration `20260913160000_yandex_enqueue_rpc_07a1_ambiguity_fix.sql` preserves this
+contract while explicitly qualifying connection/session columns and using
+`v_location_id`; this prevents PostgreSQL `42702` name-resolution failures in the
+DEV enqueue path.
+
 `review_claim_next_sync_run(uuid)` claims one queued run with `FOR UPDATE SKIP
 LOCKED`. The worker then reuses the existing Session Transport, YandexProvider,
 normalizer, scoped atomic writer and alert deduplication. It completes through
