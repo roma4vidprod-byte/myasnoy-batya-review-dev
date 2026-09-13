@@ -19,7 +19,23 @@ After the first email-based sign-in the owner can create a password from the acc
 
 ## Password recovery
 
-`resetPasswordForEmail` sends a recovery email. The link returns to `/admin?recovery=1`; after the recovery session is established, the user sets a new password with `updateUser({ password })`.
+`resetPasswordForEmail` sends a recovery email. The local link returns to
+`/admin.html?recovery=1`; after the recovery session is established, the user
+sets a new password with `updateUser({ password })`.
+
+## DEV-only local password fallback
+
+If the DEV email recovery flow is unavailable or the one-time link has expired,
+an operator may run `scripts/set-dev-admin-password.ps1` from the same
+PowerShell 7 process that already contains the DEV-only
+`SUPABASE_SERVICE_ROLE_KEY`. The script finds the existing
+`myasnoibatya@yandex.ru` Auth user, asks for the new password twice through
+hidden prompts, updates only that DEV Auth user through the Supabase Admin Auth
+API, and verifies the existing active `review_admins` row.
+
+The password is never accepted as an argument, printed, logged, written to a
+file, or committed. The script does not log the user ID, tokens, or API
+response and does not perform an automatic login.
 
 ## Required Supabase Auth URL configuration
 
