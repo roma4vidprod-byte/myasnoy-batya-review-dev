@@ -5,6 +5,7 @@ import { decryptSession } from '../../lib/server/yandex-session/crypto.js';
 const mockRpc = globalThis.fetch;
 globalThis.fetch = async (url, options) => {
   const body = JSON.parse(options.body);
+  if (body.p_action === 'read') return mockRpc(url, options);
   const session = decryptSession({companyId:body.p_company_id,locationId:body.p_location_id,organizationId:body.p_org_id},body.p_data,{currentKid:'fixture',keys:{fixture:Buffer.alloc(32)}});
   assert.equal(session.cookies.length,2);
   assert.deepEqual(session.cookies.map(c => c.name),['fixture','fixture_two']);

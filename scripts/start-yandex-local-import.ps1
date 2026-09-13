@@ -33,7 +33,14 @@ function Invoke-YandexLocalImport {
     $reply=Invoke-YandexNativeImportMessage $message $challenge
     # RPC may already have committed. Reply failure must not imply cancellation.
     Write-YandexNativeFrame $pipe $reply ([DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()+5000)
-    if ($reply.ok) { Write-Output 'Session imported'; Write-Output 'State: NOT_CONFIGURED' }
+    if ($reply.ok) {
+      $failure='NATIVE_POST_IMPORT_STATUS_FAILED'
+      $status=Get-YandexSessionStatus
+      if ($status.state -cne 'NOT_CONFIGURED' -or $status.revision -lt 1) { throw 'STOP' }
+      Write-Output 'session imported = true'
+      Write-Output 'state = NOT_CONFIGURED'
+      Write-Output ('revision = ' + $status.revision)
+    }
     else { Write-Output 'Import not confirmed. Stop; do not retry.' }
   } catch {
     Write-Output ('Import stopped ['+$failure+']. If submission started, check status before retry.')

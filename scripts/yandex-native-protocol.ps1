@@ -85,7 +85,7 @@ function Invoke-YandexNativeImportMessage($Message, $Challenge) {
       } finally { $json=$null }
     })
     $success=($result.Count -eq 3 -and $result[0] -ceq 'session imported = true' -and
-      $result[1] -ceq 'state = NOT_CONFIGURED' -and $result[2] -ceq 'revision = 1')
+      $result[1] -ceq 'state = NOT_CONFIGURED' -and $result[2] -match '^revision = [1-9][0-9]*$')
     if ($success) { return @{ok=$true;state='NOT_CONFIGURED'} }
     return @{ok=$false;state='NOT_CONFIRMED'}
   } finally { $material=$null; $result=$null }

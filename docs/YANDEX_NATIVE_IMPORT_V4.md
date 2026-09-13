@@ -1,5 +1,22 @@
 # Yandex operator import v4 — pre-use security review
 
+## Current checkpoint: revision-aware reimport 07A.3
+
+The existing native/import boundary now reads the current scoped session status
+through the existing server-only CLI before importing. It passes that exact
+revision as `expectedRevision` to the existing atomic replace/CAS operation and
+accepts only `revision + 1` with `state=NOT_CONFIGURED`. This prevents an old
+initial-import assumption (`expectedRevision=0`, `revision=1`) from overwriting
+an existing DEV session. The status read and replace are separate child
+processes with sanitized environments; neither performs a Yandex request. A
+CAS mismatch fails closed and must not be retried automatically.
+
+For the current Asbest DEV recovery, the observed pre-import revision is `7`,
+so the expected successful result is `revision=8`. Keyring, active KID,
+validator, AES-GCM implementation, private storage and native cookie boundary
+are unchanged. Real reimport and Vercel decrypt confirmation remain pending;
+no Yandex request is authorized by this checkpoint.
+
 ## Current checkpoint: approved unpartitioned selection 0.2.4
 
 Owner confirmed 140 records: 118 partitioned, 22 metadata-eligible, zero eligible
@@ -25,7 +42,8 @@ malformed partition status, foreign scope, limits, cancellation and value traps.
 Reload the extension to 0.2.4 only; keep importer stopped for diagnostic verification.
 
 Verification: full suite **257/257 PASS**, **69 checks PASS**, diff-check PASS.
-Server session engine and all native/import PowerShell scripts are unchanged.
+Server session engine and native cookie boundary are unchanged; the import
+PowerShell wrapper now reads the current revision and uses revision-aware CAS.
 
 ## Previous checkpoint: eligible-name duplicate counts 0.2.3
 
@@ -228,7 +246,7 @@ content/background scripts, externally_connectable or remote code.
   one-time NONSECRET HKCU registration and static launcher/manifest only.
 
 Unchanged sole engine: import-yandex-session.ps1 -> yandex-session.mjs import ->
-validateSession -> AES-256-GCM -> scoped expectedRevision=0 CAS/private storage.
+validateSession -> AES-256-GCM -> scoped current-revision CAS/private storage.
 No API, database migration, grants, provider or scheduler changes.
 
 ## Fixed scope and cookie policy
@@ -275,7 +293,8 @@ No live validation occurs: successful import returns only NOT_CONFIGURED.
 6. Existing wrapper passes session only through bounded child stdin and retains
    its sanitized environment; keys never go to Chrome/native adapter. The existing
    CLI encrypts before one fixed DEV RPC. No read/health/alert operation is called.
-7. Only successful state NOT_CONFIGURED/revision 1 yields the UI success result.
+7. Only successful state NOT_CONFIGURED with exactly current revision + 1 yields
+   the local operator success result.
    Listener/host close after result. No automatic retry. Caller key env is retained.
 
 Frames are bounded at 65,000 bytes before allocation and decoded with strict UTF-8;

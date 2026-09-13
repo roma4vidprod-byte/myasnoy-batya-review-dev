@@ -76,8 +76,9 @@ try {
   }
   $script:originalStart=(Get-Command New-YandexImportStartInfo).ScriptBlock
   function New-YandexImportStartInfo {
+    param([ValidateSet('status','import')][string] $Operation = 'import')
     $script:startCalls++
-    $start=& $script:originalStart
+    $start=& $script:originalStart -Operation $Operation
     $start.ArgumentList.Insert(0,'--import')
     $start.ArgumentList.Insert(1,'./test/support/yandex-header-import-rpc.mock.mjs')
     $start.Environment['IMPORT_TEST_MODE']='success'
@@ -86,7 +87,7 @@ try {
   $before=@($env:SUPABASE_SERVICE_ROLE_KEY,$env:YANDEX_SESSION_KEYS_JSON,$env:YANDEX_SESSION_ACTIVE_KID) -join '|'
   $output=@(Invoke-YandexManualImport -InputReader { Read-YandexBrowserSession }) -join "`n"
   if ($Mode -in @('valid','date','prefix','mixed_metadata')) {
-    if ($output -cne "session imported = true`nstate = NOT_CONFIGURED`nrevision = 1" -or $script:valueCalls -ne 2) { throw 'VALID_FAIL' }
+    if ($output -cne "session imported = true`nstate = NOT_CONFIGURED`nrevision = 8" -or $script:valueCalls -ne 2) { throw 'VALID_FAIL' }
   } else {
     $code=if ($Mode -eq 'old_version') { 'IMPORT_POWERSHELL_7_REQUIRED' } elseif ($Mode -eq 'missing') { 'IMPORT_CONFIG_MISSING' } else { 'IMPORT_SECURE_INPUT_FAILED' }
     if ($output -cne "session imported = false`nstate = UNKNOWN`nerror = $code") { throw 'INVALID_FAIL' }

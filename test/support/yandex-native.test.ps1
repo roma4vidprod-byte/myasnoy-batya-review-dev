@@ -59,7 +59,8 @@ try {
         $env:YANDEX_SESSION_ACTIVE_KID='fixture'
         $script:original=(Get-Command New-YandexImportStartInfo).ScriptBlock
         function New-YandexImportStartInfo {
-          $s=& $script:original
+          param([ValidateSet('status','import')][string] $Operation = 'import')
+          $s=& $script:original -Operation $Operation
           $s.ArgumentList.Insert(0,'--import');$s.ArgumentList.Insert(1,'./test/support/yandex-import-rpc.mock.mjs')
           return $s
         }
@@ -111,7 +112,8 @@ try {
         $env:YANDEX_SESSION_ACTIVE_KID='fixture'
         $script:original=(Get-Command New-YandexImportStartInfo).ScriptBlock
         function New-YandexImportStartInfo {
-          $s=& $script:original
+          param([ValidateSet('status','import')][string] $Operation = 'import')
+          $s=& $script:original -Operation $Operation
           $s.ArgumentList.Insert(0,'--import');$s.ArgumentList.Insert(1,'./test/support/yandex-import-rpc.mock.mjs')
           return $s
         }

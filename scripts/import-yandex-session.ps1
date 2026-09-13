@@ -54,11 +54,12 @@ function Read-YandexImportJson {
 }
 
 function New-YandexImportStartInfo {
+  param([ValidateSet('status','import')][string] $Operation = 'import')
   $start = [Diagnostics.ProcessStartInfo]::new()
   $start.FileName = (Get-Command node -CommandType Application -ErrorAction Stop | Select-Object -First 1).Source
   $start.WorkingDirectory = Split-Path $PSScriptRoot -Parent
   $start.ArgumentList.Add((Join-Path $PSScriptRoot 'yandex-session.mjs'))
-  $start.ArgumentList.Add('import')
+  $start.ArgumentList.Add($Operation)
   $start.UseShellExecute = $false; $start.CreateNoWindow = $true
   $start.RedirectStandardInput = $true; $start.RedirectStandardOutput = $true; $start.RedirectStandardError = $true
   $start.StandardInputEncoding = [Text.UTF8Encoding]::new($false)
@@ -73,11 +74,40 @@ function New-YandexImportStartInfo {
 
 function Get-YandexImportPowerShellMajor { return $PSVersionTable.PSVersion.Major }
 
+function Get-YandexSessionStatus {
+  $ErrorActionPreference = 'Stop'
+  $child = $null; $start = $null; $stdout = $null; $stderr = $null; $inputWrite = $null
+  try {
+    $start = New-YandexImportStartInfo -Operation 'status'
+    $child = [Diagnostics.Process]::Start($start)
+    $stdout = $child.StandardOutput.ReadToEndAsync()
+    $stderr = $child.StandardError.ReadToEndAsync()
+    $scopePayload = @{
+      scope = @{ companyId='13f3cb80-487a-4a19-96a1-fb3103200230'; locationId='9a95f63b-18e6-447b-a449-8530b67ddbae'; organizationId='54309413522' }
+    } | ConvertTo-Json -Compress -Depth 8 -WarningAction Stop
+    $inputWrite = $child.StandardInput.WriteAsync($scopePayload)
+    if (-not $inputWrite.Wait(10000)) { throw 'STOP' }
+    $child.StandardInput.Close()
+    if (-not $child.WaitForExit(25000)) { throw 'STOP' }
+    if ($child.ExitCode -ne 0) { throw 'STOP' }
+    $result = $stdout.GetAwaiter().GetResult() | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+    if ($result -isnot [Collections.IDictionary] -or $result.state -isnot [string] -or
+        ($result.revision -isnot [long] -and $result.revision -isnot [int]) -or
+        $result.revision -lt 0) { throw 'STOP' }
+    return @{ state = [string]$result.state; revision = [long]$result.revision }
+  } catch { throw 'IMPORT_REVISION_READ_FAILED' }
+  finally {
+    if ($null -ne $child) { if (-not $child.HasExited) { $child.Kill() }; $child.Dispose() }
+    if ($null -ne $start) { $start.Environment.Clear() }
+    $stdout=$null; $stderr=$null; $inputWrite=$null
+  }
+}
+
 function Invoke-YandexManualImport {
   param([scriptblock] $InputReader = { Read-YandexImportJson })
   $ErrorActionPreference = 'Stop'
   $secure = $null; $bstr = [IntPtr]::Zero; $plain = $null; $session = $null; $payload = $null
-  $child = $null; $start = $null; $started = $false; $confirmed = $false
+  $child = $null; $start = $null; $started = $false; $confirmed = $false; $expectedRevision = $null
   $failure = 'IMPORT_POWERSHELL_7_REQUIRED'
   try {
     if ((Get-YandexImportPowerShellMajor) -lt 7) { throw 'STOP' }
@@ -94,9 +124,12 @@ function Invoke-YandexManualImport {
     $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
     $failure = 'IMPORT_JSON_INVALID'
     $session = $plain | ConvertFrom-Json -AsHashtable -ErrorAction Stop
+    $failure = 'IMPORT_REVISION_READ_FAILED'
+    $status = Get-YandexSessionStatus
+    $expectedRevision = [long]$status.revision
     $payload = @{
       scope = @{ companyId='13f3cb80-487a-4a19-96a1-fb3103200230'; locationId='9a95f63b-18e6-447b-a449-8530b67ddbae'; organizationId='54309413522' }
-      expectedRevision = 0
+      expectedRevision = $expectedRevision
       session = $session
     } | ConvertTo-Json -Compress -Depth 12 -WarningAction Stop
     $failure = 'IMPORT_INPUT_TOO_LARGE'
@@ -118,7 +151,7 @@ function Invoke-YandexManualImport {
     $result = $stdout.GetAwaiter().GetResult() | ConvertFrom-Json -AsHashtable -ErrorAction Stop
     if ($result -isnot [Collections.IDictionary] -or $result.state -isnot [string] -or
         ($result.revision -isnot [long] -and $result.revision -isnot [int]) -or
-        $result.state -cne 'NOT_CONFIGURED' -or $result.revision -ne 1 -or $result.errorCode) { throw 'STOP' }
+        $result.state -cne 'NOT_CONFIGURED' -or [long]$result.revision -ne ($expectedRevision + 1) -or $result.errorCode) { throw 'STOP' }
     $confirmed = $true
   } catch {
     # Do not replay an uncertain request: the server may have committed before a timeout.
@@ -139,7 +172,7 @@ function Invoke-YandexManualImport {
   if ($confirmed) {
     Write-Output 'session imported = true'
     Write-Output 'state = NOT_CONFIGURED'
-    Write-Output 'revision = 1'
+    Write-Output ('revision = ' + ($expectedRevision + 1))
   }
 }
 

@@ -58,7 +58,8 @@ try {
     }
     $script:originalStart = (Get-Command New-YandexImportStartInfo -CommandType Function).ScriptBlock
     function New-YandexImportStartInfo {
-      $testStart = & $script:originalStart
+      param([ValidateSet('status','import')][string] $Operation = 'import')
+      $testStart = & $script:originalStart -Operation $Operation
       $testStart.ArgumentList.Insert(0,'--import')
       $testStart.ArgumentList.Insert(1,'./test/support/yandex-import-rpc.mock.mjs')
       $testStart.Environment['IMPORT_TEST_MODE'] = $Mode
@@ -72,7 +73,7 @@ try {
     }
     $output = $lines -join "`n"
     if ($Mode -eq 'success') {
-      if ($output -cne "session imported = true`nstate = NOT_CONFIGURED`nrevision = 1") { throw 'SUCCESS_STATUS' }
+      if ($output -cne "session imported = true`nstate = NOT_CONFIGURED`nrevision = 8") { throw 'SUCCESS_STATUS' }
     } elseif ($Mode -in @('error','bad_result')) {
       $code = if ($Mode -eq 'error') { 'IMPORT_CLI_FAILED' } else { 'IMPORT_STATUS_INVALID' }
       if ($output -cne "session imported = NOT_CONFIRMED`nstate = UNKNOWN`nerror = $code") { throw 'UNCERTAIN_STATUS' }
