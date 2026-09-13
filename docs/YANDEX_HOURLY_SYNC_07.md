@@ -32,6 +32,11 @@ boundary. It requires the server-only `REVIEW_WORKER_SECRET`, fixed Asbest scope
 and `YANDEX_LIVE_READ_APPROVAL=asbest-read-only-v1`. It returns only safe counts
 and fixed error codes. Browser code cannot call it with a service credential.
 
+For DEV-only runtime diagnosis, `POST /api/internal/yandex-session-runtime-status`
+uses the same worker secret and only reads the scoped encrypted session. It returns
+key fingerprints, envelope metadata and decrypt status; it never returns cookies,
+envelopes, key material or performs a Yandex request.
+
 ## Scheduler gate
 
 The existing `review-provider-due-check-hourly` job remains paused until the worker
