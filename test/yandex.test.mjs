@@ -143,13 +143,15 @@ test('contract diagnostic reports safe schema and exact parser field without val
   assert.equal(Object.hasOwn(driftReport, 'raw_payload'), false);
 });
 
-test('contract diagnostic schema exposes unexpected keys but never payload values', () => {
+test('contract diagnostic schema counts unknown keys without exposing their names', () => {
   const payload = fixture('single-review');
   payload.extra = 'synthetic-secret-top-level';
   payload.list.items[0].unexpected = 'synthetic-secret-item';
   const schema = inspectYandexReviewsPayload(payload);
-  assert.deepEqual(schema.unexpected_keys.top_level, ['extra']);
-  assert.deepEqual(schema.unexpected_keys.item, ['unexpected']);
+  assert.deepEqual(schema.unexpected_keys.top_level, ['UNRECOGNIZED_KEY']);
+  assert.deepEqual(schema.unexpected_keys.item, ['UNRECOGNIZED_KEY']);
+  assert.equal(schema.unexpected_key_counts.top_level,1);
+  assert.equal(schema.unexpected_key_counts.item,1);
   assert.equal(JSON.stringify(schema).includes('synthetic-secret'), false);
 });
 

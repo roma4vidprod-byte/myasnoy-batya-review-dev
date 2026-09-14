@@ -1,3 +1,5 @@
+> **Локальное дополнение 2026-09-14 (не deployment):** на переданном baseline f848d8ba9cf3e6890eca6ba79e16f210eaa066fa интегрирован патч ASSIST-01–05. См. `ASSISTANT_LOCAL_PATCH_20260914.md`. Runtime остаётся на прежнем f848d8b. Linux full run: 423 PASS / 56 FAIL / 10 existing SKIP; те же PowerShell-ограничения были у исходника (311/56/10). 112 новых проверок PASS; targeted 165/165; 93 JS/JSON/inline checks PASS, 14 PS parse checks NOT_RUN. Windows full gate и live acceptance не пройдены заново. Не переносить прежние PASS на новый runtime и не закрывать все AUD. Final local commit указан в внешнем PATCH_MANIFEST.json, не выдумывается внутри собственного commit.
+
 # Review Activator — AUD-01–AUD-29 remediation report
 
 Дата: 2026-09-14. Это локальный remediation checkpoint; внешний acceptance не подменяется локальными тестами.
