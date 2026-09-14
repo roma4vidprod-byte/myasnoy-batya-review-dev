@@ -1,6 +1,18 @@
 function clean(v,n=5000){return String(v||'').trim().slice(0,n)}
 function bearer(req){const h=String(req.headers.authorization||'');return h.startsWith('Bearer ')?h.slice(7):''}
 function extractOutputText(data){if(typeof data?.output_text==='string')return data.output_text.trim();for(const item of data?.output||[]){for(const part of item?.content||[]){if(part?.type==='output_text'&&part.text)return String(part.text).trim()}}return ''}
+function safeErrorStatus(error){
+  const status=Number(error?.status);
+  return Number.isInteger(status)&&status>=400&&status<600?status:500;
+}
+function safeErrorCode(error){
+  const status=safeErrorStatus(error);
+  if(status===401)return 'AUTH_REQUIRED';
+  if(status===403)return 'ADMIN_REQUIRED';
+  if(status===404)return 'REVIEW_NOT_FOUND';
+  if(status===503)return 'AI_NOT_CONFIGURED';
+  return status===502?'AI_PROVIDER_FAILED':'AI_DRAFT_FAILED';
+}
 async function rpc(name,payload,token){
   const url=process.env.SUPABASE_URL;const key=process.env.SUPABASE_ANON_KEY;
   if(!url||!key)throw Object.assign(new Error('SUPABASE_SERVER_ENV_NOT_CONFIGURED'),{status:503});
@@ -24,5 +36,5 @@ export default async function handler(req,res){
     const body=await ai.json();if(!ai.ok)return res.status(502).json({ok:false,error:'AI_PROVIDER_FAILED'});
     const draft=extractOutputText(body).slice(0,700);if(!draft)return res.status(502).json({ok:false,error:'AI_EMPTY_RESPONSE'});
     return res.status(200).json({ok:true,draft,model});
-  }catch(e){return res.status(e.status||500).json({ok:false,error:e.message||'AI_DRAFT_FAILED'})}
+  }catch(e){return res.status(safeErrorStatus(e)).json({ok:false,error:safeErrorCode(e)})}
 }
