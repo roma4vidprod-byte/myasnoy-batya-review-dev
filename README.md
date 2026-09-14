@@ -1,5 +1,14 @@
 # Мясной Батя — Review Activator DEV
 
+## Current checkpoint — encrypted session decrypt classification 07A.5F
+
+The protected offline preflight now distinguishes malformed envelope/key/AAD
+inputs, AES-GCM authentication failure, and post-AES plaintext JSON/schema
+failure using safe allowlisted codes. The legacy decrypt API remains generic;
+no plaintext, cookie, key, IV, tag or ciphertext is returned. This checkpoint
+is local and does not repair or transition the current DEV session. See
+[Yandex session decrypt forensics 07A.5F](docs/YANDEX_SESSION_DECRYPT_FORENSICS_07A5F.md).
+
 ## Current checkpoint — Yandex contract diagnostic 07A.5
 
 The existing protected worker boundary now has a read-only
