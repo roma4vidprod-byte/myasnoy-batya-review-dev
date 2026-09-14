@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 import { readFileSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { PGlite } from '@electric-sql/pglite';
@@ -21,10 +23,13 @@ const LA2 = '55555555-5555-4555-8555-555555555555';
 const scope = { companyId: A, locationId: LA, organizationId: ORG_ID };
 const ring = { currentKid: 'fixture-k1', keys: { 'fixture-k1': Buffer.alloc(32, 7), 'fixture-k2': Buffer.alloc(32, 9) } };
 const secretMarker = 'SYNTHETIC-COOKIE-NOT-A-REAL-SESSION';
+const determinismRounds = 100;
+const determinismChild = fileURLToPath(new URL('./support/yandex-session-determinism-child.mjs', import.meta.url));
 const material = { account: ACCOUNT, cookies: [{ name: 'Session_id', value: secretMarker, domain: '.yandex.ru', path: '/', secure: true, httpOnly: true, expires: -1 }] };
 const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json' } });
 const req = page => ({ method: 'GET', permanentId: ORG_ID, page, url: `https://yandex.ru/sprav/api/${ORG_ID}/reviews?ranking=by_time&source=pagination&page=${page}` });
 const err = code => error => error.code === code && error.message === code;
+const hashHex = value => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
 
 test('session cryptography, AAD, validation and secret-safe failures', async t => {
   const encrypted = encryptSession(scope, material, ring);
@@ -35,6 +40,20 @@ test('session cryptography, AAD, validation and secret-safe failures', async t =
     assert.notEqual(second.envelope.ciphertext, encrypted.envelope.ciphertext);
     assert.notEqual(second.credential_version, encrypted.credential_version);
     assert.equal(JSON.stringify(encrypted).includes(secretMarker), false);
+  });
+  await t.test('JSONB roundtrip preserves crypto material and tuple hash', () => {
+    const snapshot = JSON.parse(JSON.stringify(encrypted));
+    assert.deepEqual(decryptSession(scope, snapshot, ring), material);
+    const roundTrip = {
+      credential_version: snapshot.credential_version,
+      envelope_v: snapshot.envelope.v,
+      envelope_kid: snapshot.envelope.kid,
+      envelope_iv_hash: hashHex(snapshot.envelope.iv),
+      envelope_tag_hash: hashHex(snapshot.envelope.tag),
+      envelope_ciphertext_hash: hashHex(snapshot.envelope.ciphertext)
+    };
+    const encoded = JSON.parse(JSON.stringify(roundTrip));
+    assert.deepEqual(roundTrip, encoded);
   });
   await t.test('tampered ciphertext/tag/key/version/company/location fail authentication', () => {
     for (const field of ['ciphertext','tag']) {
@@ -62,6 +81,86 @@ test('session cryptography, AAD, validation and secret-safe failures', async t =
     try { assert.throws(() => encryptSession(scope, material, ring), err('SERVER_ONLY')); }
     finally { delete globalThis.window; }
   });
+});
+
+test('deterministic decrypt replay on immutable snapshot: same-process and cross-process', async t => {
+  const db = await PGlite.create();
+  t.after(() => db.close());
+  await db.exec(read('./fixtures/db/review-sync-baseline.sql'));
+  await db.exec(`insert into review_companies values ('${A}'),('${B}');
+    insert into review_locations values ('${LA}','${A}'),('${LA2}','${A}'),('${LB}','${B}');`);
+  await db.exec(migration);
+  const rpc = async (name, p) => {
+    assert.equal(name, 'review_yandex_session_store');
+    try {
+      return (await db.query('select public.review_yandex_session_store($1::uuid,$2::uuid,$3::text,$4::text,$5::bigint,$6::jsonb) as value',
+        [p.p_company_id,p.p_location_id,p.p_org_id,p.p_action,p.p_expected_revision,JSON.stringify(p.p_data)])).rows[0].value;
+    } catch (error) {
+      if (['SESSION_CHANGED','SESSION_SCOPE_INVALID'].includes(error.message)) error.code = error.message;
+      throw error;
+    }
+  };
+  const store = createSessionStore({ rpc });
+  const service = createYandexSessionService({ store, keyring: ring, allowRead: true });
+  await service.importSession(scope, material, 0);
+  const snapshot = await store.read(scope);
+  assert.ok(snapshot);
+  const immutableSnapshot = JSON.parse(JSON.stringify(snapshot));
+  await db.exec('reset role');
+
+  const before = {
+    revision: Number(immutableSnapshot.revision),
+    credentialVersionHash: hashHex(immutableSnapshot.credential_version),
+    envelopeV: immutableSnapshot.envelope.v,
+    envelopeKid: immutableSnapshot.envelope.kid,
+    envelopeIvHash: hashHex(immutableSnapshot.envelope.iv),
+    envelopeTagHash: hashHex(immutableSnapshot.envelope.tag),
+    envelopeCipherHash: hashHex(immutableSnapshot.envelope.ciphertext)
+  };
+  assert.deepEqual(decryptSession(scope, immutableSnapshot, ring), material);
+
+  let pass = 0;
+  let fail = 0;
+  for (let i = 0; i < determinismRounds; i++) {
+    try { decryptSession(scope, immutableSnapshot, ring); pass += 1; } catch { fail += 1; }
+  }
+  assert.equal(pass, determinismRounds);
+  assert.equal(fail, 0);
+
+  const runChild = () => {
+    const result = spawnSync(process.execPath, [determinismChild], {
+      input: JSON.stringify({
+        rounds: determinismRounds,
+        scope,
+        snapshot: immutableSnapshot,
+        keyring: {
+          currentKid: ring.currentKid,
+          keys: { [ring.currentKid]: ring.keys[ring.currentKid].toString('base64') }
+        }
+      }),
+      encoding: 'utf8',
+      maxBuffer: 256 * 1024
+    });
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    return JSON.parse(result.stdout || '{}');
+  };
+  const first = runChild();
+  const second = runChild();
+  const after = {
+    revision: Number(immutableSnapshot.revision),
+    credentialVersionHash: hashHex(immutableSnapshot.credential_version),
+    envelopeV: immutableSnapshot.envelope.v,
+    envelopeKid: immutableSnapshot.envelope.kid,
+    envelopeIvHash: hashHex(immutableSnapshot.envelope.iv),
+    envelopeTagHash: hashHex(immutableSnapshot.envelope.tag),
+    envelopeCipherHash: hashHex(immutableSnapshot.envelope.ciphertext)
+  };
+  assert.deepEqual(before, after);
+  assert.equal(first.pass, determinismRounds);
+  assert.equal(first.fail, 0);
+  assert.equal(second.pass, first.pass);
+  assert.equal(second.fail, first.fail);
+  assert.equal(first.pass + first.fail, determinismRounds);
 });
 
 test('exact read-only transport: approval, URL/method, response bounds and no redirect', async t => {
@@ -157,11 +256,11 @@ test('private storage exact migration + session service against isolated Postgre
     const s = service(); await s.importSession(scope, material, 0);
     const ready = await s.run(scope, { pageBase: 1 });
     const before = await store.read(scope);
-    const transitioned = await store.transition(scope, ready.revision, {
+    const transitionedError = await store.transition(scope, ready.revision, {
       state: 'ERROR', error_code: 'YANDEX_NETWORK_ERROR'
     });
     const after = await store.read(scope);
-    assert.equal(transitioned.state, 'ERROR');
+    assert.equal(transitionedError.state, 'ERROR');
     assert.equal(after.revision, before.revision + 1);
     assert.equal(after.credential_version, before.credential_version);
     assert.deepEqual(after.envelope, before.envelope);
@@ -171,13 +270,48 @@ test('private storage exact migration + session service against isolated Postgre
     assert.equal(after.envelope.iv, before.envelope.iv);
     assert.equal(after.envelope.tag, before.envelope.tag);
     assert.equal(after.envelope.ciphertext, before.envelope.ciphertext);
+    const transitionedReauth = await store.transition(scope, transitionedError.revision, {
+      state: 'REAUTH_REQUIRED', error_code: 'YANDEX_HTTP_401'
+    });
+    const afterReauth = await store.read(scope);
+    assert.equal(transitionedReauth.state, 'REAUTH_REQUIRED');
+    assert.equal(afterReauth.revision, after.revision + 1);
+    assert.equal(afterReauth.credential_version, before.credential_version);
+    assert.deepEqual(afterReauth.envelope, before.envelope);
+    assert.equal(afterReauth.envelope.iv, before.envelope.iv);
+  });
+  await cleanTest('replace transition increments revision and keeps credential material immutable for non-DISABLED transitions', async () => {
+    const s = service(); await s.importSession(scope, material, 0);
+    const first = await store.read(scope);
+    await store.transition(scope, first.revision, { state: 'ERROR', error_code: 'YANDEX_HTTP_401' });
+    const afterTransition = await store.read(scope);
+    const second = await s.importSession(scope, material, afterTransition.revision);
+    const replaced = await store.read(scope);
+    assert.equal(second.state, 'NOT_CONFIGURED');
+    assert.equal(second.revision, afterTransition.revision + 1);
+    assert.equal(replaced.revision, afterTransition.revision + 1);
+    assert.notEqual(replaced.credential_version, afterTransition.credential_version);
+    assert.equal(replaced.envelope.kid, afterTransition.envelope.kid);
+    assert.equal(replaced.envelope.v, afterTransition.envelope.v);
+    assert.notEqual(replaced.envelope.iv, afterTransition.envelope.iv);
+    assert.notEqual(replaced.envelope.tag, afterTransition.envelope.tag);
+    assert.notEqual(replaced.envelope.ciphertext, afterTransition.envelope.ciphertext);
+    const verify = await store.read(scope);
+    assert.equal(verify.credential_version, replaced.credential_version);
+    assert.equal(verify.envelope.kid, replaced.envelope.kid);
+    assert.equal(verify.envelope.iv, replaced.envelope.iv);
   });
   await cleanTest('read approval gate and DISABLED prevent HTTP; disable erases credential', async () => {
     const s = service(); await s.importSession(scope, material, 0);
+    const before = await store.read(scope);
     await assert.rejects(service({ allowRead: false }).run(scope, { pageBase: 1 }), err('LIVE_READ_NOT_APPROVED'));
     assert.equal(calls, 0);
-    await s.disable(scope, 1);
+    await s.disable(scope, before.revision);
+    const disabled = await store.read(scope);
     assert.equal((await store.read(scope)).envelope, null);
+    assert.equal(disabled.revision, before.revision + 1);
+    assert.equal(disabled.credential_version, null);
+    assert.equal(disabled.state, 'DISABLED');
     assert.equal((await s.run(scope, { pageBase: 1 })).state, 'DISABLED'); assert.equal(calls, 0);
     await s.importSession(scope, material, 2);
     assert.equal((await s.status(scope)).state, 'NOT_CONFIGURED');

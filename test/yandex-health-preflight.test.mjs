@@ -38,6 +38,14 @@ test('pretransport PASS decrypts session and performs zero Yandex requests', asy
   assert.equal(result.envelope_shape, 'PASS');
   assert.equal(result.stored_key_available, 'PASS');
   assert.equal(result.active_stored_kid_match, 'PASS');
+  assert.equal(result.provenance.runtime, 'local-server-process');
+  assert.equal(result.provenance.session_revision, 8);
+  assert.equal(result.provenance.stored_active_kid_match, true);
+  assert.equal(result.provenance.decrypt, 'PASS');
+  assert.match(result.provenance.envelope_fingerprint, /^[0-9a-f]{12}…[0-9a-f]{12}$/);
+  assert.match(result.provenance.aad_fingerprint, /^[0-9a-f]{12}…[0-9a-f]{12}$/);
+  assert.match(result.provenance.key_fingerprint, /^[0-9a-f]{12}…[0-9a-f]{12}$/);
+  assert.equal(JSON.stringify(result).includes('safe-value'), false);
   assert.equal(result.yandex_requests, 0);
   assert.equal(reads, 1);
 });
