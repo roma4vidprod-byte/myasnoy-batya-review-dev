@@ -39,3 +39,4 @@
 | ID | Defect | Fix | Evidence |
 |---|---|---|---|
 | NEW-01 | AI draft catch reflected arbitrary `error.message` to client | Added allowlisted status/code mapping in `api/admin-review-reply-draft.js` | `test/admin-reply-draft-security.test.mjs` |
+| NEW-02 | Health execution exceptions before `service.run` completion were collapsed by the outer handler catch into generic `SYNC_OPERATION_FAILED`, `NOT_STARTED`, zero counters and null post-state | Moved the initial session read into the service's classified boundary; added allowlisted stage/CAS/transport telemetry and injectable external fetch boundary; preserved non-health `SESSION_CHANGED` fail-fast semantics | `lib/server/yandex-session/service.js`, `lib/server/review-sync-worker.js`, `lib/server/yandex-session/crypto.js`, `test/yandex-health-execution.test.mjs`; local synthetic regression PASS; live incident equivalence remains unproven without the prohibited repeat |

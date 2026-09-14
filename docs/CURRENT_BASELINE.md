@@ -29,6 +29,19 @@
 
 Historical Preview/deployment identifiers from the handoff are not treated as current provenance until re-read from the platform. No old remote commit was substituted for the local source.
 
+## Health execution-fix checkpoint
+
+| Поле | Факт |
+|---|---|
+| task starting HEAD | `9c6c3e1b421919782e21d8dcf23da6bc85c943de` |
+| task branch | `codex/yandex-live-read-smoke-01` |
+| task starting tree | clean; no pre-existing uncommitted changes |
+| source baseline | `SOURCE_BASELINE_PASS` |
+| DEV target | `DEV_TARGET_PASS` by existing project metadata; no remote mutation/read performed in this checkpoint |
+| deployment provenance | `DEPLOYMENT_PROVENANCE_NOT_RECHECKED` by policy; previous live health was not repeated |
+
+The health execution fix is a local synthetic-boundary change. The previous server incident's internal exception is not independently proven because this task does not repeat the live operation.
+
 ## Safety boundary
 
 This remediation run performed no Yandex requests, no 2GIS requests, no worker/enqueue calls, no scheduler changes, no review/promo mutations, no replies, no transactional email/Telegram delivery, no paid AI call, and no remote DB write. Production, Business OS, Social and VK Ads were not targeted.
