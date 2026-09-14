@@ -8,6 +8,9 @@ failure using safe allowlisted codes. The legacy decrypt API remains generic;
 no plaintext, cookie, key, IV, tag or ciphertext is returned. This checkpoint
 is local and does not repair or transition the current DEV session. See
 [Yandex session decrypt forensics 07A.5F](docs/YANDEX_SESSION_DECRYPT_FORENSICS_07A5F.md).
+For plaintext-schema failures, the authenticated offline response also exposes
+only the allowlisted rule code/path/type/presence metadata needed to distinguish
+an actual schema violation from a broad catch; it does not expose session data.
 
 ## Current checkpoint — Yandex contract diagnostic 07A.5
 

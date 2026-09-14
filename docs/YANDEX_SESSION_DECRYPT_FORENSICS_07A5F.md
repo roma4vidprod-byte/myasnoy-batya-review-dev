@@ -33,13 +33,25 @@ decryption succeeds but plaintext encoding, JSON, or session schema validation
 fails, `decrypt=PASS` and `validation=FAIL` are reported. Failures before
 decrypt remain `NOT_RUN` for the decrypt/validation status fields.
 
+The plaintext-schema failure now includes a rule-level safe diagnostic in the
+authenticated offline preflight. It contains only an allowlisted rule code,
+schema path, expected type description, actual JSON type, and presence flag.
+It never includes cookie names or values, plaintext, or validator exception
+text. One important temporal rule is preserved: a finite cookie `expires`
+value must be in the future at both import validation and later decrypt
+validation. A session can therefore be valid at import and fail later with
+`SESSION_COOKIE_EXPIRED`; this is diagnostic evidence, not permission to
+weaken expiry validation.
+
 ## Evidence status
 
 The historical Preview response only established the safe generic
-`SESSION_DECRYPT_FAILED` result. It did not identify the failing stage because
-the old code collapsed all stages into one code. The exact current DEV root
-cause is therefore **UNKNOWN — evidence insufficient** until a new patched
+`SESSION_DECRYPT_FAILED` result. It did not identify the failing rule because
+the old code collapsed all validator failures into one code. The exact current
+DEV root cause remains **UNKNOWN — evidence insufficient** until a new patched
 Preview preflight is run once with the existing operator-held worker secret.
+The patched response will expose only the safe `schema_rule` object when the
+failure is `SESSION_PLAINTEXT_SCHEMA_INVALID`.
 
 No session revision or encrypted envelope was changed by this checkpoint.
 
@@ -52,6 +64,9 @@ The targeted suite covers:
 - corrupted authentication tag and ciphertext;
 - malformed envelope and missing/invalid key material;
 - AES-success with invalid JSON or invalid session schema;
+- finite expiry that passes at import time and fails later without weakening
+  the validator;
+- safe rule-level reporting for a schema failure;
 - safe authenticated HTTP preflight response with no raw diagnostics.
 
 All tests use synthetic fixtures and the no-network guard.

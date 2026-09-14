@@ -92,6 +92,26 @@ test('AES success with invalid plaintext JSON or session schema is not reported 
     'SESSION_PLAINTEXT_SCHEMA_INVALID');
 });
 
+test('finite cookie expiry is validated at import and decrypt time without weakening the contract', () => {
+  const importedAt = 1900000000000;
+  const expiringSession = {
+    ...session,
+    cookies: [{ ...session.cookies[0], expires: importedAt / 1000 + 1 }]
+  };
+  const stored = {
+    ...encryptSession(scope, expiringSession, keyring, importedAt),
+    company_id: scope.companyId, location_id: scope.locationId,
+    external_org_id: scope.organizationId, state: 'ERROR', revision: 11
+  };
+  assert.throws(
+    () => decryptSessionClassified(scope, stored, keyring, importedAt + 2000),
+    error => error?.code === 'SESSION_PLAINTEXT_SCHEMA_INVALID' &&
+      error?.rule?.code === 'SESSION_COOKIE_EXPIRED' &&
+      error?.rule?.path === 'cookies[*].expires' &&
+      error?.rule?.actual_type === 'number' && error?.rule?.present === true
+  );
+});
+
 test('preflight reports AES-success plaintext failures as decrypt PASS and validation FAIL', async () => {
   const row = { ...rawEncrypted('{not-json}'), company_id: scope.companyId,
     location_id: scope.locationId, external_org_id: scope.organizationId, state: 'ERROR', revision: 11 };
@@ -110,6 +130,34 @@ test('preflight reports AES-success plaintext failures as decrypt PASS and valid
   assert.equal(result.decrypt_stage, 'PLAINTEXT_JSON');
   assert.equal(result.provenance.decrypt, 'PASS');
   assert.equal(result.yandex_requests, 0);
+});
+
+test('preflight exposes only the safe rule for an invalid decrypted session schema', async () => {
+  const row = { ...rawEncrypted(JSON.stringify({
+    account: ACCOUNT,
+    cookies: [{ name: 'fixture', value: 'synthetic-value', domain: 'yandex.ru', path: '/sprav/api',
+      secure: true, expires: 1 }]
+  })), company_id: scope.companyId, location_id: scope.locationId,
+  external_org_id: scope.organizationId, state: 'ERROR', revision: 11 };
+  const result = await runYandexHealthPreflight({
+    env: {
+      SUPABASE_SERVICE_ROLE_KEY: 'fixture-service-role',
+      YANDEX_SESSION_KEYS_JSON: JSON.stringify({ 'fixture-k1': Buffer.alloc(32, 7).toString('base64') }),
+      YANDEX_SESSION_ACTIVE_KID: 'fixture-k1', YANDEX_LIVE_READ_APPROVAL: LIVE_READ_APPROVAL
+    },
+    read: async () => row,
+    getKeyring: () => ({ currentKid: keyring.currentKid, keys: { 'fixture-k1': Buffer.from(keyring.keys['fixture-k1']) } })
+  });
+  assert.equal(result.error, 'SESSION_PLAINTEXT_SCHEMA_INVALID');
+  assert.equal(result.session_decrypt, 'PASS');
+  assert.equal(result.session_validation, 'FAIL');
+  assert.equal(result.decrypt_stage, 'PLAINTEXT_SCHEMA');
+  assert.deepEqual(result.schema_rule, {
+    code: 'SESSION_COOKIE_EXPIRED', path: 'cookies[*].expires',
+    expected_type: 'future unix-seconds number', actual_type: 'number', present: true
+  });
+  assert.equal(result.yandex_requests, 0);
+  assert.doesNotMatch(JSON.stringify(result), /synthetic-value/);
 });
 
 test('legacy decrypt API remains generic while preflight exposes only safe classified status', async () => {
@@ -149,6 +197,11 @@ test('authenticated preflight response exposes safe classification without raw d
     preflight: async () => ({
       pretransport: 'FAIL', session_decrypt: 'FAIL', session_validation: 'NOT_RUN',
       decrypt_stage: 'AES_GCM_AUTH', error: 'SESSION_AES_GCM_AUTH_FAILED',
+      schema_rule: {
+        code: 'SESSION_COOKIE_EXPIRED', path: 'cookies[*].expires',
+        expected_type: 'future unix-seconds number', actual_type: 'number', present: true,
+        leaked_value: 'synthetic-value'
+      },
       scope: 'PASS', mode: 'PASS', page_base: 'PASS', endpoint: 'PASS',
       keyring_parse: 'PASS', active_kid: 'PASS', env_present: {}, runtime_location: 'vercel-server',
       session_state: 'ERROR', revision: 11, provenance: { decrypt: 'FAIL' }, yandex_requests: 0
@@ -160,6 +213,39 @@ test('authenticated preflight response exposes safe classification without raw d
   assert.equal(response.body.decrypt, 'FAIL');
   assert.equal(response.body.validation, 'NOT_RUN');
   assert.equal(response.body.decrypt_stage, 'AES_GCM_AUTH');
+  assert.equal(response.body.schema_rule, null);
+  assert.doesNotMatch(JSON.stringify(response.body), /synthetic-value/);
   assert.equal(response.body.yandex_requests, 0);
   assert.equal(JSON.stringify(response.body).includes('fixture-worker-secret'), false);
+});
+
+test('authenticated preflight forwards only a safe plaintext schema rule', async () => {
+  const response = {
+    statusCode: 200, headers: {}, body: null,
+    setHeader() {},
+    status(code) { this.statusCode = code; return this; },
+    json(body) { this.body = body; return this; }
+  };
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'fixture-worker-secret',
+    preflight: async () => ({
+      pretransport: 'FAIL', session_decrypt: 'PASS', session_validation: 'FAIL',
+      decrypt_stage: 'PLAINTEXT_SCHEMA', error: 'SESSION_PLAINTEXT_SCHEMA_INVALID',
+      schema_rule: {
+        code: 'SESSION_COOKIE_EXPIRED', path: 'cookies[*].expires',
+        expected_type: 'future unix-seconds number', actual_type: 'number', present: true,
+        leaked_value: 'synthetic-value'
+      },
+      scope: 'PASS', mode: 'PASS', page_base: 'PASS', endpoint: 'PASS',
+      keyring_parse: 'PASS', active_kid: 'PASS', env_present: {}, runtime_location: 'vercel-server',
+      session_state: 'ERROR', revision: 11, provenance: { decrypt: 'PASS' }, yandex_requests: 0
+    })
+  });
+  await handler({ method: 'POST', headers: { authorization: 'Bearer fixture-worker-secret' }, body: { operation: 'preflight' } }, response);
+  assert.equal(response.statusCode, 503);
+  assert.deepEqual(response.body.schema_rule, {
+    code: 'SESSION_COOKIE_EXPIRED', path: 'cookies[*].expires',
+    expected_type: 'future unix-seconds number', actual_type: 'number', present: true
+  });
+  assert.doesNotMatch(JSON.stringify(response.body), /synthetic-value/);
 });
