@@ -182,6 +182,31 @@ test('contract diagnostic is secret-protected, read-only and does not enter clai
   assert.equal(JSON.stringify(good.body).includes('secret'), false);
 });
 
+test('page-specific contract diagnostic accepts only pages 2 through 4', async () => {
+  let requestedPage = null;
+  const res = () => ({ statusCode: 200, headers: {}, body: null,
+    setHeader(k, v) { this.headers[k.toLowerCase()] = v; },
+    status(c) { this.statusCode = c; return this; },
+    json(v) { this.body = v; return this; } });
+  const handler = createReviewSyncWorkerHandler({
+    getSecret: () => 'secret', run: async () => { throw new Error('claim path must not run'); },
+    contractDiagnostic: async page => {
+      requestedPage = page;
+      return { ok: true, operation: 'contract_diagnostic', page, yandex_requests: 1, review_persistence: 'OFF' };
+    }
+  });
+  const page2 = res();
+  await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'contract_diagnostic_page', page: 2 } }, page2);
+  assert.equal(page2.statusCode, 200);
+  assert.equal(requestedPage, 2);
+  for (const page of [1, 5, '2']) {
+    const invalid = res();
+    await handler({ method: 'POST', headers: { authorization: 'Bearer secret' }, body: { operation: 'contract_diagnostic_page', page } }, invalid);
+    assert.equal(invalid.statusCode, 400);
+    assert.deepEqual(invalid.body, { ok: false, error: 'INVALID_OPERATION' });
+  }
+});
+
 test('contract diagnostic factory invokes only injected service diagnostic after preflight', async () => {
   let keyrings = 0;
   let serviceCalls = 0;

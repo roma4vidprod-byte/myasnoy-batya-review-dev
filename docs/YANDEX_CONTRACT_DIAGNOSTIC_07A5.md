@@ -18,5 +18,15 @@ session state, update connection state, or enable the paused scheduler. A
 failed parser check is reported as `YANDEX_CONTRACT_DRIFT` with its safe field
 path so a compatible parser fix can be reviewed before any worker retry.
 
+For page-specific follow-up, the same boundary accepts only pages `2`, `3`,
+or `4` with:
+
+```json
+{"operation":"contract_diagnostic_page","page":2}
+```
+
+The operator runs these sequentially and stops at the first failed page. Page 1
+is never repeated by this follow-up operation.
+
 No live result is considered confirmed until the operator runs the protected
 operation once and returns its safe JSON report.
