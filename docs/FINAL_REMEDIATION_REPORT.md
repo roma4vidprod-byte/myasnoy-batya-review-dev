@@ -10,6 +10,12 @@
 
 Полная эксплуатационная готовность всех AUD-01–AUD-29 не объявляется: matching, Yandex write/reply, 2GIS, scheduler/platform acceptance, remote schema ledger/restore, delivery outbox и business policy требуют отдельного доказательства или решения.
 
+## Native host pre-deploy gate recovery
+
+The previous `npm test` failure was a test-harness race: the default parallel Node runner started many Windows PowerShell/native subprocess groups concurrently, and one one-shot diagnostic child returned `status=null`. The production host lifecycle was correct: its diagnostic branch reads one complete frame, writes one safe response and returns. The isolated case passed 20/20 before and after the fix; the existing strict `status === 0` assertion remains.
+
+Minimal fix: `package.json` runs the existing test suite with `--test-concurrency=1`. No timeout was increased, no test was skipped, and no production native/security behavior was weakened.
+
 ## Baseline and provenance
 
 - Starting SHA: `bd3d96a4630c19e8cd57bc73049a219a6b50a479`
@@ -24,6 +30,8 @@
 
 - `api/admin-review-reply-draft.js` — allowlisted error mapping at the server boundary.
 - `test/admin-reply-draft-security.test.mjs` — regression tests for no raw exception reflection and exact request contract.
+- `package.json` — deterministic sequential test orchestration for Windows native-host subprocesses.
+- `test/native-host-test-harness.test.mjs` — regression guard for concurrency/lifecycle contract.
 - `docs/CURRENT_BASELINE.md`
 - `docs/REMEDIATION_REGISTER.md`
 - `docs/DECISIONS_AND_BLOCKERS.md`
@@ -34,8 +42,9 @@ No migration was created or applied: the confirmed defect was application-level 
 
 ## Verification
 
-- Local tests: 358 PASS / 0 FAIL.
-- Local checks: 99 PASS.
+- Local tests: 359 PASS / 0 FAIL.
+- Targeted native-host diagnostic: 20 PASS / 0 HANG / 0 FAIL.
+- Local checks: 100 PASS.
 - Diff check: PASS.
 - Tracked secret-pattern scan: PASS.
 - General `QUALITY GATE / REGRESSION HARNESS`: NOT RUN by design.

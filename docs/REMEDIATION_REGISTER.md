@@ -28,7 +28,7 @@
 | AUD-22 | Endpoint contract is `reviewId`; no frontend caller mismatch found | Historical mismatch was unconfirmed | added safe error regression; endpoint still draft-only | PASS source / paid AI live test not run |
 | AUD-23 | Real-data classification is not represented in local schema docs | Former synthetic label can mislead cleanup | no cleanup/destructive query added | PARTIAL; remote metadata audit pending |
 | AUD-24 | Escaping and auth checks exist; public form rate/outbox policy not proven | Scope spans external DB/functions | no broad policy invented | PARTIAL / remote schema and abuse tests pending |
-| AUD-25 | Current local suite is evidence, not universal harness | Historic counts were not reproducible evidence | current run recorded in `TEST_EVIDENCE.md` | PASS process; QUALITY GATE intentionally not run |
+| AUD-25 | Current local suite is evidence, not universal harness | Default parallel Node runner intermittently raced Windows PowerShell/native subprocesses | `package.json` uses deterministic `--test-concurrency=1`; 20/20 targeted native runs and serial full suite pass | PASS local gate; QUALITY GATE intentionally not run |
 | AUD-26 | Historical/current facts were mixed in handoff | Missing dated state model | baseline/register/decision/report docs added | PASS documentation |
 | AUD-27 | Migration files and isolated tests are present | Remote ledger/restore unavailable in this run | migrations not applied remotely | PARTIAL / remote schema ledger and restore pending |
 | AUD-28 | No confirmed 2GIS transport contract in source/evidence | Provider capabilities absent | no second engine or invented adapter | BLOCKED dependency |

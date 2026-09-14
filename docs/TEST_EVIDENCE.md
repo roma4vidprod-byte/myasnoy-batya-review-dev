@@ -13,8 +13,11 @@
 
 ## Post-patch results
 
-- `npm test` — 358 passed, 0 failed.
-- `npm run check` — PASS: 99 source/fixture/inline-script checks; configuration JSON valid; no code executed or network called.
+- `npm test` — 359 passed, 0 failed.
+- Native-host failure root cause: default Node test concurrency intermittently raced Windows PowerShell/native subprocess groups; the diagnostic child returned `status=null`. The isolated case passed 20/20, and the full suite passed with `--test-concurrency=1`.
+- Fix: `package.json` makes the existing test command deterministic and sequential. This changes only test orchestration; the one-shot host lifecycle, strict exit assertion, nonce/origin/destination checks and production code remain unchanged.
+- `npm run check` — PASS: 100 source/fixture/inline-script checks; configuration JSON valid; no code executed or network called.
+- targeted native-host diagnostic — 20 PASS / 0 HANG / 0 FAIL.
 - `git diff --check` — PASS.
 - tracked secret-pattern scan — PASS.
 

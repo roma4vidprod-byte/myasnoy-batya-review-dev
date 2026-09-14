@@ -6,7 +6,7 @@
     "@electric-sql/pglite": "0.5.8"
   },
   "scripts": {
-    "test": "node --import ./test/support/no-network.mjs --test test/*.test.mjs",
+    "test": "node --import ./test/support/no-network.mjs --test --test-concurrency=1 test/*.test.mjs",
     "check": "node scripts/check.mjs"
   }
 }
