@@ -49,3 +49,4 @@ The health execution fix is a local synthetic-boundary change. The previous serv
 This remediation run performed no Yandex requests, no 2GIS requests, no worker/enqueue calls, no scheduler changes, no review/promo mutations, no replies, no transactional email/Telegram delivery, no paid AI call, and no remote DB write. Production, Business OS, Social and VK Ads were not targeted.
 
 Historical counts and states in the handoff are evidence for the earlier DEV run, not a fresh remote assertion in this local-only checkpoint.
+> **Native/Windows gate checkpoint 2026-09-14:** source remains `c47b83b179b9a94781d55029b4b399c44f9a075b`; Windows `npm test` 489/489 and `npm run check` 107/107 passed with PowerShell 7.6.5. Native PostgreSQL 17 concurrency remains `NOT_RUN` because the prepared runner and native binaries are absent. See `docs/NATIVE_WINDOWS_GATE_20260914.md`.
