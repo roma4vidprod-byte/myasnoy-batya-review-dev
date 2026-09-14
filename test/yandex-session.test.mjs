@@ -153,6 +153,25 @@ test('private storage exact migration + session service against isolated Postgre
     for (const value of [imported,result,await s.status(scope),alerts,stored]) assert.equal(JSON.stringify(value).includes(secretMarker), false);
     assert.equal(JSON.stringify(result).includes('envelope'), false); assert.equal(alerts.length, 0);
   });
+  await cleanTest('READY to ERROR transition preserves credential material byte-for-byte', async () => {
+    const s = service(); await s.importSession(scope, material, 0);
+    const ready = await s.run(scope, { pageBase: 1 });
+    const before = await store.read(scope);
+    const transitioned = await store.transition(scope, ready.revision, {
+      state: 'ERROR', error_code: 'YANDEX_NETWORK_ERROR'
+    });
+    const after = await store.read(scope);
+    assert.equal(transitioned.state, 'ERROR');
+    assert.equal(after.revision, before.revision + 1);
+    assert.equal(after.credential_version, before.credential_version);
+    assert.deepEqual(after.envelope, before.envelope);
+    assert.equal(JSON.stringify(after.envelope), JSON.stringify(before.envelope));
+    assert.equal(after.envelope.v, before.envelope.v);
+    assert.equal(after.envelope.kid, before.envelope.kid);
+    assert.equal(after.envelope.iv, before.envelope.iv);
+    assert.equal(after.envelope.tag, before.envelope.tag);
+    assert.equal(after.envelope.ciphertext, before.envelope.ciphertext);
+  });
   await cleanTest('read approval gate and DISABLED prevent HTTP; disable erases credential', async () => {
     const s = service(); await s.importSession(scope, material, 0);
     await assert.rejects(service({ allowRead: false }).run(scope, { pageBase: 1 }), err('LIVE_READ_NOT_APPROVED'));
