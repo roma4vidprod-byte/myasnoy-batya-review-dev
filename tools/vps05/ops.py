@@ -163,6 +163,15 @@ select json_build_object(
  'locations_valid',(select count(*)=1 and bool_and(company_id='13f3cb80-487a-4a19-96a1-fb3103200230') from public.review_locations where id='9a95f63b-18e6-447b-a449-8530b67ddbae'),
  'session_count',(select count(*) from review_private.yandex_sessions),
  'session_scope_valid',(select coalesce(bool_and(company_id='13f3cb80-487a-4a19-96a1-fb3103200230' and location_id='9a95f63b-18e6-447b-a449-8530b67ddbae' and external_org_id='54309413522'),true) from review_private.yandex_sessions));""")
+        if sql(database,"select to_regprocedure('vps_yandex_private.persist_call(uuid,uuid,text,text,bigint,text,jsonb)') is not null;") == 't':
+            counts['vps09_persistence'] = query_json(database, """with classified as (
+ select *, (company_id in ('10000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002')
+   and external_location_id in ('lab-org-a','lab-org-b')) as synthetic,
+ (company_id='13f3cb80-487a-4a19-96a1-fb3103200230' and location_id='9a95f63b-18e6-447b-a449-8530b67ddbae'
+   and provider='yandex' and external_location_id='54309413522') as approved_real from public.review_external_reviews
+) select json_build_object('synthetic_count',count(*) filter(where synthetic),
+ 'real_count',count(*) filter(where approved_real),'unexpected_count',count(*) filter(where (synthetic or approved_real) is not true),
+ 'ratings_valid',coalesce(bool_and(rating between 1 and 5) filter(where approved_real),true)) from classified;""")
     return {'schema_sha256': sha(normalize_schema(schema)), 'tables': tables,
             'rows': rows, 'catalog': counts}
 
@@ -171,7 +180,14 @@ def validate_snapshot(s):
     extra = s['catalog'].get('vps08a_scope')
     schemas = SCHEMAS + (['vps_yandex_private'] if extra is not None else [])
     need(s['catalog']['schemas'] == schemas and s['catalog']['version'] == 'vps04-auth-api-v1', 'SCHEMA_SCOPE_FAILED')
-    need(s['catalog']['synthetic_users_only'] and s['catalog']['synthetic_reviews_only'], 'SYNTHETIC_SCOPE_FAILED')
+    real = s['catalog'].get('vps09_persistence')
+    need(s['catalog']['synthetic_users_only'], 'SYNTHETIC_SCOPE_FAILED')
+    if real is None:
+        need(s['catalog']['synthetic_reviews_only'], 'SYNTHETIC_SCOPE_FAILED')
+    else:
+        need(extra is not None and real['synthetic_count']==2 and real['unexpected_count']==0 and
+             type(real['real_count']) is int and real['real_count']>=0 and real['ratings_valid'] is True,
+             'VPS09_REVIEW_SCOPE_FAILED')
     expected = {'auth.users': 3, 'public.review_companies': 2, 'public.review_locations': 2,
                 'public.review_admins': 2, 'public.review_external_reviews': 2,
                 'public.review_provider_connections': 0, 'public.review_sync_runs': 0,
@@ -182,6 +198,8 @@ def validate_snapshot(s):
              extra['session_count'] in (0, 1), 'VPS08A_SCOPE_FAILED')
         expected.update({'public.review_companies': 3, 'public.review_locations': 3,
                          'review_private.yandex_sessions': extra['session_count']})
+    if real is not None:
+        expected['public.review_external_reviews'] = 2 + real['real_count']
     for name, count in expected.items():
         need(s['rows'][name]['count'] == count, 'ROW_COUNTS_FAILED')
     nonempty_app = {'public.review_companies', 'public.review_locations', 'public.review_admins',
@@ -310,7 +328,8 @@ def backup():
               'dump': metadata(dump), 'release_archive': metadata(dest / 'release.tar.gz'), 'directory_mode': '0o700',
               'disk_free_before': free, 'disk_free_after': shutil.disk_usage(ROOT).free,
               'database_size': size, 'source_snapshot': before, 'inventory': inv,
-              'classification': 'LOCAL_BACKUP_ONLY', 'disaster_recovery': 'NOT_CONFIGURED'}
+              'classification': 'LOCAL_BACKUP_ONLY', 'disaster_recovery': 'NOT_CONFIGURED',
+              'data_classification': 'SENSITIVE'}
     write_json(dest / 'manifest.json', result)
     write_json(STATE / 'VPS05_BACKUP.json', result, replace=True)
     return result
@@ -473,6 +492,28 @@ def offhost_observation():
     return result
 
 
+def provider_observation():
+    # Root-owned aggregate receipt only. No DB/provider requests, no raw rows.
+    path = STATE / 'VPS09_LAST_SYNC.json'
+    if not path.exists(): return {'configured': False}
+    result = {'configured': True, 'receipt_valid': False}
+    try:
+        s=path.lstat()
+        need(stat.S_ISREG(s.st_mode) and s.st_uid==0 and stat.S_IMODE(s.st_mode)==0o600 and s.st_size<8192,'PROVIDER_RECEIPT_INVALID')
+        value=json.loads(path.read_text())
+        for key in ('last_successful_provider_read','last_successful_persistence'):
+            stamp=value.get(key)
+            if stamp is not None: need(isinstance(stamp,str) and datetime.fromisoformat(stamp).tzinfo is not None,'PROVIDER_RECEIPT_INVALID')
+            result[key]=stamp
+        need(value.get('last_sync_result') in ('PASS','FAIL','IN_PROGRESS'),'PROVIDER_RECEIPT_INVALID')
+        need(type(value.get('real_review_count')) is int and value['real_review_count']>=0,'PROVIDER_RECEIPT_INVALID')
+        need(value.get('sync_failure') in (None,'SYNC_NOT_CONFIRMED'),'PROVIDER_RECEIPT_INVALID')
+        result.update({k:value[k] for k in ('last_sync_result','real_review_count','sync_failure')})
+        result['receipt_valid']=True
+    except (OSError,ValueError,KeyError,TypeError,SafeFailure): pass
+    return result
+
+
 def evaluate_monitor(sample):
     failures = []
     rules = {'DISK_LOW': sample['disk_free'] >= MIN_FREE, 'RAM_LOW': sample['ram_available'] >= 256*1024**2,
@@ -483,6 +524,10 @@ def evaluate_monitor(sample):
              'BACKUP_GROWTH': sample['backup_bytes'] <= 5*1024**3,
              'BACKUP_STALE': sample['backup_age_seconds'] is not None and sample['backup_age_seconds'] <= 36*3600}
     worker = sample.get('worker', {})
+    provider = sample.get('provider', {})
+    if provider.get('configured'):
+        rules['PROVIDER_SYNC_RECEIPT'] = provider.get('receipt_valid') is True
+        rules['PROVIDER_SYNC_FAILED'] = provider.get('last_sync_result') == 'PASS' and provider.get('sync_failure') is None
     offhost = sample.get('offhost', {})
     if offhost.get('configured'):
         rules['OFFHOST_KEY_CONFIG'] = offhost.get('key_metadata_ok') is True and offhost.get('receipt_present') is True
@@ -515,7 +560,7 @@ def monitor():
               'services': services, 'health': app_health(), 'listeners': run(['ss', '-H', '-lnt']).decode().splitlines(),
               'backup_bytes': sum(p.stat().st_size for p in files),
               'backup_age_seconds': int(time.time()-max(p.stat().st_mtime for p in manifests)) if manifests else None,
-              'worker': worker_observation(), 'offhost': offhost_observation()}
+              'worker': worker_observation(), 'offhost': offhost_observation(), 'provider': provider_observation()}
     result = evaluate_monitor(sample)
     # Atomic replacement avoids readers seeing a partially-written monitor status.
     temp = STATE / 'monitor-pending.json'

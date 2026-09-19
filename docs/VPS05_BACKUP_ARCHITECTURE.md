@@ -1,5 +1,7 @@
 # VPS05 — synthetic LAB local backup
 
+VPS09 update (2026-09-19): after the explicitly authorized private persistence adapter exists, backup validation additionally classifies only the exact Asbest Yandex company/location/org as approved real review data. It still requires3 synthetic users, exactly2 synthetic reviews, no unexpected scope and no downstream/queue rows. Original pre-adapter guard is unchanged. Backups are marked SENSITIVE; timestamps/permissions and no retention deletion remain unchanged. VPS09 created one fresh protected backup before writes; its first network read failed, so real review count remains0 and no post-success backup was created. See `VPS09_MANUAL_PERSISTENCE.md` and its evidence.
+
 Date: 2026-09-19. Starting source: `9ed33228bdde2d79b97f4689dacb09d85c03f2e2`, branch `codex/yandex-live-read-smoke-01`. Application release remains `vps04-initial`. This stage installs operational tooling only, not a new review/auth/queue engine.
 
 ## Scope and storage

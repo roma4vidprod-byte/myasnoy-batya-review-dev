@@ -1,0 +1,263 @@
+{
+  "status": "STOPPED_FAIL_CLOSED",
+  "install_utc": "2026-09-19T18:04:57.129081+00:00",
+  "backup_before": {
+    "directory_mode": "0o700",
+    "dump": {
+      "gid": 0,
+      "mode": "0o600",
+      "path": "/var/backups/review-activator/20260919T180455732132Z/review_activator_lab.dump",
+      "sha256": "5813b4ee52c1a71494da29712dc2dde5795783746386d884aaf9989440e280f4",
+      "size": 482052,
+      "uid": 0
+    },
+    "utc": "2026-09-19T18:04:57.053741+00:00"
+  },
+  "backup_before_hash_still_matches": true,
+  "original_writer_unchanged": true,
+  "source_manifest_sha256": "351425aa25c94e4e98ed0d9162ce930cbf08b1bf8da44df84a73ae3fa4076cca",
+  "runtime_hashes_match": true,
+  "before": {
+    "utc": "2026-09-19T18:06:13.746658+00:00",
+    "session": {
+      "last_successful_sync_at": null,
+      "revision": 4,
+      "rows": 1,
+      "scope_valid": true,
+      "state": "READY"
+    },
+    "reviews": {
+      "duplicates": 0,
+      "ratings_valid": true,
+      "raw_allowed": true,
+      "real": 0,
+      "scope_valid": true,
+      "synthetic": 2,
+      "with_owner_reply": 0,
+      "without_owner_reply": 0
+    },
+    "table_counts": {
+      "auth.users": 3,
+      "cron.job": 0,
+      "public.review_admins": 2,
+      "public.review_companies": 3,
+      "public.review_external_reviews": 2,
+      "public.review_feedback": 0,
+      "public.review_locations": 3,
+      "public.review_matches": 0,
+      "public.review_notification_deliveries": 0,
+      "public.review_promo_codes": 0,
+      "public.review_provider_connections": 0,
+      "public.review_qr_sources": 0,
+      "public.review_reply_actions": 0,
+      "public.review_sessions": 0,
+      "public.review_sync_runs": 0,
+      "review_private.yandex_sessions": 1
+    },
+    "synthetic_hash": "ee546503606213bfa294bd78c86fa2dd17db8911bffb52899d8a6767e8477b9a",
+    "health": {
+      "healthz": 200,
+      "readyz": 200
+    },
+    "timer": [
+      "ActiveState=inactive",
+      "UnitFileState=disabled"
+    ],
+    "public_tcp": "SSH_ONLY"
+  },
+  "first": {
+    "attempted": 1,
+    "completed": 0,
+    "completeness": "NOT_CONFIRMED",
+    "contract_valid": null,
+    "error": "YANDEX_NETWORK_ERROR",
+    "failed_page": 1,
+    "failure_stage": "TRANSPORT",
+    "http_statuses": [],
+    "notifications": "OFF",
+    "ok": false,
+    "operation": "manual-first",
+    "pager_total": null,
+    "pages": 0,
+    "pagination_report": null,
+    "parser": null,
+    "persistence_result": null,
+    "received": 0,
+    "review_persistence": "NOT_RUN",
+    "revision": 4,
+    "revision_before": 4,
+    "scope_valid": null,
+    "session_mutations": "OFF",
+    "state": null,
+    "state_before": "READY",
+    "state_cas": "NOT_RUN",
+    "unique": null
+  },
+  "after": {
+    "utc": "2026-09-19T18:07:45.116854+00:00",
+    "session": {
+      "rows": 1,
+      "scope_valid": true,
+      "state": "READY",
+      "revision": 4,
+      "last_successful_sync_at": null
+    },
+    "reviews": {
+      "real": 0,
+      "synthetic": 2,
+      "duplicates": 0,
+      "with_owner_reply": 0,
+      "without_owner_reply": 0,
+      "scope_valid": true,
+      "ratings_valid": true,
+      "raw_allowed": true
+    },
+    "table_counts": {
+      "auth.users": 3,
+      "cron.job": 0,
+      "public.review_admins": 2,
+      "public.review_companies": 3,
+      "public.review_external_reviews": 2,
+      "public.review_feedback": 0,
+      "public.review_locations": 3,
+      "public.review_matches": 0,
+      "public.review_notification_deliveries": 0,
+      "public.review_promo_codes": 0,
+      "public.review_provider_connections": 0,
+      "public.review_qr_sources": 0,
+      "public.review_reply_actions": 0,
+      "public.review_sessions": 0,
+      "public.review_sync_runs": 0,
+      "review_private.yandex_sessions": 1
+    },
+    "synthetic_hash": "ee546503606213bfa294bd78c86fa2dd17db8911bffb52899d8a6767e8477b9a",
+    "health": {
+      "healthz": 200,
+      "readyz": 200
+    },
+    "timer": [
+      "ActiveState=inactive",
+      "UnitFileState=disabled"
+    ],
+    "public_tcp": "SSH_ONLY"
+  },
+  "all_table_hashes_unchanged": true,
+  "second": "NOT_RUN",
+  "backup_after": "NOT_RUN_FIRST_SYNC_FAILED_ZERO_REAL_WRITES",
+  "security": {
+    "journal_since": "2026-09-19T18:04:57.129081+00:00",
+    "journal_exit": 0,
+    "postgres_log_read": true,
+    "journal_known_crypto_value_matches": 0,
+    "postgres_known_crypto_value_matches": 0,
+    "journal_sensitive_pattern_matches": 0,
+    "postgres_sensitive_pattern_matches": 0,
+    "provider_response_bodies_received": 0,
+    "scope": "journal since VPS09 install; bounded current PostgreSQL log; known encrypted/key bytes and secret/PII patterns, not a global historical guarantee",
+    "status": "PASS_WITH_STATED_SCOPE"
+  },
+  "monitor": {
+    "status": "FAIL",
+    "codes": [
+      "FAILED_UNITS",
+      "PROVIDER_SYNC_FAILED"
+    ],
+    "provider": {
+      "configured": true,
+      "receipt_valid": true,
+      "last_successful_provider_read": null,
+      "last_successful_persistence": null,
+      "last_sync_result": "FAIL",
+      "real_review_count": 0,
+      "sync_failure": "SYNC_NOT_CONFIRMED"
+    },
+    "failed_unit": "review-activator-monitor.service"
+  },
+  "durable_attempt_marker": true,
+  "replay_marker_present": false,
+  "temp_runtime_artifacts": 0,
+  "source": {
+    "start": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+    "vps08_checkpoint": "da98ed313a3d12ce9f8b7af7b50541151d74e346",
+    "branch": "codex/yandex-live-read-smoke-01",
+    "installed_source": "VPS08 checkpoint plus explicitly hashed VPS09 working-tree package",
+    "archive_sha256": "808389c2fc21fbea369d3771d555e0e06390fe3ff3ab1a99deac1e7c8f42fc56"
+  },
+  "effects": {
+    "manual_sync_attempts": 1,
+    "second_sync_attempts": 0,
+    "yandex_get_attempted": 1,
+    "yandex_http_responses": 0,
+    "yandex_provider_reception": "UNKNOWN",
+    "cumulative_get_attempts": 13,
+    "yandex_writes": 0,
+    "real_review_inserts": 0,
+    "real_review_updates": 0,
+    "real_review_deletes": 0,
+    "session_mutations": 0,
+    "provider_connection_mutations": 0,
+    "queue_runs_created": 0,
+    "scheduler_changes": 0,
+    "cloud_reads": 0,
+    "cloud_writes": 0,
+    "vercel_writes": 0,
+    "two_gis": 0,
+    "email": 0,
+    "telegram": 0,
+    "ai": 0,
+    "promo": 0,
+    "business_os": 0,
+    "production": 0,
+    "reboot": 0,
+    "local_vps_ddl_transactions": 1,
+    "local_backups_created": 1,
+    "installed_source_files": 5
+  },
+  "tests": {
+    "windows_javascript": {
+      "pass": 203,
+      "fail": 0,
+      "skip": 0
+    },
+    "linux_javascript": {
+      "pass": 203,
+      "fail": 0,
+      "skip": 0
+    },
+    "windows_python": {
+      "pass": 62,
+      "fail": 0,
+      "skip": 0
+    },
+    "linux_python": {
+      "pass": 62,
+      "fail": 0,
+      "skip": 0
+    },
+    "native_pg17": {
+      "pass": 31,
+      "fail": 0,
+      "skip": 0,
+      "server_version_num": 170011,
+      "cleanup": "PASS"
+    },
+    "source_checks": 142,
+    "diff_check": "PASS",
+    "source_secret_scan": {
+      "files": 189,
+      "unexpected_matches": 0,
+      "reviewed_unchanged_synthetic_exceptions": 4
+    },
+    "user_files": {
+      "preserved": 26,
+      "hash_changes": 0
+    },
+    "general_quality_gate": "NOT_RUN",
+    "historical_recovery09a_suite": "NOT_RUN"
+  },
+  "blockers": [
+    "YANDEX_NETWORK_ERROR at first page; underlying network cause UNKNOWN; no HTTP response",
+    "First persistence and live idempotency NOT_ACCEPTED; no second sync authorized after failure",
+    "Monitor intentionally exposes failed sync; no reset/false success"
+  ]
+}

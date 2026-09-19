@@ -1,5 +1,7 @@
 # VPS05 — local-only monitoring
 
+VPS09 extension (2026-09-19): `provider_observation()` reads only root0600 `/var/lib/review-activator-ops/VPS09_LAST_SYNC.json`, with a size/type/timestamp/code allowlist. It reports last confirmed read/persistence timestamps, result and real-review count; it does not query Yandex or the DB. Invalid/failed receipts fail monitoring visibly. Actual VPS09 first sync failed before HTTP response; monitor reports `PROVIDER_SYNC_FAILED`, not a fabricated success. See `VPS09_MANUAL_PERSISTENCE.md`.
+
 VPS06 extension (2026-09-19): optional worker/timer observations are now included when the dedicated unit is installed. This does not activate a worker. See `VPS06_FAILURE_MODEL.md` and actual `evidence/vps06/VPS06_MONITORING.json`. Existing backup/monitor timer definitions are unchanged.
 
 `review-activator-monitor.service` and `.timer` are enabled. Timer: five minutes after boot and five minutes after activation, accuracy30s. These are **operational monitoring**, not review/provider scheduling.

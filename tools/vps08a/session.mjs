@@ -1,5 +1,6 @@
 // Private server entrypoint: never the HTTP/default queue worker. No env file
-// discovery, secret arguments, provider retries, review writer or notifications.
+// discovery, secret arguments, provider retries or notifications. VPS09 manual
+// modes explicitly opt into the existing atomic writer after complete read only.
 import {openSync,closeSync,fstatSync,readFileSync,constants} from 'node:fs';
 import {userInfo} from 'node:os';
 import {createVpsSessionContext,VPS_SESSION_SCOPE as scope} from '../../lib/server/yandex-session/profile-context.js';
@@ -9,6 +10,7 @@ import {createYandexSessionService} from '../../lib/server/yandex-session/servic
 import {prepareVpsImport} from '../../lib/server/yandex-session/vps-import.js';
 import {runVpsDiagnostic} from '../../lib/server/yandex-session/vps-diagnostic.js';
 import {createVpsRpc} from './pg.mjs';
+import {createReviewPersistenceWriter} from '../../lib/server/review-persistence-writer.js';
 
 const emit=value=>process.stdout.write(JSON.stringify(value)+'\n');
 const safeCodes=new Set(['SESSION_CHANGED','SESSION_SCOPE_INVALID','SESSION_ROLE_DENIED','SESSION_STORAGE_FAILED','SESSION_PROFILE_INVALID',
@@ -18,10 +20,11 @@ let ring,importer;
 let attempted=0,completed=0;const statuses=[];
 try {
   const operation=process.argv[2];
-  if(process.argv.length!==3||!['status','import','health','full','page4','boundary34','mutable-full'].includes(operation))fail('SESSION_MODE_INVALID');
+  if(process.argv.length!==3||!['status','import','health','full','page4','boundary34','mutable-full','manual-first','manual-replay'].includes(operation))fail('SESSION_MODE_INVALID');
+  const manual=['manual-first','manual-replay'].includes(operation);
   const context=createVpsSessionContext(),role=userInfo().username;
   if(operation==='import'?role!=='review-yandex-import':role!=='review-yandex-reader')fail('SESSION_ROLE_DENIED');
-  const rpc=createVpsRpc(),store=createSessionStore({rpc,context});
+  const rpc=createVpsRpc({persistencePhase:manual?operation.slice(7):undefined}),store=createSessionStore({rpc,context});
   const status=()=>rpc('review_yandex_session_store',{p_company_id:scope.companyId,p_location_id:scope.locationId,p_org_id:scope.organizationId,p_action:'status',p_expected_revision:null,p_data:{}});
   if(operation==='status'){emit({ok:true,session:await status()});}
   else {
@@ -56,8 +59,9 @@ try {
       const validated=decryptSessionClassified(scope,row,ring,Date.now(),context);
       for(const c of validated.cookies)c.value='';
       const service=createYandexSessionService({store,keyring:ring,context,allowRead:true,
+        allowManualPersistence:manual,persistenceWriter:manual?createReviewPersistenceWriter({rpc}):null,
         fetchImpl:async(url,options)=>{attempted++;const response=await fetch(url,options);completed++;statuses.push(response.status);return response;}});
-      const result=operation==='boundary34'
+      const result=manual?await service.persistManual(scope,{expectedRevision:4}):operation==='boundary34'
         ? await service.boundaryDiagnostic(scope,{expectedRevision:3})
         : operation==='page4'
         ? await service.contractDiagnostic(scope,{page:4,expectedRevision:3})
@@ -68,6 +72,9 @@ try {
         unique:result.unique_count??null,pager_total:result.pagination?.total??null,
         completeness:result.completeness??null,attempted,completed,http_statuses:statuses,
         review_persistence:'OFF',notifications:'OFF',state_cas:result.stateCas??'NOT_RUN',
+        ...(manual?{review_persistence:result.review_persistence,persistence_result:result.persistence_result,
+          pagination_report:result.pagination_report,scope_valid:result.scope_valid??null,contract_valid:result.contract_valid??null,
+          session_mutations:'OFF',parser:result.parser??null}:{}),
         ...(operation==='page4'?{state:result.state_after,revision:result.revision,page:result.page,
           http_status:result.http_status,content_type:result.content_type,response_bytes:result.response_bytes,
           parser:result.parser??null,contract_failure:result.contract_failure??null,

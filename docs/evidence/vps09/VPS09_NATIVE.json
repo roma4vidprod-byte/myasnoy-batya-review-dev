@@ -1,0 +1,145 @@
+{
+  "status": "PASS",
+  "tests": [
+    {
+      "name": "anon wrapper denied",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated wrapper denied",
+      "status": "PASS"
+    },
+    {
+      "name": "service_role wrapper denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-activator wrapper denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-yandex-import wrapper denied",
+      "status": "PASS"
+    },
+    {
+      "name": "reader direct table denied",
+      "status": "PASS"
+    },
+    {
+      "name": "reader direct original RPC denied",
+      "status": "PASS"
+    },
+    {
+      "name": "owner NOSUPERUSER NOBYPASSRLS",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong company no writes",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong location no writes",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong org no writes",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong nullprovider no writes",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong nullrevision no writes",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong stale no writes",
+      "status": "PASS"
+    },
+    {
+      "name": "first two inserts",
+      "status": "PASS"
+    },
+    {
+      "name": "first phase cannot repeat",
+      "status": "PASS"
+    },
+    {
+      "name": "idempotent strict no-op",
+      "status": "PASS"
+    },
+    {
+      "name": "observed_at-only no row mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "update unchanged and new in one atomic batch",
+      "status": "PASS"
+    },
+    {
+      "name": "changed replay updates zero",
+      "status": "PASS"
+    },
+    {
+      "name": "owner reply and raw object preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate batch rollback",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid rating rollback",
+      "status": "PASS"
+    },
+    {
+      "name": "raw allowlist rollback",
+      "status": "PASS"
+    },
+    {
+      "name": "bad timestamp DB error rollback",
+      "status": "PASS"
+    },
+    {
+      "name": "collision rolls back earlier insertion",
+      "status": "PASS"
+    },
+    {
+      "name": "mid-loop DB constraint failure atomic rollback",
+      "status": "PASS"
+    },
+    {
+      "name": "synthetic rows exactly2",
+      "status": "PASS"
+    },
+    {
+      "name": "downstream all zero",
+      "status": "PASS"
+    },
+    {
+      "name": "unique scoped identities",
+      "status": "PASS"
+    },
+    {
+      "name": "session READY4 not mutated",
+      "status": "PASS"
+    }
+  ],
+  "provider_requests": 0,
+  "existing_lab_connections": 0,
+  "cleanup": "PASS",
+  "hashes": {
+    "supabase/migrations/20260912090000_review_activator_canonical_baseline.sql": "71aa35c22cb2aa99a39491b22de8f0f56d390dd53d6165223a8c61f15126176c",
+    "supabase/migrations/20260912103803_yandex_session_transport_v1.sql": "a6497dbf4ead5daea77eaa187e35f6b359b1d8f2a3521ee0881cba31d151e52c",
+    "supabase/migrations/20260913090000_yandex_scoped_persistence_atomic_writer_04.sql": "5cbc4cd6d522e2029770ec3a960c86ddadd4300df61357a52a362dc7838e373a",
+    "supabase/migrations/20260913100000_yandex_persistence_idempotency_05a.sql": "1dbf06efee422407d8bc5ccee1b0bb7ae27f87d2639ed4efa13a1c36c9cc2e7b",
+    "session-access.sql": "4d11c8e3e300cbd1d46bcbd302415fdda475c0575b23bc1ff65eb55c7153d59c",
+    "persistence-access.sql": "96098c22f12eaa504017d9f57f9427f953b1bb7824bd6a8815a2df39029857ce"
+  },
+  "server_version_num": 170011,
+  "session_fixture_adaptation": "only disposable DB guard name",
+  "pass": 31,
+  "fail": 0,
+  "skip": 0
+}

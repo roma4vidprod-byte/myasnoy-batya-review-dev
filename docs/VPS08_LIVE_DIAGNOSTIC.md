@@ -1,4 +1,6 @@
-# VPS08 live diagnostic — NOT_RUN
+# VPS08 live diagnostic — historical investigation
+
+Current checkpoint supersedes the initial NOT_RUN observations below: VPS08D read-only acceptance PASS with71 unique,4 pages, sessionREADY4; see `VPS08D_MUTABLE_PAGINATION.md` and `evidence/vps08d/VPS08D_RESULT.json`. VPS08 work was committed as `da98ed313a3d12ce9f8b7af7b50541151d74e346`. Subsequent VPS09 persistence attempt stopped before writing on page1 network failure; see `VPS09_MANUAL_PERSISTENCE.md`. Historical failures/NOT_RUN notes are retained, not represented as current state.
 
 No real session can currently cross the approved source-to-VPS boundary. Pre-live acceptance is **BLOCKED**, despite healthy infrastructure.
 
