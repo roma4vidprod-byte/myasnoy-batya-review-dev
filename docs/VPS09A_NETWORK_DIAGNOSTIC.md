@@ -85,3 +85,5 @@ Business GET0; cumulative remains13. Diagnostic socket probes17:6 TCP,11 TLS (in
 Next safe step: upstream/VPS network-path investigation with these safe timestamps/destinations, or a separately bounded diagnostic capturing the actual fetch cause after explicit authorization. No support message was sent. No real sync is authorized by this report.
 
 Evidence: `evidence/vps09a/VPS09A_CONTEXT.json`, `VPS09A_NETWORK.json`, `VPS09A_POSTFLIGHT.json`.
+
+Follow-up VPS09B completed a separately authorized bounded no-HTTP reliability series and installed this safe telemetry. See `VPS09B_OUTBOUND_RELIABILITY.md`; this does not rewrite VPS09A's historical UNKNOWN verdict or authorize VPS09 persistence replay.

@@ -1,0 +1,3462 @@
+{
+  "series": {
+    "kind": "complete",
+    "utc": "2026-09-19T19:17:28.159799+00:00",
+    "attempts": 54,
+    "duration_seconds": 566.59,
+    "http_requests": 0
+  },
+  "first_utc": "2026-09-19T19:08:01.656229+00:00",
+  "hostname": "yandex.ru",
+  "source_sha": "652fed6ab1dbae3dd05fae9dccbe1d02c78927f7",
+  "raw_report_path": "/var/lib/review-activator-ops/VPS09B_NETWORK.jsonl",
+  "raw_report_sha256": "db6f10e4ba233bc027fdb856caa5e07f79d51dbb61c6e1f1145660d95c19c9ca",
+  "dns_summary": {
+    "samples": 55,
+    "pass": 55,
+    "ipv4": [
+      "5.255.255.77",
+      "77.88.44.55",
+      "77.88.55.88"
+    ],
+    "ipv6": [
+      "2a02:6b8:a::a"
+    ],
+    "ipv4_sets": 1,
+    "ipv4_orderings": 6,
+    "resolver_method": "getaddrinfo/NSS -> systemd-resolved",
+    "nameservers": [
+      "127.0.0.53"
+    ],
+    "configured_upstream": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "per_sample_upstream": "NOT_OBSERVED_CACHE_POSSIBLE"
+  },
+  "dns_samples": [
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:01.656229+00:00",
+      "result": "PASS",
+      "elapsed_ms": 21,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:01.731817+00:00",
+      "result": "PASS",
+      "elapsed_ms": 8,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:12.140272+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:22.648087+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:33.145665+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:43.646775+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:08:54.150545+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:09:04.654834+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:09:15.147215+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:09:25.654827+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:09:36.150517+00:00",
+      "result": "PASS",
+      "elapsed_ms": 8,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:09:46.659982+00:00",
+      "result": "PASS",
+      "elapsed_ms": 22,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:09:57.151926+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:10:07.649680+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:10:18.172435+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:10:28.646687+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:10:39.156461+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:10:49.643691+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:11:00.147111+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:11:10.644779+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:11:21.155262+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:11:31.648101+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:11:42.149621+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:11:52.661354+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:12:03.156412+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:12:13.658433+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:12:24.149906+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:12:34.648177+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:12:45.155083+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:12:55.644199+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:13:06.145218+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:13:16.645234+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:13:27.149833+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:13:37.664610+00:00",
+      "result": "PASS",
+      "elapsed_ms": 11,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:13:48.185193+00:00",
+      "result": "PASS",
+      "elapsed_ms": 13,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:13:58.645577+00:00",
+      "result": "PASS",
+      "elapsed_ms": 8,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:14:09.153358+00:00",
+      "result": "PASS",
+      "elapsed_ms": 8,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:14:19.644688+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:14:30.163855+00:00",
+      "result": "PASS",
+      "elapsed_ms": 11,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:14:40.692009+00:00",
+      "result": "PASS",
+      "elapsed_ms": 22,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:14:51.154222+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:15:01.659663+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:15:12.149329+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:15:22.646617+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:15:33.148085+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:15:43.652724+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:15:54.143882+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:16:04.647336+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:16:15.149702+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:16:25.655071+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:16:36.150824+00:00",
+      "result": "PASS",
+      "elapsed_ms": 11,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:16:46.660781+00:00",
+      "result": "PASS",
+      "elapsed_ms": 12,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:16:57.151607+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:17:07.648786+00:00",
+      "result": "PASS",
+      "elapsed_ms": 9,
+      "addresses": [
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    },
+    {
+      "kind": "dns",
+      "utc": "2026-09-19T19:17:18.150464+00:00",
+      "result": "PASS",
+      "elapsed_ms": 10,
+      "addresses": [
+        {
+          "address": "77.88.44.55",
+          "family": 4
+        },
+        {
+          "address": "77.88.55.88",
+          "family": 4
+        },
+        {
+          "address": "5.255.255.77",
+          "family": 4
+        },
+        {
+          "address": "2a02:6b8:a::a",
+          "family": 6
+        }
+      ]
+    }
+  ],
+  "per_ip": {
+    "5.255.255.77": {
+      "tcp": {
+        "pass": 2,
+        "attempts": 10,
+        "fail": 8,
+        "success_elapsed_ms": {
+          "min": 30,
+          "max": 46,
+          "median": 38
+        },
+        "failure_stages": {
+          "TCP_CONNECT": 8
+        }
+      },
+      "tls": {
+        "pass": 2,
+        "attempts": 6,
+        "fail": 4,
+        "success_elapsed_ms": {
+          "min": 62,
+          "max": 73,
+          "median": 67.5
+        },
+        "failure_stages": {
+          "TCP_CONNECT": 4
+        }
+      },
+      "clients": {
+        "node": {
+          "pass": 0,
+          "attempts": 2,
+          "fail": 2,
+          "success_elapsed_ms": null,
+          "failure_stages": {
+            "TCP_CONNECT": 2
+          }
+        },
+        "curl": {
+          "pass": 2,
+          "attempts": 2,
+          "fail": 0,
+          "success_elapsed_ms": {
+            "min": 62,
+            "max": 73,
+            "median": 67.5
+          },
+          "failure_stages": {}
+        },
+        "openssl": {
+          "pass": 0,
+          "attempts": 2,
+          "fail": 2,
+          "success_elapsed_ms": null,
+          "failure_stages": {
+            "TCP_CONNECT": 2
+          }
+        }
+      }
+    },
+    "77.88.44.55": {
+      "tcp": {
+        "pass": 2,
+        "attempts": 10,
+        "fail": 8,
+        "success_elapsed_ms": {
+          "min": 25,
+          "max": 43,
+          "median": 34
+        },
+        "failure_stages": {
+          "TCP_CONNECT": 8
+        }
+      },
+      "tls": {
+        "pass": 2,
+        "attempts": 6,
+        "fail": 4,
+        "success_elapsed_ms": {
+          "min": 57,
+          "max": 117,
+          "median": 87
+        },
+        "failure_stages": {
+          "TCP_CONNECT": 4
+        }
+      },
+      "clients": {
+        "node": {
+          "pass": 0,
+          "attempts": 2,
+          "fail": 2,
+          "success_elapsed_ms": null,
+          "failure_stages": {
+            "TCP_CONNECT": 2
+          }
+        },
+        "curl": {
+          "pass": 1,
+          "attempts": 2,
+          "fail": 1,
+          "success_elapsed_ms": {
+            "min": 57,
+            "max": 57,
+            "median": 57
+          },
+          "failure_stages": {
+            "TCP_CONNECT": 1
+          }
+        },
+        "openssl": {
+          "pass": 1,
+          "attempts": 2,
+          "fail": 1,
+          "success_elapsed_ms": {
+            "min": 117,
+            "max": 117,
+            "median": 117
+          },
+          "failure_stages": {
+            "TCP_CONNECT": 1
+          }
+        }
+      }
+    },
+    "77.88.55.88": {
+      "tcp": {
+        "pass": 3,
+        "attempts": 10,
+        "fail": 7,
+        "success_elapsed_ms": {
+          "min": 25,
+          "max": 37,
+          "median": 26
+        },
+        "failure_stages": {
+          "TCP_CONNECT": 7
+        }
+      },
+      "tls": {
+        "pass": 0,
+        "attempts": 6,
+        "fail": 6,
+        "success_elapsed_ms": null,
+        "failure_stages": {
+          "TCP_CONNECT": 6
+        }
+      },
+      "clients": {
+        "node": {
+          "pass": 0,
+          "attempts": 2,
+          "fail": 2,
+          "success_elapsed_ms": null,
+          "failure_stages": {
+            "TCP_CONNECT": 2
+          }
+        },
+        "curl": {
+          "pass": 0,
+          "attempts": 2,
+          "fail": 2,
+          "success_elapsed_ms": null,
+          "failure_stages": {
+            "TCP_CONNECT": 2
+          }
+        },
+        "openssl": {
+          "pass": 0,
+          "attempts": 2,
+          "fail": 2,
+          "success_elapsed_ms": null,
+          "failure_stages": {
+            "TCP_CONNECT": 2
+          }
+        }
+      }
+    }
+  },
+  "client_matrix": {
+    "node": {
+      "pass": 11,
+      "attempts": 42,
+      "fail": 31,
+      "success_elapsed_ms": {
+        "min": 25,
+        "max": 120,
+        "median": 43
+      },
+      "failure_stages": {
+        "TCP_CONNECT": 31
+      }
+    },
+    "curl": {
+      "pass": 3,
+      "attempts": 6,
+      "fail": 3,
+      "success_elapsed_ms": {
+        "min": 57,
+        "max": 73,
+        "median": 62
+      },
+      "failure_stages": {
+        "TCP_CONNECT": 3
+      }
+    },
+    "openssl": {
+      "pass": 1,
+      "attempts": 6,
+      "fail": 5,
+      "success_elapsed_ms": {
+        "min": 117,
+        "max": 117,
+        "median": 117
+      },
+      "failure_stages": {
+        "TCP_CONNECT": 5
+      }
+    }
+  },
+  "node_family": {
+    "0": {
+      "pass": 2,
+      "attempts": 3,
+      "fail": 1,
+      "success_elapsed_ms": {
+        "min": 68,
+        "max": 75,
+        "median": 71.5
+      },
+      "failure_stages": {
+        "TCP_CONNECT": 1
+      }
+    },
+    "4": {
+      "pass": 2,
+      "attempts": 3,
+      "fail": 1,
+      "success_elapsed_ms": {
+        "min": 68,
+        "max": 120,
+        "median": 94
+      },
+      "failure_stages": {
+        "TCP_CONNECT": 1
+      }
+    }
+  },
+  "all_probes": {
+    "pass": 15,
+    "attempts": 54,
+    "fail": 39,
+    "success_elapsed_ms": {
+      "min": 25,
+      "max": 120,
+      "median": 57
+    },
+    "failure_stages": {
+      "TCP_CONNECT": 39
+    }
+  },
+  "probes": [
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:08:11.815685+00:00",
+      "index": 1,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:08:22.229191+00:00",
+      "index": 2,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:08:32.739340+00:00",
+      "index": 3,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:08:43.242189+00:00",
+      "index": 4,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:08:43.766698+00:00",
+      "index": 5,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 2,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 43,
+      "elapsed_ms": 43,
+      "selected_ip": "77.88.44.55",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 2
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:09:04.253517+00:00",
+      "index": 6,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10009,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:09:14.728628+00:00",
+      "index": 7,
+      "client": "node",
+      "mode": "tls",
+      "ip": "5.255.255.77",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10001,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 10
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:09:25.228977+00:00",
+      "index": 8,
+      "client": "node",
+      "mode": "tls",
+      "ip": "77.88.44.55",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 11
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:09:35.738743+00:00",
+      "index": 9,
+      "client": "node",
+      "mode": "tls",
+      "ip": "77.88.55.88",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10012,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 10
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:09:36.242882+00:00",
+      "index": 10,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 3,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 30,
+      "elapsed_ms": 30,
+      "selected_ip": "5.255.255.77",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:09:56.756184+00:00",
+      "index": 11,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 3,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10002,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:10:07.240156+00:00",
+      "index": 12,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 3,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:10:07.794590+00:00",
+      "index": 13,
+      "client": "node",
+      "mode": "family",
+      "family": 0,
+      "round": 1,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 36,
+      "elapsed_ms": 68,
+      "selected_ip": "77.88.44.55",
+      "tls": true,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 14
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:10:18.384624+00:00",
+      "index": 14,
+      "client": "node",
+      "mode": "family",
+      "family": 4,
+      "round": 1,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 65,
+      "elapsed_ms": 120,
+      "selected_ip": "77.88.55.88",
+      "tls": true,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 17
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:10:38.729596+00:00",
+      "index": 15,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 4,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:10:49.227207+00:00",
+      "index": 16,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 4,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10001,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:10:49.747967+00:00",
+      "index": 17,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 4,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 37,
+      "elapsed_ms": 37,
+      "selected_ip": "77.88.55.88",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:11:00.233792+00:00",
+      "index": 18,
+      "client": "curl",
+      "mode": "tls",
+      "ip": "5.255.255.77",
+      "round": 1,
+      "result": "PASS",
+      "curl_code": 0,
+      "os_errno": 0,
+      "tcp_connected": true,
+      "tcp_ms": 30.303,
+      "elapsed_ms": 73,
+      "tls_ms": 72.604,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "http_status": 0,
+      "http_request_bytes": 0,
+      "application_data_bytes": 0,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:11:20.653125+00:00",
+      "index": 19,
+      "client": "curl",
+      "mode": "tls",
+      "ip": "77.88.44.55",
+      "round": 1,
+      "result": "FAIL",
+      "curl_code": 28,
+      "os_errno": 0,
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "tls_ms": null,
+      "tls_version": null,
+      "certificate_valid": false,
+      "timeout_phase": "TCP_CONNECT",
+      "http_status": 0,
+      "http_request_bytes": 0,
+      "application_data_bytes": 0,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:11:31.163059+00:00",
+      "index": 20,
+      "client": "curl",
+      "mode": "tls",
+      "ip": "77.88.55.88",
+      "round": 1,
+      "result": "FAIL",
+      "curl_code": 28,
+      "os_errno": 0,
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10002,
+      "tls_ms": null,
+      "tls_version": null,
+      "certificate_valid": false,
+      "timeout_phase": "TCP_CONNECT",
+      "http_status": 0,
+      "http_request_bytes": 0,
+      "application_data_bytes": 0,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:11:41.737487+00:00",
+      "index": 21,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 5,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:11:42.251517+00:00",
+      "index": 22,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 5,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 25,
+      "elapsed_ms": 25,
+      "selected_ip": "77.88.44.55",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:11:52.754577+00:00",
+      "index": 23,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 5,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 25,
+      "elapsed_ms": 25,
+      "selected_ip": "77.88.55.88",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:12:13.240747+00:00",
+      "index": 24,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 6,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:12:23.743163+00:00",
+      "index": 25,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 6,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:12:34.237057+00:00",
+      "index": 26,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 6,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:12:44.662751+00:00",
+      "index": 27,
+      "client": "openssl",
+      "mode": "tls",
+      "ip": "5.255.255.77",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10012,
+      "tls_version": null,
+      "certificate_valid": false,
+      "exit_code": null,
+      "os_errno": null,
+      "timeout_phase": "TCP_CONNECT",
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:12:55.169391+00:00",
+      "index": 28,
+      "client": "openssl",
+      "mode": "tls",
+      "ip": "77.88.44.55",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10012,
+      "tls_version": null,
+      "certificate_valid": false,
+      "exit_code": null,
+      "os_errno": null,
+      "timeout_phase": "TCP_CONNECT",
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:13:05.660131+00:00",
+      "index": 29,
+      "client": "openssl",
+      "mode": "tls",
+      "ip": "77.88.55.88",
+      "round": 1,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10012,
+      "tls_version": null,
+      "certificate_valid": false,
+      "exit_code": null,
+      "os_errno": null,
+      "timeout_phase": "TCP_CONNECT",
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:13:06.289119+00:00",
+      "index": 30,
+      "client": "node",
+      "mode": "family",
+      "family": 0,
+      "round": 2,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 42,
+      "elapsed_ms": 75,
+      "selected_ip": "77.88.44.55",
+      "tls": true,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 13
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:13:16.784780+00:00",
+      "index": 31,
+      "client": "node",
+      "mode": "family",
+      "family": 4,
+      "round": 2,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 38,
+      "elapsed_ms": 68,
+      "selected_ip": "5.255.255.77",
+      "tls": true,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 13
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:13:37.236692+00:00",
+      "index": 32,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 7,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:13:47.754727+00:00",
+      "index": 33,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 7,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:13:58.284086+00:00",
+      "index": 34,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 7,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:14:08.726086+00:00",
+      "index": 35,
+      "client": "node",
+      "mode": "tls",
+      "ip": "5.255.255.77",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10011,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 10
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:14:19.227775+00:00",
+      "index": 36,
+      "client": "node",
+      "mode": "tls",
+      "ip": "77.88.44.55",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 9
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:14:29.722016+00:00",
+      "index": 37,
+      "client": "node",
+      "mode": "tls",
+      "ip": "77.88.55.88",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 10
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:14:30.296056+00:00",
+      "index": 38,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 8,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 46,
+      "elapsed_ms": 46,
+      "selected_ip": "5.255.255.77",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 2
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:14:50.779352+00:00",
+      "index": 39,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 8,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10002,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:15:01.237528+00:00",
+      "index": 40,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 8,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10004,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:15:11.771393+00:00",
+      "index": 41,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 9,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 2
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:15:22.244390+00:00",
+      "index": 42,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 9,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:15:32.740100+00:00",
+      "index": 43,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 9,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 2
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:15:33.216289+00:00",
+      "index": 44,
+      "client": "curl",
+      "mode": "tls",
+      "ip": "5.255.255.77",
+      "round": 2,
+      "result": "PASS",
+      "curl_code": 0,
+      "os_errno": 0,
+      "tcp_connected": true,
+      "tcp_ms": 19.236,
+      "elapsed_ms": 62,
+      "tls_ms": 61.702,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "http_status": 0,
+      "http_request_bytes": 0,
+      "application_data_bytes": 0,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:15:43.716292+00:00",
+      "index": 45,
+      "client": "curl",
+      "mode": "tls",
+      "ip": "77.88.44.55",
+      "round": 2,
+      "result": "PASS",
+      "curl_code": 0,
+      "os_errno": 0,
+      "tcp_connected": true,
+      "tcp_ms": 21.895,
+      "elapsed_ms": 57,
+      "tls_ms": 57.264,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "timeout_phase": null,
+      "http_status": 0,
+      "http_request_bytes": 0,
+      "application_data_bytes": 0,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:16:04.152437+00:00",
+      "index": 46,
+      "client": "curl",
+      "mode": "tls",
+      "ip": "77.88.55.88",
+      "round": 2,
+      "result": "FAIL",
+      "curl_code": 28,
+      "os_errno": 0,
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "tls_ms": null,
+      "tls_version": null,
+      "certificate_valid": false,
+      "timeout_phase": "TCP_CONNECT",
+      "http_status": 0,
+      "http_request_bytes": 0,
+      "application_data_bytes": 0,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:16:14.719566+00:00",
+      "index": 47,
+      "client": "node",
+      "mode": "family",
+      "family": 0,
+      "round": 3,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 13
+        },
+        {
+          "event": "connectionAttemptTimeout",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 264
+        },
+        {
+          "event": "connectionAttempt",
+          "ip": "2a02:6b8:a::a",
+          "family": 6,
+          "elapsed_ms": 265
+        },
+        {
+          "event": "connectionAttemptFailed",
+          "ip": "2a02:6b8:a::a",
+          "family": 6,
+          "elapsed_ms": 265,
+          "diagnostic": {
+            "category": "ROUTE_UNREACHABLE",
+            "phase": "TCP_CONNECT",
+            "codes": [
+              "ENETUNREACH"
+            ],
+            "syscall": "connect",
+            "hostname": "yandex.ru",
+            "aborted": false
+          }
+        },
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 265
+        },
+        {
+          "event": "connectionAttemptTimeout",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 515
+        },
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 515
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:16:25.217569+00:00",
+      "index": 48,
+      "client": "node",
+      "mode": "family",
+      "family": 4,
+      "round": 3,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10002,
+      "selected_ip": null,
+      "tls": true,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 13
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:16:35.749540+00:00",
+      "index": 49,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "5.255.255.77",
+      "round": 10,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10010,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "5.255.255.77",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:16:46.228591+00:00",
+      "index": 50,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.44.55",
+      "round": 10,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10003,
+      "selected_ip": null,
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": "TCP_CONNECT",
+      "diagnostic": {
+        "category": "ABORT_TIMEOUT",
+        "phase": "TCP_CONNECT",
+        "codes": [],
+        "syscall": null,
+        "hostname": "yandex.ru",
+        "aborted": true
+      },
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.44.55",
+          "family": 4,
+          "elapsed_ms": 1
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:16:46.795883+00:00",
+      "index": 51,
+      "client": "node",
+      "mode": "tcp",
+      "ip": "77.88.55.88",
+      "round": 10,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": 26,
+      "elapsed_ms": 26,
+      "selected_ip": "77.88.55.88",
+      "tls": false,
+      "tls_version": null,
+      "certificate_valid": null,
+      "timeout_phase": null,
+      "diagnostic": null,
+      "events": [
+        {
+          "event": "connectionAttempt",
+          "ip": "77.88.55.88",
+          "family": 4,
+          "elapsed_ms": 2
+        }
+      ],
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:17:07.159850+00:00",
+      "index": 52,
+      "client": "openssl",
+      "mode": "tls",
+      "ip": "5.255.255.77",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10005,
+      "tls_version": null,
+      "certificate_valid": false,
+      "exit_code": null,
+      "os_errno": null,
+      "timeout_phase": "TCP_CONNECT",
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:17:07.767898+00:00",
+      "index": 53,
+      "client": "openssl",
+      "mode": "tls",
+      "ip": "77.88.44.55",
+      "round": 2,
+      "result": "PASS",
+      "tcp_connected": true,
+      "tcp_ms": null,
+      "elapsed_ms": 117,
+      "tls_version": "TLSv1.3",
+      "certificate_valid": true,
+      "exit_code": 0,
+      "os_errno": null,
+      "timeout_phase": null,
+      "http_requests": 0
+    },
+    {
+      "kind": "probe",
+      "utc": "2026-09-19T19:17:28.159681+00:00",
+      "index": 54,
+      "client": "openssl",
+      "mode": "tls",
+      "ip": "77.88.55.88",
+      "round": 2,
+      "result": "FAIL",
+      "tcp_connected": false,
+      "tcp_ms": null,
+      "elapsed_ms": 10007,
+      "tls_version": null,
+      "certificate_valid": false,
+      "exit_code": null,
+      "os_errno": null,
+      "timeout_phase": "TCP_CONNECT",
+      "http_requests": 0
+    }
+  ],
+  "routes": [
+    {
+      "kind": "route",
+      "utc": "2026-09-19T19:08:01.661186+00:00",
+      "ip": "5.255.255.77",
+      "route": [
+        {
+          "dst": "5.255.255.77",
+          "gateway": "141.98.87.1",
+          "dev": "ens3",
+          "prefsrc": "141.98.87.15",
+          "flags": [],
+          "uid": 994,
+          "cache": []
+        }
+      ]
+    },
+    {
+      "kind": "route",
+      "utc": "2026-09-19T19:08:01.662766+00:00",
+      "ip": "77.88.44.55",
+      "route": [
+        {
+          "dst": "77.88.44.55",
+          "gateway": "141.98.87.1",
+          "dev": "ens3",
+          "prefsrc": "141.98.87.15",
+          "flags": [],
+          "uid": 994,
+          "cache": []
+        }
+      ]
+    },
+    {
+      "kind": "route",
+      "utc": "2026-09-19T19:08:01.664424+00:00",
+      "ip": "77.88.55.88",
+      "route": [
+        {
+          "dst": "77.88.55.88",
+          "gateway": "141.98.87.1",
+          "dev": "ens3",
+          "prefsrc": "141.98.87.15",
+          "flags": [],
+          "uid": 994,
+          "cache": []
+        }
+      ]
+    }
+  ],
+  "resource_summary": {
+    "samples": 109,
+    "max_tcp_count": 22,
+    "max_time_wait": 7,
+    "max_load1": 0.080078125,
+    "min_available_memory_kib": 3361316,
+    "fd_limits": [
+      1024,
+      1048576
+    ],
+    "ephemeral_ports": "32768\t60999",
+    "file_nr_first": "1344\t0\t9223372036854775807",
+    "file_nr_last": "1472\t0\t9223372036854775807",
+    "max_conntrack_count": 43,
+    "conntrack_max": "65536"
+  },
+  "passive": {
+    "start_utc": "2026-09-19T19:10:24.834881+00:00",
+    "end_utc": "2026-09-19T19:11:54.969858+00:00",
+    "mode": "PASSIVE_SYN_RST_HEADERS_ONLY",
+    "extra_network_requests": 0,
+    "raw_packets_saved": false,
+    "raw_lines_saved": false,
+    "counts": {
+      "5.255.255.77": {
+        "syn_out": 15,
+        "syn_ack_in": 1,
+        "rst_in": 0
+      },
+      "77.88.44.55": {
+        "syn_out": 15,
+        "syn_ack_in": 1,
+        "rst_in": 1
+      },
+      "77.88.55.88": {
+        "syn_out": 9,
+        "syn_ack_in": 2,
+        "rst_in": 2
+      }
+    },
+    "samples": 90,
+    "max_syn_sent": 1,
+    "max_time_wait": 7,
+    "max_tcp_count": 23,
+    "max_load1": 0.0048828125,
+    "min_available_memory_kib": 3361316,
+    "conntrack_count_max": 43,
+    "conntrack_capacity": "65536",
+    "capture_packet_counters": [
+      49,
+      49,
+      0
+    ],
+    "capture_exit": 0,
+    "tcp_mtu_probing": "0"
+  },
+  "tls_versions": [
+    "TLSv1.3"
+  ],
+  "curl_http_request_bytes": 0,
+  "curl_application_bytes": 0,
+  "http_requests": 0,
+  "verdict": "B. HOSTING_EGRESS_INTERMITTENCY",
+  "verdict_scope": "Current VPS-to-Yandex outbound path reproduces TCP-connect intermittency across clients/IPs; exact dropping device/upstream/provider side NOT_LOCALIZED. Historical VPS09 individual errno remains UNAVAILABLE.",
+  "context": {
+    "user": "review-yandex-reader",
+    "uid": 994,
+    "node": "24.21.0",
+    "curl": "8.5.0 / libcurl8.5.0 / OpenSSL3.0.13",
+    "openssl": "3.0.13",
+    "environment": "env -i PATH=/usr/bin:/bin",
+    "business_runtime_invoked": false
+  },
+  "host_policy": {
+    "preflight_utc": "2026-09-19T18:58:54.551699+00:00",
+    "ufw": "active; incoming deny; outgoing allow; only SSH inbound",
+    "ipv4_output": "ACCEPT; empty ufw-user-output; NEW TCP accepted; ESTABLISHED/RELATED accepted",
+    "outbound_443_restrictions": "NONE_FOUND",
+    "outbound_rate_limit": "NONE_FOUND",
+    "mtu": {
+      "interface": "ens3",
+      "value": 1500,
+      "route_override": "NONE_PRESENT",
+      "active_pmtu_probe": "NOT_RUN_TCP_CONNECT_FAILS_BEFORE_TLS"
+    },
+    "network_config_changes": 0
+  },
+  "effects": {
+    "dns_lookup_calls": 55,
+    "diagnostic_probe_invocations": 54,
+    "tcp_only": 30,
+    "tls_including_family_comparison": 24,
+    "http_requests": 0,
+    "provider_writes": 0,
+    "db_writes": 0,
+    "session_transitions": 0,
+    "business_get_cumulative": 13,
+    "passive_observation_seconds": 90
+  }
+}

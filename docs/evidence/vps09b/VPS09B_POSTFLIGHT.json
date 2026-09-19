@@ -1,0 +1,76 @@
+{
+  "utc": "2026-09-19T19:20:47.767064+00:00",
+  "session": {
+    "rows": 1,
+    "scope_valid": true,
+    "state": "READY",
+    "revision": 4,
+    "last_successful_sync_at": null
+  },
+  "reviews": {
+    "real": 0,
+    "synthetic": 2,
+    "duplicates": 0,
+    "with_owner_reply": 0,
+    "without_owner_reply": 0,
+    "scope_valid": true,
+    "ratings_valid": true,
+    "raw_allowed": true
+  },
+  "lab_users": 3,
+  "queue_runs": 0,
+  "all_table_hashes_unchanged": true,
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "timer": [
+    "ActiveState=inactive",
+    "UnitFileState=disabled"
+  ],
+  "public_tcp": "SSH_ONLY",
+  "monitor_receipt": {
+    "last_successful_persistence": null,
+    "last_successful_provider_read": null,
+    "last_sync_result": "FAIL",
+    "real_review_count": 0,
+    "sync_failure": "SYNC_NOT_CONFIRMED"
+  },
+  "attempt_marker_sha256": "1bf47121a21a0e9048042f9f7d013d72606d449f7c096fa6cac1bac79291bb75",
+  "receipt_sha256": "580a86296626d9b708f2f0da428bff661565ba42c53a0e74482e9bc364369a8c",
+  "replay_absent": true,
+  "runtime_files": 25,
+  "runtime_manifest_hash_match": true,
+  "telemetry": {
+    "status": "PASS",
+    "utc": "2026-09-19T19:19:38.771105+00:00",
+    "source_sha": "652fed6ab1dbae3dd05fae9dccbe1d02c78927f7",
+    "files": {
+      "lib/server/yandex-session/network-diagnostic.js": "da75d11eb6b3bfef31d49020a1eb2c5902967f528bdda33556057bf6c97747f6",
+      "lib/server/yandex-session/transport.js": "498eb7ac40610d6de6f5a606d71230485842d49b42e18d157732c6e9dedb046c",
+      "lib/server/yandex-session/service.js": "bc77ded50320ec4c7563e4d25f59e1260f8d5fffc4a92cdd5a565ea375993cc4",
+      "tools/vps08a/session.mjs": "66e9d299945d70921dd10779e30434b3254160763eabceb6a67e9aa018965cfa"
+    },
+    "rollback_code_checkpoint": "/var/lib/review-activator-ops/vps09b-runtime-before",
+    "rollback_mode": "0700",
+    "file_owner": "root:review-yandex-reader",
+    "file_mode": "0640",
+    "network_policy_changed": false,
+    "business_invocations": 0,
+    "db_writes": 0,
+    "restart_count": 0,
+    "release_runtime_files": 25
+  },
+  "unit_hashes": {
+    "review-activator-foundation.service": "1d75e134e26fa72346c0668f53c75b555741b12842953be4ee158debadf1cfba",
+    "review-activator-worker.service": "4bc472e615e16eb0ebe3c35a3ba5bc6b1ec8bd05a7684ba5f976d7f83d79595a",
+    "review-activator-monitor.service": "94b1660ca84c1f948064c610285019f2e106a84975b2d3a251b163601ec41da8",
+    "review-activator-backup.service": "bb301f6a5d48b0f1baa93bd341889ec68ce79f5baff6fe3b95ee458f90673c0c"
+  },
+  "log_scan": {
+    "journal_exit": 0,
+    "since": "2026-09-19T19:07:00Z",
+    "sensitive_pattern_matches": 0,
+    "exact_secret_value_scan": "NOT_RUN_NO_SECRET_LOADED"
+  }
+}
