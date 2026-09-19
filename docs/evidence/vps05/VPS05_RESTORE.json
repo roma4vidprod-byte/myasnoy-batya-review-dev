@@ -1,0 +1,536 @@
+{
+  "backup_sha256": "87aaeccb46a948a966dbb73b61a043c52b2d2dd3efba23149dc2017ac223cc53",
+  "cleanup": "PASS",
+  "comparison": {
+    "all_table_counts_hashes_equal": true,
+    "catalog_owners_acl_rls_equal": true,
+    "data_exclusions": [],
+    "database_name_oid_and_database_connect_acl": "SEPARATE_TARGET_NOT_COMPARED",
+    "restored_schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558",
+    "schema_equal": true,
+    "schema_exclusions": [
+      "psql restriction control token lines"
+    ],
+    "source_schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558"
+  },
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "restore_exit_code": 0,
+  "restored_snapshot": {
+    "catalog": {
+      "constraints": 175,
+      "functions": 32,
+      "indexes": 123,
+      "schemas": [
+        "auth",
+        "cron",
+        "public",
+        "review_private",
+        "vps_lab_private"
+      ],
+      "synthetic_reviews_only": true,
+      "synthetic_users_only": true,
+      "version": "vps04-auth-api-v1"
+    },
+    "rows": {
+      "auth.audit_log_entries": {
+        "count": 27,
+        "sha256": "a5fb4e4ef74d0aae98c28f0658efdfc973df5a4d73960a74a606e45c015f5080"
+      },
+      "auth.custom_oauth_providers": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.flow_state": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.identities": {
+        "count": 3,
+        "sha256": "3f6808502d2f918c202638749677cc2f861c20e0b078557cd0b205e1f32cf7f3"
+      },
+      "auth.instances": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.mfa_amr_claims": {
+        "count": 8,
+        "sha256": "b49640cbda51d1c9d8e1c737d14af8cadcb0b842241e50a1f1fbd3a73a838289"
+      },
+      "auth.mfa_challenges": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.mfa_factors": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_authorizations": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_client_states": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_clients": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_consents": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.one_time_tokens": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.refresh_tokens": {
+        "count": 8,
+        "sha256": "5ac98da316706eafd38393652246c9384628005108744b1928f291b705efd5e8"
+      },
+      "auth.saml_providers": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.saml_relay_states": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.schema_migrations": {
+        "count": 70,
+        "sha256": "fbbe3b830a36126d23ee174ae2b9baff61b1b52a0ce417081cb312ba3ade0078"
+      },
+      "auth.sessions": {
+        "count": 8,
+        "sha256": "19be17429925d1d13d2326b13c0b52a36de6d77da9eef227edce2a2b7bd209ec"
+      },
+      "auth.sso_domains": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.sso_providers": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.users": {
+        "count": 3,
+        "sha256": "d774dac99cda8860ae5bd98bd3583e052b62bbeb52cb07bc39a3797ff03802af"
+      },
+      "auth.webauthn_challenges": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.webauthn_credentials": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "cron.job": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_admins": {
+        "count": 2,
+        "sha256": "8fd12f5d7651b1acb738d746d5e2b5b6f97015e1f550abdb88bbbe5601180c6b"
+      },
+      "public.review_companies": {
+        "count": 2,
+        "sha256": "3b82d24bf26d4bf0e992debb5d0c1d1ff565d8c58f474a3b51964933a7e024b3"
+      },
+      "public.review_external_reviews": {
+        "count": 2,
+        "sha256": "ada98eb2672b8685ec5b40131e81db4a0338aa2673b950d2f414e26786850062"
+      },
+      "public.review_feedback": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_locations": {
+        "count": 2,
+        "sha256": "d436b4644cda2ffbd56e841490cde5d976a80f11dec488690999472bc3bb07af"
+      },
+      "public.review_matches": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_notification_deliveries": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_promo_codes": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_provider_connections": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_qr_sources": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_reply_actions": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_sessions": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_sync_runs": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "review_private.yandex_contract_recoveries": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "review_private.yandex_sessions": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "vps_lab_private.memberships": {
+        "count": 2,
+        "sha256": "2b182007deb8be5260a2c2358fbba05e0ff87d1c45fbfe8ac395dda70e75409f"
+      },
+      "vps_lab_private.version": {
+        "count": 1,
+        "sha256": "24cec6be8c9194e68bb962daf53c3e91f9226211b88b7cd42c6b74facd17b167"
+      }
+    },
+    "schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558",
+    "tables": [
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "audit_log_entries"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "custom_oauth_providers"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "flow_state"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "identities"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "instances"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "mfa_amr_claims"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "mfa_challenges"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "mfa_factors"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_authorizations"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_client_states"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_clients"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_consents"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "one_time_tokens"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "refresh_tokens"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "saml_providers"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "saml_relay_states"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "schema_migrations"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "sessions"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "sso_domains"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "sso_providers"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "users"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "webauthn_challenges"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "webauthn_credentials"
+      },
+      {
+        "force": false,
+        "owner": "supabase_admin",
+        "rls": true,
+        "schema": "cron",
+        "table": "job"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_admins"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_companies"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_external_reviews"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_feedback"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_locations"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_matches"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_notification_deliveries"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_promo_codes"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_provider_connections"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_qr_sources"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_reply_actions"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_sessions"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_sync_runs"
+      },
+      {
+        "force": true,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "review_private",
+        "table": "yandex_contract_recoveries"
+      },
+      {
+        "force": true,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "review_private",
+        "table": "yandex_sessions"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "vps_lab_private",
+        "table": "memberships"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "vps_lab_private",
+        "table": "version"
+      }
+    ]
+  },
+  "security": {
+    "acl": {
+      "auth_table_denied": true,
+      "private_memberships_denied": true,
+      "private_schema_denied": true,
+      "raw_payload_denied": true,
+      "recovery_execute_denied": true
+    },
+    "actual_private_select_denied": {
+      "anon": true,
+      "authenticated": true,
+      "service_role": true
+    },
+    "rls_no_subject_rows": 0,
+    "roles": [
+      {
+        "role": "anon",
+        "safe": true
+      },
+      {
+        "role": "authenticated",
+        "safe": true
+      },
+      {
+        "role": "ra_lab_authenticator",
+        "safe": true
+      },
+      {
+        "role": "service_role",
+        "safe": true
+      },
+      {
+        "role": "supabase_auth_admin",
+        "safe": true
+      }
+    ]
+  },
+  "source_database": "review_activator_lab",
+  "source_unchanged": true,
+  "status": "PASS",
+  "target_database": "review_activator_restore_test",
+  "utc": "2026-09-19T10:41:55.559069+00:00"
+}

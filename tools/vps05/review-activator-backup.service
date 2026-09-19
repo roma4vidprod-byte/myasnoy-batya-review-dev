@@ -1,0 +1,25 @@
+[Unit]
+Description=Review Activator synthetic LAB local backup only (no retention deletion)
+After=postgresql@17-main.service
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/bin/flock --nonblock /var/lib/review-activator-ops/backup.lock /usr/bin/python3 -B /opt/review-activator-lab/ops/vps05/ops.py backup
+TimeoutStartSec=10min
+MemoryMax=384M
+CPUQuota=50%
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=yes
+# Unix peer backup needs runuser to switch to postgres. Explicit bounded
+# capabilities preserve this under User=root + NoNewPrivileges; no broad root caps.
+CapabilityBoundingSet=CAP_SETUID CAP_SETGID
+AmbientCapabilities=CAP_SETUID CAP_SETGID
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/backups/review-activator /var/lib/review-activator-ops
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+IPAddressDeny=any

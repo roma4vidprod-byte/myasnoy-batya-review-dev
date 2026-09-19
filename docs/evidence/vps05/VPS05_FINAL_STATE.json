@@ -1,0 +1,130 @@
+{
+  "backup_directories": 2,
+  "boot_id": "e1aa28e3-af7e-45ac-b10c-b4d22d8995e6",
+  "disk_free": 37103779840,
+  "failed_units": [],
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "listeners": [
+    "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+    "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+    "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+    "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+    "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+    "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+    "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+    "LISTEN 0      4096            [::]:22       [::]:*"
+  ],
+  "ops_sha256": "a13d72b35622f88fc7e65f8f9450ca611b6b8d56acd0b271a19694200efe0976",
+  "original_lab_unchanged": true,
+  "release_hashes_match": true,
+  "restore_target_absent": true,
+  "row_counts": {
+    "auth.audit_log_entries": 27,
+    "auth.custom_oauth_providers": 0,
+    "auth.flow_state": 0,
+    "auth.identities": 3,
+    "auth.instances": 0,
+    "auth.mfa_amr_claims": 8,
+    "auth.mfa_challenges": 0,
+    "auth.mfa_factors": 0,
+    "auth.oauth_authorizations": 0,
+    "auth.oauth_client_states": 0,
+    "auth.oauth_clients": 0,
+    "auth.oauth_consents": 0,
+    "auth.one_time_tokens": 0,
+    "auth.refresh_tokens": 8,
+    "auth.saml_providers": 0,
+    "auth.saml_relay_states": 0,
+    "auth.schema_migrations": 70,
+    "auth.sessions": 8,
+    "auth.sso_domains": 0,
+    "auth.sso_providers": 0,
+    "auth.users": 3,
+    "auth.webauthn_challenges": 0,
+    "auth.webauthn_credentials": 0,
+    "cron.job": 0,
+    "public.review_admins": 2,
+    "public.review_companies": 2,
+    "public.review_external_reviews": 2,
+    "public.review_feedback": 0,
+    "public.review_locations": 2,
+    "public.review_matches": 0,
+    "public.review_notification_deliveries": 0,
+    "public.review_promo_codes": 0,
+    "public.review_provider_connections": 0,
+    "public.review_qr_sources": 0,
+    "public.review_reply_actions": 0,
+    "public.review_sessions": 0,
+    "public.review_sync_runs": 0,
+    "review_private.yandex_contract_recoveries": 0,
+    "review_private.yandex_sessions": 0,
+    "vps_lab_private.memberships": 2,
+    "vps_lab_private.version": 1
+  },
+  "schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558",
+  "secret_config_metadata_unchanged": true,
+  "services": {
+    "postgresql@17-main.service": {
+      "ActiveEnterTimestamp": "Sat 2026-09-19 09:26:14 UTC",
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "UnitFileState": "enabled-runtime"
+    },
+    "review-activator-backup.service": {
+      "ActiveEnterTimestamp": "",
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "UnitFileState": "static"
+    },
+    "review-activator-backup.timer": {
+      "ActiveEnterTimestamp": "Sat 2026-09-19 10:51:28 UTC",
+      "ActiveState": "active",
+      "LastTriggerUSec": "",
+      "NextElapseUSecRealtime": "Sun 2026-09-20 03:30:00 UTC",
+      "Result": "success",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-foundation.service": {
+      "ActiveEnterTimestamp": "Sat 2026-09-19 09:26:14 UTC",
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-monitor.service": {
+      "ActiveEnterTimestamp": "",
+      "ActiveState": "inactive",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "UnitFileState": "static"
+    },
+    "review-activator-monitor.timer": {
+      "ActiveEnterTimestamp": "Sat 2026-09-19 10:51:28 UTC",
+      "ActiveState": "active",
+      "LastTriggerUSec": "Sat 2026-09-19 10:56:30 UTC",
+      "NextElapseUSecRealtime": "",
+      "Result": "success",
+      "UnitFileState": "enabled"
+    },
+    "review-lab-api.service": {
+      "ActiveEnterTimestamp": "Sat 2026-09-19 09:26:11 UTC",
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "UnitFileState": "enabled"
+    },
+    "review-lab-auth.service": {
+      "ActiveEnterTimestamp": "Sat 2026-09-19 09:26:10 UTC",
+      "ActiveState": "active",
+      "ExecMainStatus": "0",
+      "Result": "success",
+      "UnitFileState": "enabled"
+    }
+  },
+  "utc": "2026-09-19T10:57:42.492151+00:00"
+}

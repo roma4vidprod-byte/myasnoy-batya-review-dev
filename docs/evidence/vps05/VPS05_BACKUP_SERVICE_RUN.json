@@ -1,0 +1,712 @@
+{
+  "classification": "LOCAL_BACKUP_ONLY",
+  "database": "review_activator_lab",
+  "database_size": 10852019,
+  "directory_mode": "0o700",
+  "disaster_recovery": "NOT_CONFIGURED",
+  "disk_free_after": 37112348672,
+  "disk_free_before": 37112885248,
+  "dump": {
+    "gid": 0,
+    "mode": "0o600",
+    "path": "/var/backups/review-activator/20260919T105126493074Z/review_activator_lab.dump",
+    "sha256": "596fa204195064bdfa5f2cef5a0bad974fc14b57fd1da88e8d65b4576986680a",
+    "size": 451672,
+    "uid": 0
+  },
+  "format": "custom",
+  "inventory": {
+    "active_release": "/opt/review-activator-lab/releases/vps04-initial",
+    "auth": "v2.196.0",
+    "listeners": [
+      "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+      "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+      "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+      "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+      "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+      "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+      "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+      "LISTEN 0      4096            [::]:22       [::]:*"
+    ],
+    "node": "v24.21.0",
+    "pg_dump": "pg_dump (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg24.04+2)",
+    "postgrest": "PostgREST 14.17",
+    "profile": "vps-lab",
+    "release_path": "/opt/review-activator-lab/releases/vps04-initial",
+    "role_memberships": [
+      {
+        "admin": false,
+        "inherit": false,
+        "member": "ra_lab_authenticator",
+        "role": "anon",
+        "set": true
+      },
+      {
+        "admin": false,
+        "inherit": false,
+        "member": "ra_lab_authenticator",
+        "role": "authenticated",
+        "set": true
+      },
+      {
+        "admin": false,
+        "inherit": false,
+        "member": "ra_lab_authenticator",
+        "role": "service_role",
+        "set": true
+      }
+    ],
+    "roles_without_passwords": [
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": true,
+        "login": false,
+        "name": "anon",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": true,
+        "login": false,
+        "name": "authenticated",
+        "superuser": false
+      },
+      {
+        "bypassrls": true,
+        "createdb": true,
+        "createrole": true,
+        "inherit": true,
+        "login": true,
+        "name": "postgres",
+        "superuser": true
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": false,
+        "login": true,
+        "name": "ra_lab_authenticator",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": false,
+        "login": false,
+        "name": "ra_lab_migrator",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": false,
+        "login": false,
+        "name": "ra_lab_owner",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": false,
+        "login": false,
+        "name": "ra_lab_runtime",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": true,
+        "login": false,
+        "name": "service_role",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": true,
+        "login": false,
+        "name": "supabase_admin",
+        "superuser": false
+      },
+      {
+        "bypassrls": false,
+        "createdb": false,
+        "createrole": false,
+        "inherit": true,
+        "login": true,
+        "name": "supabase_auth_admin",
+        "superuser": false
+      }
+    ],
+    "secret_config_metadata_only": [
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/auth.env",
+        "sha256": "7d50ee16ba7fc458aa5afceb779e86202d94a7968494f6f2f130be3036d7066f",
+        "size": 1452,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/api.env",
+        "sha256": "97af02851d817fb9589f625d7071bdc8ddd63ff40166f6aea944786521c0edd7",
+        "size": 698,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/node.env",
+        "sha256": "384306ea083b0b09cc09f7f360217df52ad2c4a14cddcde91279b9b90022aed9",
+        "size": 682,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/bootstrap.json",
+        "sha256": "a1c9b6a3105fa2ed92360e431109a0977e277948710f9ab9dd78c5b97fdf6b86",
+        "size": 1269,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/synthetic-users.json",
+        "sha256": "b186be8999d9fbc4118b78a8c36ae86212dd9fd89cad73923c083ade2aa66b97",
+        "size": 426,
+        "uid": 0
+      }
+    ],
+    "server_version_num": "170011",
+    "services": {
+      "postgresql@17-main.service": {
+        "ActiveState": "active",
+        "DropInPaths": "",
+        "FragmentPath": "/usr/lib/systemd/system/postgresql@.service",
+        "UnitFileState": "enabled-runtime",
+        "User": "",
+        "WorkingDirectory": ""
+      },
+      "review-activator-foundation.service": {
+        "ActiveState": "active",
+        "DropInPaths": "/etc/systemd/system/review-activator-foundation.service.d/vps04.conf",
+        "FragmentPath": "/etc/systemd/system/review-activator-foundation.service",
+        "UnitFileState": "enabled",
+        "User": "review-activator",
+        "WorkingDirectory": "/opt/review-activator-lab/releases/vps04-initial"
+      },
+      "review-lab-api.service": {
+        "ActiveState": "active",
+        "DropInPaths": "",
+        "FragmentPath": "/etc/systemd/system/review-lab-api.service",
+        "UnitFileState": "enabled",
+        "User": "ra-lab-api",
+        "WorkingDirectory": "/opt/review-activator-lab"
+      },
+      "review-lab-auth.service": {
+        "ActiveState": "active",
+        "DropInPaths": "",
+        "FragmentPath": "/etc/systemd/system/review-lab-auth.service",
+        "UnitFileState": "enabled",
+        "User": "ra-lab-auth",
+        "WorkingDirectory": "/opt/review-activator-lab"
+      }
+    }
+  },
+  "release_archive": {
+    "gid": 0,
+    "mode": "0o600",
+    "path": "/var/backups/review-activator/20260919T105126493074Z/release.tar.gz",
+    "sha256": "45cd23c2253d50178d7060283a81ec8c3526ed2ea9683ee478de8f73a81914d5",
+    "size": 14657,
+    "uid": 0
+  },
+  "source_snapshot": {
+    "catalog": {
+      "constraints": 175,
+      "functions": 32,
+      "indexes": 123,
+      "schemas": [
+        "auth",
+        "cron",
+        "public",
+        "review_private",
+        "vps_lab_private"
+      ],
+      "synthetic_reviews_only": true,
+      "synthetic_users_only": true,
+      "version": "vps04-auth-api-v1"
+    },
+    "rows": {
+      "auth.audit_log_entries": {
+        "count": 27,
+        "sha256": "a5fb4e4ef74d0aae98c28f0658efdfc973df5a4d73960a74a606e45c015f5080"
+      },
+      "auth.custom_oauth_providers": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.flow_state": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.identities": {
+        "count": 3,
+        "sha256": "3f6808502d2f918c202638749677cc2f861c20e0b078557cd0b205e1f32cf7f3"
+      },
+      "auth.instances": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.mfa_amr_claims": {
+        "count": 8,
+        "sha256": "b49640cbda51d1c9d8e1c737d14af8cadcb0b842241e50a1f1fbd3a73a838289"
+      },
+      "auth.mfa_challenges": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.mfa_factors": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_authorizations": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_client_states": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_clients": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.oauth_consents": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.one_time_tokens": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.refresh_tokens": {
+        "count": 8,
+        "sha256": "5ac98da316706eafd38393652246c9384628005108744b1928f291b705efd5e8"
+      },
+      "auth.saml_providers": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.saml_relay_states": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.schema_migrations": {
+        "count": 70,
+        "sha256": "fbbe3b830a36126d23ee174ae2b9baff61b1b52a0ce417081cb312ba3ade0078"
+      },
+      "auth.sessions": {
+        "count": 8,
+        "sha256": "19be17429925d1d13d2326b13c0b52a36de6d77da9eef227edce2a2b7bd209ec"
+      },
+      "auth.sso_domains": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.sso_providers": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.users": {
+        "count": 3,
+        "sha256": "d774dac99cda8860ae5bd98bd3583e052b62bbeb52cb07bc39a3797ff03802af"
+      },
+      "auth.webauthn_challenges": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "auth.webauthn_credentials": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "cron.job": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_admins": {
+        "count": 2,
+        "sha256": "8fd12f5d7651b1acb738d746d5e2b5b6f97015e1f550abdb88bbbe5601180c6b"
+      },
+      "public.review_companies": {
+        "count": 2,
+        "sha256": "3b82d24bf26d4bf0e992debb5d0c1d1ff565d8c58f474a3b51964933a7e024b3"
+      },
+      "public.review_external_reviews": {
+        "count": 2,
+        "sha256": "ada98eb2672b8685ec5b40131e81db4a0338aa2673b950d2f414e26786850062"
+      },
+      "public.review_feedback": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_locations": {
+        "count": 2,
+        "sha256": "d436b4644cda2ffbd56e841490cde5d976a80f11dec488690999472bc3bb07af"
+      },
+      "public.review_matches": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_notification_deliveries": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_promo_codes": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_provider_connections": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_qr_sources": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_reply_actions": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_sessions": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "public.review_sync_runs": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "review_private.yandex_contract_recoveries": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "review_private.yandex_sessions": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "vps_lab_private.memberships": {
+        "count": 2,
+        "sha256": "2b182007deb8be5260a2c2358fbba05e0ff87d1c45fbfe8ac395dda70e75409f"
+      },
+      "vps_lab_private.version": {
+        "count": 1,
+        "sha256": "24cec6be8c9194e68bb962daf53c3e91f9226211b88b7cd42c6b74facd17b167"
+      }
+    },
+    "schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558",
+    "tables": [
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "audit_log_entries"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "custom_oauth_providers"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "flow_state"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "identities"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "instances"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "mfa_amr_claims"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "mfa_challenges"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "mfa_factors"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_authorizations"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_client_states"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_clients"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "oauth_consents"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "one_time_tokens"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "refresh_tokens"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "saml_providers"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "saml_relay_states"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "schema_migrations"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "sessions"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "sso_domains"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "sso_providers"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": true,
+        "schema": "auth",
+        "table": "users"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "webauthn_challenges"
+      },
+      {
+        "force": false,
+        "owner": "supabase_auth_admin",
+        "rls": false,
+        "schema": "auth",
+        "table": "webauthn_credentials"
+      },
+      {
+        "force": false,
+        "owner": "supabase_admin",
+        "rls": true,
+        "schema": "cron",
+        "table": "job"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_admins"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_companies"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_external_reviews"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_feedback"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_locations"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_matches"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_notification_deliveries"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_promo_codes"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_provider_connections"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_qr_sources"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_reply_actions"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_sessions"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "public",
+        "table": "review_sync_runs"
+      },
+      {
+        "force": true,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "review_private",
+        "table": "yandex_contract_recoveries"
+      },
+      {
+        "force": true,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "review_private",
+        "table": "yandex_sessions"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "vps_lab_private",
+        "table": "memberships"
+      },
+      {
+        "force": false,
+        "owner": "postgres",
+        "rls": true,
+        "schema": "vps_lab_private",
+        "table": "version"
+      }
+    ]
+  },
+  "status": "BACKUP_CREATED_RESTORE_PENDING",
+  "utc": "2026-09-19T10:51:28.322754+00:00"
+}

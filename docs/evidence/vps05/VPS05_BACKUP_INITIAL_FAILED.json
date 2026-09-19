@@ -1,0 +1,20 @@
+{
+  "status": "PRESERVED_INITIAL_FAILURE",
+  "utc": "2026-09-19T10:45:52Z",
+  "unit": "review-activator-backup.service",
+  "stage": "GUARD",
+  "safe_code": "SQL_FAILED",
+  "exit_code": 1,
+  "dump_created_in_this_failed_attempt": false,
+  "component": "runuser UID switch",
+  "safe_diagnostic": "Operation not permitted",
+  "isolated_read_only_experiments": {
+    "sandbox_without_explicit_User": "PASS",
+    "sandbox_with_explicit_User_root": "FAIL_UID_SWITCH",
+    "flock_without_explicit_User": "PASS",
+    "explicit_User_root_bounded_ambient_SETUID_SETGID": "PASS"
+  },
+  "fix": "Retain User=root and NoNewPrivileges; explicitly bound and pass only CAP_SETUID/CAP_SETGID for Unix peer PostgreSQL access",
+  "database_privilege_or_HBA_changes": 0,
+  "subsequent_actual_backup_service_result": "PASS"
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=Review Activator daily local backup (not provider scheduler)
+
+[Timer]
+OnCalendar=*-*-* 03:30:00 UTC
+AccuracySec=1min
+Persistent=false
+Unit=review-activator-backup.service
+
+[Install]
+WantedBy=timers.target

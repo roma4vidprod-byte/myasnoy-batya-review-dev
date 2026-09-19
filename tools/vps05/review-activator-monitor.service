@@ -1,0 +1,21 @@
+[Unit]
+Description=Review Activator synthetic LAB local monitor (no business jobs)
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/bin/flock --nonblock /var/lib/review-activator-ops/monitor.lock /usr/bin/python3 -B /opt/review-activator-lab/ops/vps05/ops.py monitor
+TimeoutStartSec=45
+MemoryMax=128M
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/review-activator-ops
+ReadOnlyPaths=/var/backups/review-activator
+InaccessiblePaths=/etc/review-activator-lab
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+IPAddressDeny=any
+IPAddressAllow=localhost

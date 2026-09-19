@@ -1,0 +1,11 @@
+[Unit]
+Description=Review Activator local monitoring every five minutes (not provider scheduler)
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+AccuracySec=30s
+Unit=review-activator-monitor.service
+
+[Install]
+WantedBy=timers.target

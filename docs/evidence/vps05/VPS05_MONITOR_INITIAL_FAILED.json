@@ -1,0 +1,48 @@
+{
+  "checks": {
+    "BACKUP_GROWTH": true,
+    "BACKUP_STALE": true,
+    "DISK_LOW": true,
+    "FAILED_UNITS": true,
+    "HEALTHZ_FAILED": true,
+    "LISTENER_MISMATCH": false,
+    "LOAD_HIGH": true,
+    "RAM_LOW": true,
+    "READYZ_FAILED": true,
+    "SERVICE_DOWN": true
+  },
+  "codes": [
+    "LISTENER_MISMATCH"
+  ],
+  "sample": {
+    "backup_age_seconds": 158,
+    "backup_bytes": 513007,
+    "cpus": 2,
+    "disk_free": 37113139200,
+    "failed_units": 0,
+    "health": {
+      "healthz": 200,
+      "readyz": 200
+    },
+    "listeners": [
+      "LISTEN 0      0      127.0.0.54:53    0.0.0.0:*",
+      "LISTEN 0      0       127.0.0.1:13001 0.0.0.0:*",
+      "LISTEN 0      0       127.0.0.1:13000 0.0.0.0:*",
+      "LISTEN 0      0       127.0.0.1:5432  0.0.0.0:*",
+      "LISTEN 0      0         0.0.0.0:22    0.0.0.0:*",
+      "LISTEN 0      0      127.0.0.53:53    0.0.0.0:*",
+      "LISTEN 0      0       127.0.0.1:19999 0.0.0.0:*",
+      "LISTEN 0      0               *:22          *:*"
+    ],
+    "load1": 0.0390625,
+    "ram_available": 3508559872,
+    "services": {
+      "postgresql@17-main.service": "active",
+      "review-activator-foundation.service": "active",
+      "review-lab-api.service": "active",
+      "review-lab-auth.service": "active"
+    },
+    "utc": "2026-09-19T10:43:51.652379+00:00"
+  },
+  "status": "FAIL"
+}

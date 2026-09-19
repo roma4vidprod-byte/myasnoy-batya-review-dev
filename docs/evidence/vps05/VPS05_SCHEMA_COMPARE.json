@@ -1,0 +1,12 @@
+{
+  "all_table_counts_hashes_equal": true,
+  "catalog_owners_acl_rls_equal": true,
+  "data_exclusions": [],
+  "database_name_oid_and_database_connect_acl": "SEPARATE_TARGET_NOT_COMPARED",
+  "restored_schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558",
+  "schema_equal": true,
+  "schema_exclusions": [
+    "psql restriction control token lines"
+  ],
+  "source_schema_sha256": "d31e942ec7f3af2e0323652ba52ac3f603d45cb0daa57d73c2b7dbabaec17558"
+}
