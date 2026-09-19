@@ -1,0 +1,110 @@
+{
+  "archive_member_hashes": "PASS",
+  "cleanup": "PASS",
+  "comparison": {
+    "all_table_counts_hashes_equal": true,
+    "catalog_owners_acl_rls_equal": true,
+    "data_exclusions": [],
+    "database_name_oid_and_database_connect_acl": "SEPARATE_TARGET_NOT_COMPARED",
+    "restored_schema_sha256": "420f8b753181b089e466ae8a18f02ed89fcc44435c678a31b8afa008071e4af1",
+    "schema_equal": true,
+    "schema_exclusions": [
+      "psql restriction control token lines"
+    ],
+    "source_schema_sha256": "420f8b753181b089e466ae8a18f02ed89fcc44435c678a31b8afa008071e4af1"
+  },
+  "config_restore": "HASH_VERIFIED_NOT_APPLIED",
+  "decrypt": "PASS",
+  "dump_sha256": "62b2716a31ae7544da08f6344ecec7a0a00ad97e7f9a74bf793751b3dde00be2",
+  "encrypted_sha256": "633e55169fef7fc0176ed39b7975e6f3b4d2ab3e8f6bcc5eca8fff2f9c541072",
+  "global_role_restore": "ENCRYPTED_BACKUP_NOT_APPLIED_TO_EXISTING_CLUSTER",
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "rows": {
+    "auth.audit_log_entries": 27,
+    "auth.custom_oauth_providers": 0,
+    "auth.flow_state": 0,
+    "auth.identities": 3,
+    "auth.instances": 0,
+    "auth.mfa_amr_claims": 8,
+    "auth.mfa_challenges": 0,
+    "auth.mfa_factors": 0,
+    "auth.oauth_authorizations": 0,
+    "auth.oauth_client_states": 0,
+    "auth.oauth_clients": 0,
+    "auth.oauth_consents": 0,
+    "auth.one_time_tokens": 0,
+    "auth.refresh_tokens": 8,
+    "auth.saml_providers": 0,
+    "auth.saml_relay_states": 0,
+    "auth.schema_migrations": 70,
+    "auth.sessions": 8,
+    "auth.sso_domains": 0,
+    "auth.sso_providers": 0,
+    "auth.users": 3,
+    "auth.webauthn_challenges": 0,
+    "auth.webauthn_credentials": 0,
+    "cron.job": 0,
+    "public.review_admins": 2,
+    "public.review_companies": 2,
+    "public.review_external_reviews": 2,
+    "public.review_feedback": 0,
+    "public.review_locations": 2,
+    "public.review_matches": 0,
+    "public.review_notification_deliveries": 0,
+    "public.review_promo_codes": 0,
+    "public.review_provider_connections": 0,
+    "public.review_qr_sources": 0,
+    "public.review_reply_actions": 0,
+    "public.review_sessions": 0,
+    "public.review_sync_runs": 0,
+    "review_private.yandex_contract_recoveries": 0,
+    "review_private.yandex_sessions": 0,
+    "vps_lab_private.memberships": 2,
+    "vps_lab_private.version": 1
+  },
+  "security": {
+    "acl": {
+      "auth_table_denied": true,
+      "private_memberships_denied": true,
+      "private_schema_denied": true,
+      "raw_payload_denied": true,
+      "recovery_execute_denied": true
+    },
+    "actual_private_select_denied": {
+      "anon": true,
+      "authenticated": true,
+      "service_role": true
+    },
+    "rls_no_subject_rows": 0,
+    "roles": [
+      {
+        "role": "anon",
+        "safe": true
+      },
+      {
+        "role": "authenticated",
+        "safe": true
+      },
+      {
+        "role": "ra_lab_authenticator",
+        "safe": true
+      },
+      {
+        "role": "service_role",
+        "safe": true
+      },
+      {
+        "role": "supabase_auth_admin",
+        "safe": true
+      }
+    ]
+  },
+  "source": "RETRIEVED_WINDOWS_COPY",
+  "source_lab_unchanged": true,
+  "status": "PASS",
+  "target": "review_activator_dr_vps07",
+  "utc": "2026-09-19T12:31:36.724123+00:00"
+}

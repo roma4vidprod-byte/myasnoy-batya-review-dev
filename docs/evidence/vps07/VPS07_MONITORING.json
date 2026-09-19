@@ -1,0 +1,242 @@
+{
+  "status": "PASS",
+  "utc": "2026-09-19T12:33:27.967149+00:00",
+  "server_version_num": 170011,
+  "boot_id": "e1aa28e3-af7e-45ac-b10c-b4d22d8995e6",
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "services": {
+    "postgresql@17-main.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled-runtime"
+    },
+    "review-lab-auth.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-lab-api.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-foundation.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "ssh.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "disabled"
+    },
+    "review-activator-backup.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-monitor.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-worker.service": {
+      "Result": "success",
+      "ActiveState": "inactive",
+      "UnitFileState": "static"
+    },
+    "review-activator-worker.timer": {
+      "Result": "success",
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    }
+  },
+  "listeners": [
+    "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+    "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+    "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+    "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+    "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+    "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+    "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+    "LISTEN 0      4096            [::]:22       [::]:*"
+  ],
+  "ufw": [
+    "Status: active",
+    "",
+    "To                         Action      From",
+    "--                         ------      ----",
+    "22/tcp                     ALLOW       Anywhere                   # Review Activator SSH",
+    "22/tcp (v6)                ALLOW       Anywhere (v6)              # Review Activator SSH",
+    ""
+  ],
+  "offhost": {
+    "archive_path": "C:\\Users\\tasfo\\Review-Activator-Recovery\\VPS07-20260919\\archives\\backup.aead",
+    "automation": "NOT_CONFIGURED",
+    "destination_type": "TEMPORARY_WINDOWS",
+    "freshness_limit_seconds": 129600,
+    "hash_verified": true,
+    "independent_readback": true,
+    "offhost_automation": "NOT_CONFIGURED",
+    "restore": "PASS",
+    "sha256": "633e55169fef7fc0176ed39b7975e6f3b4d2ab3e8f6bcc5eca8fff2f9c541072",
+    "size": 747570,
+    "status": "PASS",
+    "verified_at": "2026-09-19T12:31:39.400048+00:00",
+    "windows_acl": "CURRENT_USER_AND_SYSTEM_ONLY"
+  },
+  "restore": "PASS",
+  "lab_comparison": {
+    "schema_equal": true,
+    "catalog_owners_acl_rls_equal": true,
+    "all_table_counts_hashes_equal": true,
+    "source_schema_sha256": "420f8b753181b089e466ae8a18f02ed89fcc44435c678a31b8afa008071e4af1",
+    "restored_schema_sha256": "420f8b753181b089e466ae8a18f02ed89fcc44435c678a31b8afa008071e4af1",
+    "schema_exclusions": [
+      "psql restriction control token lines"
+    ],
+    "data_exclusions": [],
+    "database_name_oid_and_database_connect_acl": "SEPARATE_TARGET_NOT_COMPARED"
+  },
+  "negative_tests": {
+    "wrong_key": true,
+    "corrupt_ciphertext": true,
+    "offhost_hash_mismatch": true
+  },
+  "monitor": {
+    "checks": {
+      "BACKUP_GROWTH": true,
+      "BACKUP_STALE": true,
+      "DISK_LOW": true,
+      "FAILED_UNITS": true,
+      "HEALTHZ_FAILED": true,
+      "LISTENER_MISMATCH": true,
+      "LOAD_HIGH": true,
+      "OFFHOST_BACKUP_STALE": true,
+      "OFFHOST_KEY_CONFIG": true,
+      "OFFHOST_VERIFY_FAILED": true,
+      "RAM_LOW": true,
+      "READYZ_FAILED": true,
+      "SERVICE_DOWN": true,
+      "WORKER_FAILED": true,
+      "WORKER_TIMER_STATE": true
+    },
+    "codes": [],
+    "sample": {
+      "backup_age_seconds": 142,
+      "backup_bytes": 1552173,
+      "cpus": 2,
+      "disk_free": 37099098112,
+      "failed_units": 0,
+      "health": {
+        "healthz": 200,
+        "readyz": 200
+      },
+      "listeners": [
+        "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+        "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+        "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+        "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+        "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+        "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+        "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+        "LISTEN 0      4096            [::]:22       [::]:*"
+      ],
+      "load1": 0.025390625,
+      "offhost": {
+        "age_seconds": 108,
+        "automation": "NOT_CONFIGURED",
+        "configured": true,
+        "hash_verified": true,
+        "key_metadata_ok": true,
+        "mode": "TEMPORARY_MANUAL",
+        "receipt_present": true,
+        "remote_presence": "NOT_LIVE_CHECKED",
+        "restore_pass": true
+      },
+      "ram_available": 3506495488,
+      "services": {
+        "postgresql@17-main.service": "active",
+        "review-activator-foundation.service": "active",
+        "review-lab-api.service": "active",
+        "review-lab-auth.service": "active"
+      },
+      "utc": "2026-09-19T12:33:27.746502+00:00",
+      "worker": {
+        "installed": true,
+        "last_execution": "2026-09-19T11:42:07.448Z",
+        "last_ok": true,
+        "last_success": "2026-09-19T11:42:07.448Z",
+        "lock_refused": false,
+        "service_result": "success",
+        "service_state": "inactive",
+        "timer_enabled": "disabled",
+        "timer_state": "inactive"
+      }
+    },
+    "status": "PASS"
+  },
+  "installed_source_hashes": {
+    "vps05/ops.py": "8852d11c64f0c468eb3036eb88d7023b8f3df1d3e85e855eb14fc080e724efc2",
+    "vps05/review-activator-backup.service": "115ba0d192385a557a7d0033d4cd61d3b27cee009516f290e217b5cc2eb3106c",
+    "vps05/review-activator-backup.timer": "1903d3bbcd6546191906a0c1c0901965dafb5f4cdd48c405f9636877bbaeb66c",
+    "vps05/review-activator-monitor.service": "c01d8fb756e02e17692ad475ff9382847354758f62e5ced914ac1fccb9b1e8b8",
+    "vps05/review-activator-monitor.timer": "274a6dfacb21f5c58c55d94139e356b3d4485d2b02a9b41430c0fd95718e5310",
+    "vps05/test_ops.py": "7681883138f648a12e2f54124f082f40efb0d649897ba8987eb8f08cb7c5a22b",
+    "vps07/acceptance.py": "7ecda803036b1530c7e1cbeae6c75e29b4a98222c961388263bf5fa896142488",
+    "vps07/crypto_backup.py": "a50d96275beaf4825cd857a1cbf0e2883a5c8d9f3db7a7a8a63c86cc0f596c82",
+    "vps07/dr.py": "f55cb2049fdf8c2ab0ed67673881b70cc05cd0671dfd1482a977fbdf4c27366b",
+    "vps07/test_dr.py": "25a53ac03d67ba6137878976d1ab928dab00e81d6932e248d739a24944e3f2a9"
+  },
+  "returned_key_removed": true,
+  "test_database_absent": true,
+  "row_counts": {
+    "auth.audit_log_entries": 27,
+    "auth.custom_oauth_providers": 0,
+    "auth.flow_state": 0,
+    "auth.identities": 3,
+    "auth.instances": 0,
+    "auth.mfa_amr_claims": 8,
+    "auth.mfa_challenges": 0,
+    "auth.mfa_factors": 0,
+    "auth.oauth_authorizations": 0,
+    "auth.oauth_client_states": 0,
+    "auth.oauth_clients": 0,
+    "auth.oauth_consents": 0,
+    "auth.one_time_tokens": 0,
+    "auth.refresh_tokens": 8,
+    "auth.saml_providers": 0,
+    "auth.saml_relay_states": 0,
+    "auth.schema_migrations": 70,
+    "auth.sessions": 8,
+    "auth.sso_domains": 0,
+    "auth.sso_providers": 0,
+    "auth.users": 3,
+    "auth.webauthn_challenges": 0,
+    "auth.webauthn_credentials": 0,
+    "cron.job": 0,
+    "public.review_admins": 2,
+    "public.review_companies": 2,
+    "public.review_external_reviews": 2,
+    "public.review_feedback": 0,
+    "public.review_locations": 2,
+    "public.review_matches": 0,
+    "public.review_notification_deliveries": 0,
+    "public.review_promo_codes": 0,
+    "public.review_provider_connections": 0,
+    "public.review_qr_sources": 0,
+    "public.review_reply_actions": 0,
+    "public.review_sessions": 0,
+    "public.review_sync_runs": 0,
+    "review_private.yandex_contract_recoveries": 0,
+    "review_private.yandex_sessions": 0,
+    "vps_lab_private.memberships": 2,
+    "vps_lab_private.version": 1
+  },
+  "reboot": "NOT_RUN",
+  "offhost_automation": "NOT_CONFIGURED",
+  "real_provider_scheduler": "OFF"
+}

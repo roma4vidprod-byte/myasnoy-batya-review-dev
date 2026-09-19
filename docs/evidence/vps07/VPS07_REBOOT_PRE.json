@@ -1,0 +1,88 @@
+{
+  "gate": "BLOCKED_BY_OUT_OF_BAND_RECOVERY",
+  "reboot_authorized_now": false,
+  "ssh_reviewadmin": "PASS",
+  "ssh_root_rescue": "PASS",
+  "host_key": "PREEXISTING_PIN_STRICT_CHECK_PASSED",
+  "host_fingerprint": "SHA256:hGYk5Nzpbe1XJVhbgm2vkut/kB4f1iOVx2pkxDRTaog",
+  "boot_id": "e1aa28e3-af7e-45ac-b10c-b4d22d8995e6",
+  "boot_id_unchanged": true,
+  "services": {
+    "postgresql@17-main.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled-runtime"
+    },
+    "review-lab-auth.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-lab-api.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-foundation.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "ssh.service": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "disabled"
+    },
+    "review-activator-backup.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-monitor.timer": {
+      "Result": "success",
+      "ActiveState": "active",
+      "UnitFileState": "enabled"
+    },
+    "review-activator-worker.service": {
+      "Result": "success",
+      "ActiveState": "inactive",
+      "UnitFileState": "static"
+    },
+    "review-activator-worker.timer": {
+      "Result": "success",
+      "ActiveState": "inactive",
+      "UnitFileState": "disabled"
+    }
+  },
+  "ssh_socket": {
+    "active": true,
+    "enabled": true
+  },
+  "postgresql_wrapper": {
+    "active": true,
+    "enabled": true
+  },
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "ufw": [
+    "Status: active",
+    "",
+    "To                         Action      From",
+    "--                         ------      ----",
+    "22/tcp                     ALLOW       Anywhere                   # Review Activator SSH",
+    "22/tcp (v6)                ALLOW       Anywhere (v6)              # Review Activator SSH",
+    ""
+  ],
+  "listeners": [
+    "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+    "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+    "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+    "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+    "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+    "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+    "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+    "LISTEN 0      4096            [::]:22       [::]:*"
+  ]
+}

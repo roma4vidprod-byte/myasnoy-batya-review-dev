@@ -1,0 +1,248 @@
+{
+  "status": "PASS",
+  "utc": "2026-09-19T12:42:50.878Z",
+  "start_sha": "abcc2769e134636467a852a09957f10a2af07f13",
+  "branch": "codex/yandex-live-read-smoke-01",
+  "tests": {
+    "windows_vps07": {
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "log_sha256": "0e3b680282080e48730eb4466888abc31502a580ef096fab1eb1911075f836da"
+    },
+    "linux_vps07": {
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "log_sha256": "907668138d57feeebc3ad9d56fd12f7f53ff578bad1a0bbcf206754d8fde5557"
+    },
+    "windows_vps05": {
+      "pass": 40,
+      "fail": 0,
+      "skip": 0,
+      "log_sha256": "3cff0f20f21c4cadd11ecdca3f6eae6e0b041bfd2037a873b2fe012ecf47cbc8"
+    },
+    "linux_vps05": {
+      "pass": 40,
+      "fail": 0,
+      "skip": 0,
+      "log_sha256": "72fafa6199b46d158bec9a59f49ecb7ebcac61024e49b5736ef4234788cb6089"
+    },
+    "npm_check": 127,
+    "native_restore": "PASS",
+    "native_negative_tests": {
+      "wrong_key": true,
+      "corrupt_ciphertext": true,
+      "offhost_hash_mismatch": true
+    },
+    "full_suite": "NOT_RUN",
+    "general_harness": "NOT_RUN"
+  },
+  "diff_check": "PASS",
+  "secret_scan": {
+    "files": 300,
+    "unresolved": 0,
+    "findings": [
+      {
+        "path": "test/support/yandex-dev-keys.test.ps1",
+        "code": "SUPABASE_SECRET",
+        "classification": "REVIEWED_EXISTING_SYNTHETIC_FIXTURE"
+      },
+      {
+        "path": "test/yandex-dev-env.test.mjs",
+        "code": "SUPABASE_SECRET",
+        "classification": "REVIEWED_EXISTING_SYNTHETIC_FIXTURE"
+      }
+    ]
+  },
+  "original_user_untracked": [
+    {
+      "path": "Invoke-ReviewFullDiagnostic-Once.ps1",
+      "sha256": "efff5b06e2fea690d5d2196f3e624e854ee29370a55cecf109d6ef6f49ca8d3c",
+      "unchanged": true
+    },
+    {
+      "path": "deploy/vps-foundation/review-activator-foundation.service",
+      "sha256": "de66633c9a685962ffc7965f15768ed4b72b8dfb7c4eb0630a6c6866181546ff",
+      "unchanged": true
+    },
+    {
+      "path": "docs/VPS04A_FULL_TEST_ACCEPTANCE.md",
+      "sha256": "9d66346659a69cd58e3d3e065cdae354bc6f2c2641d493cfdd569462833486ed",
+      "unchanged": true
+    },
+    {
+      "path": "docs/VPS04A_REBOOT_ACCEPTANCE.md",
+      "sha256": "a6781879261e5158925b8bcb197999d111e98a07b9b4fd64d9b41414edd34100",
+      "unchanged": true
+    },
+    {
+      "path": "docs/VPS_CURRENT_BASELINE_20260915.md",
+      "sha256": "0317751359c9f8db2f5fc50921c9cb73e42ada1067d3eccdf3dc1e71ea665f63",
+      "unchanged": true
+    },
+    {
+      "path": "docs/VPS_FOUNDATION_RUNBOOK_20260915.md",
+      "sha256": "2e13f7d7d6e83883e1b00f108a7ffd3c0bc3d9d4909e589b57d8f63d369457c3",
+      "unchanged": true
+    },
+    {
+      "path": "docs/VPS_FOUNDATION_SCOPE_20260915.md",
+      "sha256": "080a5505e745ec7bf1b715021aa70928d7eb368ab2b1014c70f65622bfe2065f",
+      "unchanged": true
+    },
+    {
+      "path": "docs/VPS_NEXT_GATES_20260915.md",
+      "sha256": "506b8ef5f008d1d24830bd2c5b9f0da6ff56265d8f81a6d7d6a4ed47d619b9ee",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_FINAL_CHECKS.json",
+      "sha256": "adadfd041af8ed0b9c0eebe1a5beef7d5363bcee8a65b96ab075794b9469b114",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_FINAL_REPORT.md",
+      "sha256": "cee86e4a362295bd28cf7808366ece1f9b74a39579c1101032dfec2f9fe4148b",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_FULL_TESTS.json",
+      "sha256": "4dd044f26a76cdb88e439208b1f9477777295ba06c63de0659eabe3c73abec89",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_MEMORY.json",
+      "sha256": "bc649cc0a16e1da4019e856c8256ec0114bf1af8ac2e3408a06fa41e0f015694",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_POST_REBOOT.json",
+      "sha256": "c79e8f075352d43b53a42c28bb35a498fb7cdf3118071f5e68d6748ddc6fad06",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_PRE_REBOOT.json",
+      "sha256": "ead89cad1f4aa499d60cd1ecbd6860b54b613bda1499a8d3e13ee7c9b298f52b",
+      "unchanged": true
+    },
+    {
+      "path": "docs/evidence/vps04a/VPS04A_REBOOT_DIFF.json",
+      "sha256": "852a223a2843407af76559a1d2d60b36bcbafae33dfdc12d621e996633fc9415",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/build-vps-foundation.mjs",
+      "sha256": "dcc77ab74861f1cb433db3ec772054e71b813d6db1923fe70d692a9b85bab1b4",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/start-vps-foundation.mjs",
+      "sha256": "5017ceba8493391057180aabf02ba1f06006a8874d6b6377804ff048d7ea304d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/verify-vps-foundation.mjs",
+      "sha256": "f414934b3d6133daa493f9e352728a73c9922296f78f31416ec30db37b157f93",
+      "unchanged": true
+    },
+    {
+      "path": "supabase/migrations/20260914230000_recovery09_scheduler_acl_09a.sql",
+      "sha256": "e5532ec5709805724df7451d55e657cb72ea6b8768101ed8e4502e8b6f0241dc",
+      "unchanged": true
+    },
+    {
+      "path": "test/support/managed-scheduler-fixture.mjs",
+      "sha256": "c4a0799866620c65694dad871bdb3f5aeb056f3e36b874d3da1a500c35e59c2a",
+      "unchanged": true
+    },
+    {
+      "path": "test/vps-foundation.test.mjs",
+      "sha256": "eb1e56dc51e305f97630c056fc6841432a714abfda3c1f80b463196a21569447",
+      "unchanged": true
+    },
+    {
+      "path": "test/yandex-scheduler-acl.test.mjs",
+      "sha256": "b67bfcbc5698817a5dc4e6517908d1651d0a509db1393a40c142f5e5c53c84ba",
+      "unchanged": true
+    },
+    {
+      "path": "tools/contract-recovery/scheduler-acl-native.py",
+      "sha256": "c8ce7aa935c461ff4732baa5b825e52ac45f6d025229cb4f061314c7f7831588",
+      "unchanged": true
+    },
+    {
+      "path": "tools/contract-recovery/scheduler-acl/OWNER_ONLY_INSTALL.sql",
+      "sha256": "026026e16f0b1379ebc30305563d9d337f0abfeeae85e06cd600dc5b196bb7dc",
+      "unchanged": true
+    },
+    {
+      "path": "tools/contract-recovery/scheduler-acl/PRECHECK_READ_ONLY.sql",
+      "sha256": "7837ef1e8e57236817a0c5ada555d879cf25e8b42d82502ef6e00851fe9fbae7",
+      "unchanged": true
+    },
+    {
+      "path": "tools/contract-recovery/scheduler-acl/test_runner_portability.py",
+      "sha256": "59f19a54af9395a97ab0380a809d94fd9c3df241b73c2241a4112c50ba1ce002",
+      "unchanged": true
+    }
+  ],
+  "installed_source_hashes_match": {
+    "vps05/ops.py": true,
+    "vps05/review-activator-backup.service": true,
+    "vps05/review-activator-backup.timer": true,
+    "vps05/review-activator-monitor.service": true,
+    "vps05/review-activator-monitor.timer": true,
+    "vps05/test_ops.py": true,
+    "vps07/acceptance.py": true,
+    "vps07/crypto_backup.py": true,
+    "vps07/dr.py": true,
+    "vps07/test_dr.py": true
+  },
+  "backup_monitor_units_unchanged": {
+    "review-activator-backup.service": true,
+    "review-activator-backup.timer": true,
+    "review-activator-monitor.service": true,
+    "review-activator-monitor.timer": true
+  },
+  "offhost_archive": {
+    "size": 747570,
+    "sha256": "633e55169fef7fc0176ed39b7975e6f3b4d2ab3e8f6bcc5eca8fff2f9c541072"
+  },
+  "lab_unchanged": true,
+  "external_effects": {
+    "vps_local_backup": 1,
+    "encrypted_archive_created": 1,
+    "offhost_windows_copy": 1,
+    "retrieved_copy_restore": 1,
+    "disposable_db_created": 1,
+    "disposable_db_dropped": 1,
+    "redundant_returned_key_deleted": 1,
+    "permanent_dr_keys_created": 1,
+    "local_monitor_source_update": 1,
+    "manual_monitor_run": 1,
+    "retention_deletion": 0,
+    "reboot": 0,
+    "ssh_changes": 0,
+    "ufw_changes": 0,
+    "packages_installed": 0,
+    "provider_panel_mutations": 0,
+    "yandex_reads": 0,
+    "yandex_writes": 0,
+    "two_gis": 0,
+    "email": 0,
+    "telegram": 0,
+    "paid_ai": 0,
+    "promo": 0,
+    "supabase_cloud_writes": 0,
+    "vercel_writes": 0,
+    "business_os": 0,
+    "production": 0,
+    "worker_runs": 0,
+    "worker_timer_changes": 0,
+    "push": 0
+  },
+  "secret_values_in_git_or_evidence": 0,
+  "panel_credential_observation": "EXISTING_CREDENTIAL_INCIDENTALLY_DISPLAYED_NOT_SAVED_IN_EVIDENCE",
+  "production_untouched": true
+}

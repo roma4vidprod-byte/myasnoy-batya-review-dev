@@ -1,0 +1,19 @@
+{
+  "observed_on": "2026-09-19",
+  "hiplet": "120706",
+  "out_of_band_method": "NOT_PROVEN",
+  "console": {"tab": true, "canvas": true, "screen": "BLACK", "guest_identity": "NOT_PROVEN", "input": "NOT_PROVEN", "browser_action_failure": "NO_NODE_FOUND_AT_GIVEN_LOCATION"},
+  "serial_console": "UNKNOWN",
+  "rescue": "UNKNOWN_NOT_ACTIVATED",
+  "recovery_iso": "UNKNOWN",
+  "power_off_control": "VISIBLE_NOT_USED",
+  "power_on": "NOT_VERIFIED",
+  "soft_reboot_control": "VISIBLE_NOT_USED",
+  "forced_reboot_control": "VISIBLE_NOT_USED",
+  "password_reset_control": "VISIBLE_NOT_USED",
+  "reinstall_navigation": "VISIBLE_NOT_USED",
+  "snapshot_backup": "NOT_PROVEN_DOCUMENTATION_CONFLICT",
+  "support_request": "PREPARED_NOT_SENT",
+  "panel_mutations": 0,
+  "credential_caveat": "EXISTING_PANEL_CREDENTIAL_INCIDENTALLY_DISPLAYED_BY_TOOL_NOT_PERSISTED_IN_EVIDENCE"
+}

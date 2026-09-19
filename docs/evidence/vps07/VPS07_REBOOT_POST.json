@@ -1,0 +1,9 @@
+{
+  "reboot": "NOT_RUN",
+  "post_reboot_tests": "NOT_RUN",
+  "reason": "OUT_OF_BAND_RECOVERY_NOT_PROVEN",
+  "reboot_acceptance": "BLOCKED_BY_OUT_OF_BAND_RECOVERY",
+  "power_cycles": 0,
+  "rescue_activations": 0,
+  "reinstalls": 0
+}

@@ -1,0 +1,707 @@
+{
+  "status": "PASS",
+  "export": {
+    "algorithm": "AES-256-GCM",
+    "archive": {
+      "gid": 0,
+      "mode": "0o600",
+      "path": "/var/backups/review-activator-dr/20260919T123103599119Z/backup.aead",
+      "sha256": "633e55169fef7fc0176ed39b7975e6f3b4d2ab3e8f6bcc5eca8fff2f9c541072",
+      "size": 747570,
+      "uid": 0
+    },
+    "database_size": 10933939,
+    "dump_sha256": "62b2716a31ae7544da08f6344ecec7a0a00ad97e7f9a74bf793751b3dde00be2",
+    "key_source": "NEW_DEDICATED_BACKUP_KEY",
+    "member_count": 46,
+    "retention_deletion": false,
+    "sensitive_config_metadata_only": [
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/auth.env",
+        "sha256": "7d50ee16ba7fc458aa5afceb779e86202d94a7968494f6f2f130be3036d7066f",
+        "size": 1452,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/api.env",
+        "sha256": "97af02851d817fb9589f625d7071bdc8ddd63ff40166f6aea944786521c0edd7",
+        "size": 698,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/node.env",
+        "sha256": "384306ea083b0b09cc09f7f360217df52ad2c4a14cddcde91279b9b90022aed9",
+        "size": 682,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/worker.env",
+        "sha256": "3ef30cbb27125081cfbc75b28d7cc21b70ac5488f1baaa439b393477ec4f103c",
+        "size": 62,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/bootstrap.json",
+        "sha256": "a1c9b6a3105fa2ed92360e431109a0977e277948710f9ab9dd78c5b97fdf6b86",
+        "size": 1269,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/review-activator-lab/synthetic-users.json",
+        "sha256": "b186be8999d9fbc4118b78a8c36ae86212dd9fd89cad73923c083ade2aa66b97",
+        "size": 426,
+        "uid": 0
+      },
+      {
+        "gid": 113,
+        "mode": "0o644",
+        "path": "/etc/postgresql/17/main/environment",
+        "sha256": "1074010e46c5629825bdac2484052ddaec9b128e202c3861bc4d4f9c88cce9ec",
+        "size": 315,
+        "uid": 109
+      },
+      {
+        "gid": 113,
+        "mode": "0o644",
+        "path": "/etc/postgresql/17/main/pg_ctl.conf",
+        "sha256": "050965e811a153533f069693e4d45ce12eaca645fb52809a0696028d63110573",
+        "size": 143,
+        "uid": 109
+      },
+      {
+        "gid": 113,
+        "mode": "0o640",
+        "path": "/etc/postgresql/17/main/pg_hba.conf",
+        "sha256": "ad0df9635890926d79a12d5627b68af6b85b6254fa23cace2bbe077838969c9e",
+        "size": 5924,
+        "uid": 109
+      },
+      {
+        "gid": 113,
+        "mode": "0o640",
+        "path": "/etc/postgresql/17/main/pg_ident.conf",
+        "sha256": "b4dfef08731a7d20a3bb724ad4cf3e1cd91ec01fbe51349c6a3acc5704072965",
+        "size": 2640,
+        "uid": 109
+      },
+      {
+        "gid": 113,
+        "mode": "0o644",
+        "path": "/etc/postgresql/17/main/postgresql.conf",
+        "sha256": "399db7ae5860be7d0b884ad7ee75ccd3f935e3d73872147a5a078e56893f2457",
+        "size": 31226,
+        "uid": 109
+      },
+      {
+        "gid": 113,
+        "mode": "0o644",
+        "path": "/etc/postgresql/17/main/start.conf",
+        "sha256": "e83be42666e695b4e43c65fee5967e8f30e814ca49e473fad9ccf86a42b4f30a",
+        "size": 317,
+        "uid": 109
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/usr/lib/systemd/system/postgresql@.service",
+        "sha256": "4c44931bba34e0754b7c0762852a5c1b615a1e307df9c458d231232d55e4c907",
+        "size": 1651,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-lab-auth.service",
+        "sha256": "2e4f36d2fe9fc523412d750780ea5e71c8ab2c8f44487c9f74a119c2f053b5ab",
+        "size": 891,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-lab-api.service",
+        "sha256": "c88a2d63bd0cf7d307cdf503386500469e71343c2ca8794ae72d4077ce9fa83c",
+        "size": 895,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-activator-foundation.service",
+        "sha256": "79a91724eec0ac3373d90c5304c454b7b4e03aaa4fd12a19f5d9974d90aac212",
+        "size": 1365,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-activator-foundation.service.d/vps04.conf",
+        "sha256": "c4e2b607d6b10f944a67533f835b1127618f48e192e2f90beac003728925b332",
+        "size": 424,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-activator-backup.service",
+        "sha256": "115ba0d192385a557a7d0033d4cd61d3b27cee009516f290e217b5cc2eb3106c",
+        "size": 850,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-activator-backup.timer",
+        "sha256": "1903d3bbcd6546191906a0c1c0901965dafb5f4cdd48c405f9636877bbaeb66c",
+        "size": 224,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-activator-monitor.service",
+        "sha256": "c01d8fb756e02e17692ad475ff9382847354758f62e5ced914ac1fccb9b1e8b8",
+        "size": 641,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o644",
+        "path": "/etc/systemd/system/review-activator-monitor.timer",
+        "sha256": "274a6dfacb21f5c58c55d94139e356b3d4485d2b02a9b41430c0fd95718e5310",
+        "size": 230,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/systemd/system/review-activator-worker.service",
+        "sha256": "9258269ba56d85764128c838abbe836bd4da782dca8d2c5b9dd9be3cc75a23da",
+        "size": 984,
+        "uid": 0
+      },
+      {
+        "gid": 0,
+        "mode": "0o600",
+        "path": "/etc/systemd/system/review-activator-worker.timer",
+        "sha256": "250d4ace5298b5043d71fe0c1644d0b3673de0054bde095d7a407474689fb451",
+        "size": 220,
+        "uid": 0
+      }
+    ],
+    "source_lab_unchanged": true,
+    "source_snapshot": {
+      "catalog": {
+        "constraints": 175,
+        "functions": 32,
+        "indexes": 123,
+        "schemas": [
+          "auth",
+          "cron",
+          "public",
+          "review_private",
+          "vps_lab_private"
+        ],
+        "synthetic_reviews_only": true,
+        "synthetic_users_only": true,
+        "version": "vps04-auth-api-v1"
+      },
+      "rows": {
+        "auth.audit_log_entries": {
+          "count": 27,
+          "sha256": "a5fb4e4ef74d0aae98c28f0658efdfc973df5a4d73960a74a606e45c015f5080"
+        },
+        "auth.custom_oauth_providers": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.flow_state": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.identities": {
+          "count": 3,
+          "sha256": "3f6808502d2f918c202638749677cc2f861c20e0b078557cd0b205e1f32cf7f3"
+        },
+        "auth.instances": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.mfa_amr_claims": {
+          "count": 8,
+          "sha256": "b49640cbda51d1c9d8e1c737d14af8cadcb0b842241e50a1f1fbd3a73a838289"
+        },
+        "auth.mfa_challenges": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.mfa_factors": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.oauth_authorizations": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.oauth_client_states": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.oauth_clients": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.oauth_consents": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.one_time_tokens": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.refresh_tokens": {
+          "count": 8,
+          "sha256": "5ac98da316706eafd38393652246c9384628005108744b1928f291b705efd5e8"
+        },
+        "auth.saml_providers": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.saml_relay_states": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.schema_migrations": {
+          "count": 70,
+          "sha256": "fbbe3b830a36126d23ee174ae2b9baff61b1b52a0ce417081cb312ba3ade0078"
+        },
+        "auth.sessions": {
+          "count": 8,
+          "sha256": "19be17429925d1d13d2326b13c0b52a36de6d77da9eef227edce2a2b7bd209ec"
+        },
+        "auth.sso_domains": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.sso_providers": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.users": {
+          "count": 3,
+          "sha256": "d774dac99cda8860ae5bd98bd3583e052b62bbeb52cb07bc39a3797ff03802af"
+        },
+        "auth.webauthn_challenges": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "auth.webauthn_credentials": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "cron.job": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_admins": {
+          "count": 2,
+          "sha256": "8fd12f5d7651b1acb738d746d5e2b5b6f97015e1f550abdb88bbbe5601180c6b"
+        },
+        "public.review_companies": {
+          "count": 2,
+          "sha256": "3b82d24bf26d4bf0e992debb5d0c1d1ff565d8c58f474a3b51964933a7e024b3"
+        },
+        "public.review_external_reviews": {
+          "count": 2,
+          "sha256": "ada98eb2672b8685ec5b40131e81db4a0338aa2673b950d2f414e26786850062"
+        },
+        "public.review_feedback": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_locations": {
+          "count": 2,
+          "sha256": "d436b4644cda2ffbd56e841490cde5d976a80f11dec488690999472bc3bb07af"
+        },
+        "public.review_matches": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_notification_deliveries": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_promo_codes": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_provider_connections": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_qr_sources": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_reply_actions": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_sessions": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "public.review_sync_runs": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "review_private.yandex_contract_recoveries": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "review_private.yandex_sessions": {
+          "count": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "vps_lab_private.memberships": {
+          "count": 2,
+          "sha256": "2b182007deb8be5260a2c2358fbba05e0ff87d1c45fbfe8ac395dda70e75409f"
+        },
+        "vps_lab_private.version": {
+          "count": 1,
+          "sha256": "24cec6be8c9194e68bb962daf53c3e91f9226211b88b7cd42c6b74facd17b167"
+        }
+      },
+      "schema_sha256": "420f8b753181b089e466ae8a18f02ed89fcc44435c678a31b8afa008071e4af1",
+      "tables": [
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "audit_log_entries"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "custom_oauth_providers"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "flow_state"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "identities"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "instances"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "mfa_amr_claims"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "mfa_challenges"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "mfa_factors"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "oauth_authorizations"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "oauth_client_states"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "oauth_clients"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "oauth_consents"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "one_time_tokens"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "refresh_tokens"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "saml_providers"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "saml_relay_states"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "schema_migrations"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "sessions"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "sso_domains"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "sso_providers"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": true,
+          "schema": "auth",
+          "table": "users"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "webauthn_challenges"
+        },
+        {
+          "force": false,
+          "owner": "supabase_auth_admin",
+          "rls": false,
+          "schema": "auth",
+          "table": "webauthn_credentials"
+        },
+        {
+          "force": false,
+          "owner": "supabase_admin",
+          "rls": true,
+          "schema": "cron",
+          "table": "job"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_admins"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_companies"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_external_reviews"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_feedback"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_locations"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_matches"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_notification_deliveries"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_promo_codes"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_provider_connections"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_qr_sources"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_reply_actions"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_sessions"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "public",
+          "table": "review_sync_runs"
+        },
+        {
+          "force": true,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "review_private",
+          "table": "yandex_contract_recoveries"
+        },
+        {
+          "force": true,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "review_private",
+          "table": "yandex_sessions"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "vps_lab_private",
+          "table": "memberships"
+        },
+        {
+          "force": false,
+          "owner": "postgres",
+          "rls": true,
+          "schema": "vps_lab_private",
+          "table": "version"
+        }
+      ]
+    },
+    "status": "ENCRYPTED_AWAITING_OFFHOST",
+    "utc": "2026-09-19T12:31:06.252557+00:00"
+  },
+  "offhost": {
+    "archive_path": "C:\\Users\\tasfo\\Review-Activator-Recovery\\VPS07-20260919\\archives\\backup.aead",
+    "automation": "NOT_CONFIGURED",
+    "destination_type": "TEMPORARY_WINDOWS",
+    "freshness_limit_seconds": 129600,
+    "hash_verified": true,
+    "independent_readback": true,
+    "offhost_automation": "NOT_CONFIGURED",
+    "restore": "PASS",
+    "sha256": "633e55169fef7fc0176ed39b7975e6f3b4d2ab3e8f6bcc5eca8fff2f9c541072",
+    "size": 747570,
+    "status": "PASS",
+    "verified_at": "2026-09-19T12:31:39.400048+00:00",
+    "windows_acl": "CURRENT_USER_AND_SYSTEM_ONLY"
+  },
+  "windows_independent_readback": {
+    "destination_type": "TEMPORARY_WINDOWS",
+    "independent_readback": true,
+    "size": 747570,
+    "sha256": "633e55169fef7fc0176ed39b7975e6f3b4d2ab3e8f6bcc5eca8fff2f9c541072",
+    "archive_path": "C:\\Users\\tasfo\\Review-Activator-Recovery\\VPS07-20260919\\archives\\backup.aead",
+    "windows_acl": "CURRENT_USER_AND_SYSTEM_ONLY",
+    "automation": "NOT_CONFIGURED"
+  },
+  "key_permissions": "WINDOWS_CURRENT_USER_SYSTEM_VPS_ROOT0600",
+  "permanent_remote_storage": "NOT_CONFIGURED"
+}

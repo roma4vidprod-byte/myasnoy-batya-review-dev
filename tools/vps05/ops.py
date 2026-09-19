@@ -430,6 +430,31 @@ def worker_observation():
             'last_success': success.get('finished_at')}
 
 
+def offhost_observation():
+    """Last verified receipt, not a live remote check. Never read key contents."""
+    key = Path('/etc/review-activator-dr/backup.key')
+    receipt = STATE / 'VPS07_OFFHOST.json'
+    if not key.parent.exists() and not receipt.exists():
+        return {'configured': False}
+    result = {'configured': True, 'mode': 'TEMPORARY_MANUAL', 'automation': 'NOT_CONFIGURED',
+              'remote_presence': 'NOT_LIVE_CHECKED', 'key_metadata_ok': False,
+              'receipt_present': False, 'hash_verified': False, 'restore_pass': False, 'age_seconds': None}
+    try:
+        st = key.lstat()
+        result['key_metadata_ok'] = stat.S_ISREG(st.st_mode) and st.st_uid == 0 and stat.S_IMODE(st.st_mode) == 0o600 and st.st_size == 32
+        r = receipt.lstat()
+        need(stat.S_ISREG(r.st_mode) and r.st_uid == 0 and stat.S_IMODE(r.st_mode) == 0o600 and r.st_size < 16384, 'OFFHOST_RECEIPT_INVALID')
+        value = json.loads(receipt.read_text())
+        stamp = datetime.fromisoformat(value['verified_at'])
+        need(stamp.tzinfo is not None, 'OFFHOST_TIMESTAMP_INVALID')
+        result.update(receipt_present=True, hash_verified=value.get('hash_verified') is True,
+                      restore_pass=value.get('restore') == 'PASS' and value.get('status') == 'PASS',
+                      age_seconds=int(time.time()-stamp.timestamp()))
+    except (OSError, ValueError, KeyError, SafeFailure):
+        pass
+    return result
+
+
 def evaluate_monitor(sample):
     failures = []
     rules = {'DISK_LOW': sample['disk_free'] >= MIN_FREE, 'RAM_LOW': sample['ram_available'] >= 256*1024**2,
@@ -440,6 +465,12 @@ def evaluate_monitor(sample):
              'BACKUP_GROWTH': sample['backup_bytes'] <= 5*1024**3,
              'BACKUP_STALE': sample['backup_age_seconds'] is not None and sample['backup_age_seconds'] <= 36*3600}
     worker = sample.get('worker', {})
+    offhost = sample.get('offhost', {})
+    if offhost.get('configured'):
+        rules['OFFHOST_KEY_CONFIG'] = offhost.get('key_metadata_ok') is True and offhost.get('receipt_present') is True
+        rules['OFFHOST_VERIFY_FAILED'] = offhost.get('hash_verified') is True and offhost.get('restore_pass') is True
+        age = offhost.get('age_seconds')
+        rules['OFFHOST_BACKUP_STALE'] = isinstance(age, int) and 0 <= age <= 36*3600
     if worker.get('installed'):
         rules['WORKER_FAILED'] = worker.get('service_result') == 'success' and worker.get('last_ok') is True
         # Disabled timer is the intended safe business state, not a monitoring failure.
@@ -466,7 +497,7 @@ def monitor():
               'services': services, 'health': app_health(), 'listeners': run(['ss', '-H', '-lnt']).decode().splitlines(),
               'backup_bytes': sum(p.stat().st_size for p in files),
               'backup_age_seconds': int(time.time()-max(p.stat().st_mtime for p in manifests)) if manifests else None,
-              'worker': worker_observation()}
+              'worker': worker_observation(), 'offhost': offhost_observation()}
     result = evaluate_monitor(sample)
     # Atomic replacement avoids readers seeing a partially-written monitor status.
     temp = STATE / 'monitor-pending.json'
