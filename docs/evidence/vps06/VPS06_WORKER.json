@@ -1,0 +1,287 @@
+{
+  "status": "PASS",
+  "utc": "2026-09-19T11:37:40.758228+00:00",
+  "server_version_num": 170011,
+  "tests": [
+    {
+      "name": "empty_queue",
+      "status": "PASS",
+      "detail": {
+        "ok": true,
+        "claimed": false,
+        "queue": "EMPTY",
+        "enqueued": 0,
+        "code": "EMPTY",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:00.896Z",
+        "finished_at": "2026-09-19T11:37:00.924Z"
+      }
+    },
+    {
+      "name": "due_enqueue_one_and_dedupe",
+      "status": "PASS",
+      "detail": {
+        "ok": true,
+        "claimed": true,
+        "state": "READY",
+        "mode": "synthetic",
+        "pages_fetched": 0,
+        "fetched_count": 0,
+        "inserted": 0,
+        "updated": 0,
+        "unchanged": 0,
+        "seen": 0,
+        "enqueued": 1,
+        "code": "COMPLETED",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:01.139Z",
+        "finished_at": "2026-09-19T11:37:01.173Z"
+      }
+    },
+    {
+      "name": "multiple_jobs_one_per_invocation",
+      "status": "PASS",
+      "detail": {
+        "queued": 0,
+        "running": 0,
+        "succeeded": 3,
+        "failed": 0
+      }
+    },
+    {
+      "name": "process_failure",
+      "status": "PASS",
+      "detail": {
+        "ok": false,
+        "claimed": true,
+        "state": "ERROR",
+        "errorCode": "SYNC_OPERATION_FAILED",
+        "enqueued": 0,
+        "code": "PROCESS_FAILED",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:02.240Z",
+        "finished_at": "2026-09-19T11:37:02.273Z"
+      }
+    },
+    {
+      "name": "stale_job",
+      "status": "PASS",
+      "detail": {
+        "ok": false,
+        "claimed": true,
+        "state": "ERROR",
+        "errorCode": "SYNC_OPERATION_FAILED",
+        "enqueued": 0,
+        "code": "PROCESS_FAILED",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:02.503Z",
+        "finished_at": "2026-09-19T11:37:02.535Z"
+      }
+    },
+    {
+      "name": "duplicate_complete_stale_fail",
+      "status": "PASS",
+      "detail": {
+        "duplicate_complete": "DENIED",
+        "stale_fail": "DENIED"
+      }
+    },
+    {
+      "name": "scope_null_acl",
+      "status": "PASS",
+      "detail": {
+        "denials": 11,
+        "reviews_and_auth_and_sessions_and_cron": "DENIED"
+      }
+    },
+    {
+      "name": "native_claim_two_backends",
+      "status": "PASS",
+      "detail": {
+        "first_claim": true,
+        "second_claim": false,
+        "rolled_back": true
+      }
+    },
+    {
+      "name": "parallel_advisory_lock",
+      "status": "PASS",
+      "detail": {
+        "worker_b": {
+          "ok": true,
+          "code": "ALREADY_RUNNING",
+          "claimed": false,
+          "provider_calls": 0,
+          "started_at": "2026-09-19T11:37:03.709Z",
+          "finished_at": "2026-09-19T11:37:03.729Z"
+        },
+        "completed": 1,
+        "duplicates": 0,
+        "released": true
+      }
+    },
+    {
+      "name": "systemd_duplicate_invocation",
+      "status": "PASS",
+      "detail": {
+        "same_invocation": true,
+        "completions": 1
+      }
+    },
+    {
+      "name": "SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "signal": "SIGTERM",
+        "claim_rolled_back": true,
+        "lock_released": true,
+        "systemd_result": "exit-code"
+      }
+    },
+    {
+      "name": "SIGKILL",
+      "status": "PASS",
+      "detail": {
+        "signal": "SIGKILL",
+        "claim_rolled_back": true,
+        "lock_released": true,
+        "systemd_result": "signal"
+      }
+    },
+    {
+      "name": "worker_timeout",
+      "status": "PASS",
+      "detail": {
+        "systemd_result": "timeout",
+        "claim_rolled_back": true,
+        "lock_released": true
+      }
+    },
+    {
+      "name": "claim_rpc_failure",
+      "status": "PASS",
+      "detail": {
+        "stage": "CLAIM",
+        "rollback": true,
+        "completion": 0
+      }
+    },
+    {
+      "name": "complete_rpc_failure",
+      "status": "PASS",
+      "detail": {
+        "stage": "COMPLETE",
+        "rollback": true,
+        "completion": 0
+      }
+    },
+    {
+      "name": "DB_unavailable",
+      "status": "PASS",
+      "detail": {
+        "isolated_socket_unavailable": true,
+        "live_db_stopped": false,
+        "stage": "DB_READINESS"
+      }
+    },
+    {
+      "name": "actual_timer_and_overlap",
+      "status": "PASS",
+      "detail": {
+        "same_invocation": true,
+        "active_state": "activating",
+        "timer_active": "active",
+        "cadence": "*-*-* *:*:0/2",
+        "hold_ms": 7000,
+        "completions": 1
+      }
+    },
+    {
+      "name": "final_empty_queue",
+      "status": "PASS",
+      "detail": {
+        "ok": true,
+        "claimed": false,
+        "queue": "EMPTY",
+        "enqueued": 0,
+        "code": "EMPTY",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:40.645Z",
+        "finished_at": "2026-09-19T11:37:40.671Z"
+      }
+    }
+  ],
+  "observations": {
+    "locks": [
+      [
+        {
+          "pid": 104408,
+          "granted": true,
+          "classid": "1380013908",
+          "objid": "6",
+          "mode": "ExclusiveLock"
+        }
+      ],
+      [
+        {
+          "pid": 104531,
+          "granted": true,
+          "classid": "1380013908",
+          "objid": "6",
+          "mode": "ExclusiveLock"
+        }
+      ],
+      [
+        {
+          "pid": 104595,
+          "granted": true,
+          "classid": "1380013908",
+          "objid": "6",
+          "mode": "ExclusiveLock"
+        }
+      ],
+      [
+        {
+          "pid": 104688,
+          "granted": true,
+          "classid": "1380013908",
+          "objid": "6",
+          "mode": "ExclusiveLock"
+        }
+      ],
+      [
+        {
+          "pid": 105049,
+          "granted": true,
+          "classid": "1380013908",
+          "objid": "6",
+          "mode": "ExclusiveLock"
+        }
+      ]
+    ],
+    "timer_overlap": {
+      "same_invocation": true,
+      "active_state": "activating",
+      "timer_active": "active",
+      "cadence": "*-*-* *:*:0/2",
+      "hold_ms": 7000
+    },
+    "cleanup": {
+      "queued": 0,
+      "running": 0,
+      "succeeded": 0,
+      "failed": 0
+    },
+    "timer_final": {
+      "active": "inactive",
+      "enabled": "disabled"
+    },
+    "hashes": {
+      "lib/server/single-sync-run.js": "c2c1e3de00b071aa82e4e3399f5158b5612164b621c20452abf42c033ac8c504",
+      "tools/vps06/worker.mjs": "be51186523e6e7cde11552a134f41a8ff90a958a79e14c4fb36ba8ed8aaa88d0",
+      "tools/vps06/once.mjs": "0f20edac2908c04c8a0cdac484274e233ede12c89042f22660789954238016f4",
+      "tools/vps06/pg.mjs": "4c7f365d245689b2dc94a16963d6d39ebb1165a24e7bce0ceffde44f1a240d82"
+    }
+  },
+  "provider_calls": 0
+}

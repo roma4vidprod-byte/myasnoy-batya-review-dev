@@ -1,0 +1,199 @@
+{
+  "tests": [
+    {
+      "name": "cloud",
+      "status": "PASS",
+      "code": "PROFILE_DENIED",
+      "provider_calls": 0
+    },
+    {
+      "name": "wrong",
+      "status": "PASS",
+      "code": "PROFILE_DENIED",
+      "provider_calls": 0
+    },
+    {
+      "name": "missing",
+      "status": "PASS",
+      "code": "SYNTHETIC_MODE_REQUIRED",
+      "provider_calls": 0
+    },
+    {
+      "name": "ambiguous",
+      "status": "PASS",
+      "code": "SYNTHETIC_MODE_REQUIRED",
+      "provider_calls": 0
+    },
+    {
+      "name": "unexpected_exception",
+      "status": "PASS",
+      "fail_once": true,
+      "raw_exception_hidden": true
+    }
+  ],
+  "monitor_failure_observed": {
+    "checks": {
+      "BACKUP_GROWTH": true,
+      "BACKUP_STALE": true,
+      "DISK_LOW": true,
+      "FAILED_UNITS": true,
+      "HEALTHZ_FAILED": true,
+      "LISTENER_MISMATCH": true,
+      "LOAD_HIGH": true,
+      "RAM_LOW": true,
+      "READYZ_FAILED": true,
+      "SERVICE_DOWN": true,
+      "WORKER_FAILED": false,
+      "WORKER_TIMER_STATE": true
+    },
+    "codes": [
+      "WORKER_FAILED"
+    ],
+    "sample": {
+      "backup_age_seconds": 2962,
+      "backup_bytes": 1026014,
+      "cpus": 2,
+      "disk_free": 37102100480,
+      "failed_units": 0,
+      "health": {
+        "healthz": 200,
+        "readyz": 200
+      },
+      "listeners": [
+        "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+        "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+        "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+        "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+        "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+        "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+        "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+        "LISTEN 0      4096            [::]:22       [::]:*"
+      ],
+      "load1": 0.173828125,
+      "ram_available": 3492106240,
+      "services": {
+        "postgresql@17-main.service": "active",
+        "review-activator-foundation.service": "active",
+        "review-lab-api.service": "active",
+        "review-lab-auth.service": "active"
+      },
+      "utc": "2026-09-19T11:40:51.014575+00:00",
+      "worker": {
+        "installed": true,
+        "last_execution": "2026-09-19T11:40:50.794Z",
+        "last_ok": false,
+        "last_success": "2026-09-19T11:37:40.671Z",
+        "lock_refused": false,
+        "service_result": "success",
+        "service_state": "inactive",
+        "timer_enabled": "disabled",
+        "timer_state": "inactive"
+      }
+    },
+    "status": "FAIL"
+  },
+  "monitor": {
+    "checks": {
+      "BACKUP_GROWTH": true,
+      "BACKUP_STALE": true,
+      "DISK_LOW": true,
+      "FAILED_UNITS": true,
+      "HEALTHZ_FAILED": true,
+      "LISTENER_MISMATCH": true,
+      "LOAD_HIGH": true,
+      "RAM_LOW": true,
+      "READYZ_FAILED": true,
+      "SERVICE_DOWN": true,
+      "WORKER_FAILED": true,
+      "WORKER_TIMER_STATE": true
+    },
+    "codes": [],
+    "sample": {
+      "backup_age_seconds": 2963,
+      "backup_bytes": 1026014,
+      "cpus": 2,
+      "disk_free": 37102108672,
+      "failed_units": 0,
+      "health": {
+        "healthz": 200,
+        "readyz": 200
+      },
+      "listeners": [
+        "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+        "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+        "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+        "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+        "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+        "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+        "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+        "LISTEN 0      4096            [::]:22       [::]:*"
+      ],
+      "load1": 0.173828125,
+      "ram_available": 3509108736,
+      "services": {
+        "postgresql@17-main.service": "active",
+        "review-activator-foundation.service": "active",
+        "review-lab-api.service": "active",
+        "review-lab-auth.service": "active"
+      },
+      "utc": "2026-09-19T11:40:51.654303+00:00",
+      "worker": {
+        "installed": true,
+        "last_execution": "2026-09-19T11:40:51.477Z",
+        "last_ok": true,
+        "last_success": "2026-09-19T11:40:51.477Z",
+        "lock_refused": false,
+        "service_result": "success",
+        "service_state": "inactive",
+        "timer_enabled": "disabled",
+        "timer_state": "inactive"
+      }
+    },
+    "status": "PASS"
+  },
+  "lab_tables_preserved": true,
+  "unchanged_claim_complete_fail_hashes": {
+    "review_claim_next_sync_run(uuid)": "4153120f966de5c0d9d69e113f2ceadcee7c4bad5cd25075c08ccda87b611989",
+    "review_complete_sync_run(uuid,uuid,jsonb)": "62bf56d1aeae1b6d5f929c605c3b806a22c91368d2dc4b4248b9e09716779aa5",
+    "review_fail_sync_run(uuid,uuid,text)": "35c9f3d5f174ca4c545167ab03d75937572a365fd482fb7672fa6cb3a449ffa2"
+  },
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "listeners": [
+    "LISTEN 0      4096      127.0.0.54:53    0.0.0.0:*",
+    "LISTEN 0      2048       127.0.0.1:13001 0.0.0.0:*",
+    "LISTEN 0      511        127.0.0.1:13000 0.0.0.0:*",
+    "LISTEN 0      200        127.0.0.1:5432  0.0.0.0:*",
+    "LISTEN 0      4096         0.0.0.0:22    0.0.0.0:*",
+    "LISTEN 0      4096   127.0.0.53%lo:53    0.0.0.0:*",
+    "LISTEN 0      4096       127.0.0.1:19999 0.0.0.0:*",
+    "LISTEN 0      4096            [::]:22       [::]:*"
+  ],
+  "timers": {
+    "review-activator-worker.timer": "ActiveState=inactive\nUnitFileState=disabled",
+    "review-activator-backup.timer": "ActiveState=active\nUnitFileState=enabled",
+    "review-activator-monitor.timer": "ActiveState=active\nUnitFileState=enabled"
+  },
+  "operational_windows_dependencies": [],
+  "db_role": {
+    "rolname": "review-activator",
+    "rolsuper": false,
+    "rolcreaterole": false,
+    "rolcreatedb": false,
+    "rolinherit": false,
+    "rolbypassrls": false
+  },
+  "service": "Type=oneshot\nRestart=no\nTimeoutStartUSec=25s\nResult=success\nUser=review-activator\nPrivateNetwork=yes\nRestrictAddressFamilies=AF_UNIX\nActiveState=inactive",
+  "postgrest_dependency": "NOT_USED_DIRECT_UNIX_POSTGRESQL",
+  "boot_id": "e1aa28e3-af7e-45ac-b10c-b4d22d8995e6",
+  "backup_unit_hashes": {
+    "review-activator-backup.service": "115ba0d192385a557a7d0033d4cd61d3b27cee009516f290e217b5cc2eb3106c",
+    "review-activator-backup.timer": "1903d3bbcd6546191906a0c1c0901965dafb5f4cdd48c405f9636877bbaeb66c",
+    "review-activator-monitor.service": "c01d8fb756e02e17692ad475ff9382847354758f62e5ced914ac1fccb9b1e8b8",
+    "review-activator-monitor.timer": "274a6dfacb21f5c58c55d94139e356b3d4485d2b02a9b41430c0fd95718e5310"
+  },
+  "deployed_ops_hash": "f37c12f416aaf75c57473cbe71e6f888545d96c1f1ce94b8ddefcab685ddda40",
+  "status": "PASS"
+}

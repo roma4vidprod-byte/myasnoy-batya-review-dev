@@ -1,0 +1,304 @@
+{
+  "status": "PASS",
+  "native_tests": [
+    {
+      "name": "process_failure",
+      "status": "PASS",
+      "detail": {
+        "ok": false,
+        "claimed": true,
+        "state": "ERROR",
+        "errorCode": "SYNC_OPERATION_FAILED",
+        "enqueued": 0,
+        "code": "PROCESS_FAILED",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:02.240Z",
+        "finished_at": "2026-09-19T11:37:02.273Z"
+      }
+    },
+    {
+      "name": "stale_job",
+      "status": "PASS",
+      "detail": {
+        "ok": false,
+        "claimed": true,
+        "state": "ERROR",
+        "errorCode": "SYNC_OPERATION_FAILED",
+        "enqueued": 0,
+        "code": "PROCESS_FAILED",
+        "provider_calls": 0,
+        "started_at": "2026-09-19T11:37:02.503Z",
+        "finished_at": "2026-09-19T11:37:02.535Z"
+      }
+    },
+    {
+      "name": "duplicate_complete_stale_fail",
+      "status": "PASS",
+      "detail": {
+        "duplicate_complete": "DENIED",
+        "stale_fail": "DENIED"
+      }
+    },
+    {
+      "name": "SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "signal": "SIGTERM",
+        "claim_rolled_back": true,
+        "lock_released": true,
+        "systemd_result": "exit-code"
+      }
+    },
+    {
+      "name": "SIGKILL",
+      "status": "PASS",
+      "detail": {
+        "signal": "SIGKILL",
+        "claim_rolled_back": true,
+        "lock_released": true,
+        "systemd_result": "signal"
+      }
+    },
+    {
+      "name": "worker_timeout",
+      "status": "PASS",
+      "detail": {
+        "systemd_result": "timeout",
+        "claim_rolled_back": true,
+        "lock_released": true
+      }
+    },
+    {
+      "name": "claim_rpc_failure",
+      "status": "PASS",
+      "detail": {
+        "stage": "CLAIM",
+        "rollback": true,
+        "completion": 0
+      }
+    },
+    {
+      "name": "complete_rpc_failure",
+      "status": "PASS",
+      "detail": {
+        "stage": "COMPLETE",
+        "rollback": true,
+        "completion": 0
+      }
+    },
+    {
+      "name": "DB_unavailable",
+      "status": "PASS",
+      "detail": {
+        "isolated_socket_unavailable": true,
+        "live_db_stopped": false,
+        "stage": "DB_READINESS"
+      }
+    }
+  ],
+  "extra_tests": [
+    {
+      "name": "cloud",
+      "status": "PASS",
+      "code": "PROFILE_DENIED",
+      "provider_calls": 0
+    },
+    {
+      "name": "wrong",
+      "status": "PASS",
+      "code": "PROFILE_DENIED",
+      "provider_calls": 0
+    },
+    {
+      "name": "missing",
+      "status": "PASS",
+      "code": "SYNTHETIC_MODE_REQUIRED",
+      "provider_calls": 0
+    },
+    {
+      "name": "ambiguous",
+      "status": "PASS",
+      "code": "SYNTHETIC_MODE_REQUIRED",
+      "provider_calls": 0
+    },
+    {
+      "name": "unexpected_exception",
+      "status": "PASS",
+      "fail_once": true,
+      "raw_exception_hidden": true
+    }
+  ],
+  "initial_install_failure": {
+    "status": "FAIL",
+    "utc": "2026-09-19T11:34:30.932409+00:00",
+    "server_version_num": 170011,
+    "tests": [
+      {
+        "name": "empty_queue",
+        "status": "FAIL",
+        "code": "NATIVE_ASSERTION_FAILED"
+      }
+    ],
+    "observations": {},
+    "provider_calls": 0
+  },
+  "initial_measurement_failure": {
+    "status": "FAIL",
+    "utc": "2026-09-19T11:35:48.597147+00:00",
+    "server_version_num": 170011,
+    "tests": [
+      {
+        "name": "empty_queue",
+        "status": "PASS",
+        "detail": {
+          "ok": true,
+          "claimed": false,
+          "queue": "EMPTY",
+          "enqueued": 0,
+          "code": "EMPTY",
+          "provider_calls": 0,
+          "started_at": "2026-09-19T11:35:35.127Z",
+          "finished_at": "2026-09-19T11:35:35.152Z"
+        }
+      },
+      {
+        "name": "due_enqueue_one_and_dedupe",
+        "status": "PASS",
+        "detail": {
+          "ok": true,
+          "claimed": true,
+          "state": "READY",
+          "mode": "synthetic",
+          "pages_fetched": 0,
+          "fetched_count": 0,
+          "inserted": 0,
+          "updated": 0,
+          "unchanged": 0,
+          "seen": 0,
+          "enqueued": 1,
+          "code": "COMPLETED",
+          "provider_calls": 0,
+          "started_at": "2026-09-19T11:35:35.327Z",
+          "finished_at": "2026-09-19T11:35:35.358Z"
+        }
+      },
+      {
+        "name": "multiple_jobs_one_per_invocation",
+        "status": "PASS",
+        "detail": {
+          "queued": 0,
+          "running": 0,
+          "succeeded": 3,
+          "failed": 0
+        }
+      },
+      {
+        "name": "process_failure",
+        "status": "PASS",
+        "detail": {
+          "ok": false,
+          "claimed": true,
+          "state": "ERROR",
+          "errorCode": "SYNC_OPERATION_FAILED",
+          "enqueued": 0,
+          "code": "PROCESS_FAILED",
+          "provider_calls": 0,
+          "started_at": "2026-09-19T11:35:36.409Z",
+          "finished_at": "2026-09-19T11:35:36.438Z"
+        }
+      },
+      {
+        "name": "stale_job",
+        "status": "PASS",
+        "detail": {
+          "ok": false,
+          "claimed": true,
+          "state": "ERROR",
+          "errorCode": "SYNC_OPERATION_FAILED",
+          "enqueued": 0,
+          "code": "PROCESS_FAILED",
+          "provider_calls": 0,
+          "started_at": "2026-09-19T11:35:36.656Z",
+          "finished_at": "2026-09-19T11:35:36.686Z"
+        }
+      },
+      {
+        "name": "duplicate_complete_stale_fail",
+        "status": "PASS",
+        "detail": {
+          "duplicate_complete": "DENIED",
+          "stale_fail": "DENIED"
+        }
+      },
+      {
+        "name": "scope_null_acl",
+        "status": "PASS",
+        "detail": {
+          "denials": 11,
+          "reviews_and_auth_and_sessions_and_cron": "DENIED"
+        }
+      },
+      {
+        "name": "native_claim_two_backends",
+        "status": "PASS",
+        "detail": {
+          "first_claim": true,
+          "second_claim": false,
+          "rolled_back": true
+        }
+      },
+      {
+        "name": "parallel_advisory_lock",
+        "status": "PASS",
+        "detail": {
+          "worker_b": {
+            "ok": true,
+            "code": "ALREADY_RUNNING",
+            "claimed": false,
+            "provider_calls": 0,
+            "started_at": "2026-09-19T11:35:37.815Z",
+            "finished_at": "2026-09-19T11:35:37.835Z"
+          },
+          "completed": 1,
+          "duplicates": 0,
+          "released": true
+        }
+      },
+      {
+        "name": "systemd_duplicate_invocation",
+        "status": "FAIL",
+        "code": "NATIVE_ASSERTION_FAILED"
+      }
+    ],
+    "observations": {
+      "locks": [
+        [
+          {
+            "pid": 103599,
+            "granted": true,
+            "classid": "1380013908",
+            "objid": "6",
+            "mode": "ExclusiveLock"
+          }
+        ],
+        [
+          {
+            "pid": 103722,
+            "granted": true,
+            "classid": "1380013908",
+            "objid": "6",
+            "mode": "ExclusiveLock"
+          }
+        ]
+      ]
+    },
+    "provider_calls": 0
+  },
+  "postgrest_dependency": "NOT_USED_DIRECT_UNIX_POSTGRESQL",
+  "initial_linux_staging": {
+    "status": "FAIL",
+    "passed": 38,
+    "errors": 2,
+    "reason": "Missing unchanged VPS05 unit fixtures; copied, final 40/40 PASS"
+  }
+}

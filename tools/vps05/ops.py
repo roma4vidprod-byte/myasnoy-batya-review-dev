@@ -403,6 +403,33 @@ def listener_evaluation(lines):
     return not (observed - allowed) and expected_internal <= observed and any(p == 22 for _, p in observed)
 
 
+def worker_observation():
+    """Read status only; never start/trigger the worker or query queue/database."""
+    unit = 'review-activator-worker.service'
+    if run(['systemctl', 'show', unit, '-p', 'LoadState', '--value']).decode().strip() == 'not-found':
+        return {'installed': False}
+    def prop(name, key):
+        return run(['systemctl', 'show', name, '-p', key, '--value']).decode().strip()
+    def read_status(name):
+        try:
+            value = json.loads((Path('/var/lib/review-activator-worker') / name).read_text())
+            stamp = value.get('finished_at')
+            if not isinstance(stamp, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', stamp):
+                return {}
+            return {'finished_at': stamp, 'ok': value.get('ok') is True,
+                    'lock_refused': value.get('code') == 'ALREADY_RUNNING'}
+        except (OSError, ValueError, TypeError):
+            return {}
+    latest, success = read_status('latest.json'), read_status('success.json')
+    return {'installed': True, 'service_result': prop(unit, 'Result'),
+            'service_state': prop(unit, 'ActiveState'),
+            'timer_state': prop('review-activator-worker.timer', 'ActiveState'),
+            'timer_enabled': prop('review-activator-worker.timer', 'UnitFileState'),
+            'last_execution': latest.get('finished_at'), 'last_ok': latest.get('ok'),
+            'lock_refused': latest.get('lock_refused'),
+            'last_success': success.get('finished_at')}
+
+
 def evaluate_monitor(sample):
     failures = []
     rules = {'DISK_LOW': sample['disk_free'] >= MIN_FREE, 'RAM_LOW': sample['ram_available'] >= 256*1024**2,
@@ -412,6 +439,11 @@ def evaluate_monitor(sample):
              'LISTENER_MISMATCH': listener_evaluation(sample['listeners']),
              'BACKUP_GROWTH': sample['backup_bytes'] <= 5*1024**3,
              'BACKUP_STALE': sample['backup_age_seconds'] is not None and sample['backup_age_seconds'] <= 36*3600}
+    worker = sample.get('worker', {})
+    if worker.get('installed'):
+        rules['WORKER_FAILED'] = worker.get('service_result') == 'success' and worker.get('last_ok') is True
+        # Disabled timer is the intended safe business state, not a monitoring failure.
+        rules['WORKER_TIMER_STATE'] = worker.get('timer_state') in ('active', 'inactive')
     failures.extend(k for k, passed in rules.items() if not passed)
     return {'status': 'PASS' if not failures else 'FAIL', 'codes': failures, 'checks': rules, 'sample': sample}
 
@@ -433,7 +465,8 @@ def monitor():
               'failed_units': len(run(['systemctl', '--failed', '--no-legend', '--plain', '--no-pager']).decode().splitlines()),
               'services': services, 'health': app_health(), 'listeners': run(['ss', '-H', '-lnt']).decode().splitlines(),
               'backup_bytes': sum(p.stat().st_size for p in files),
-              'backup_age_seconds': int(time.time()-max(p.stat().st_mtime for p in manifests)) if manifests else None}
+              'backup_age_seconds': int(time.time()-max(p.stat().st_mtime for p in manifests)) if manifests else None,
+              'worker': worker_observation()}
     result = evaluate_monitor(sample)
     # Atomic replacement avoids readers seeing a partially-written monitor status.
     temp = STATE / 'monitor-pending.json'

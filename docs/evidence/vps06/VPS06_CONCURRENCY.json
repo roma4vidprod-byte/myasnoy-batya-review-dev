@@ -1,0 +1,160 @@
+{
+  "status": "PASS",
+  "server_version_num": 170011,
+  "tests": [
+    {
+      "name": "multiple_jobs_one_per_invocation",
+      "status": "PASS",
+      "detail": {
+        "queued": 0,
+        "running": 0,
+        "succeeded": 3,
+        "failed": 0
+      }
+    },
+    {
+      "name": "duplicate_complete_stale_fail",
+      "status": "PASS",
+      "detail": {
+        "duplicate_complete": "DENIED",
+        "stale_fail": "DENIED"
+      }
+    },
+    {
+      "name": "scope_null_acl",
+      "status": "PASS",
+      "detail": {
+        "denials": 11,
+        "reviews_and_auth_and_sessions_and_cron": "DENIED"
+      }
+    },
+    {
+      "name": "parallel_advisory_lock",
+      "status": "PASS",
+      "detail": {
+        "worker_b": {
+          "ok": true,
+          "code": "ALREADY_RUNNING",
+          "claimed": false,
+          "provider_calls": 0,
+          "started_at": "2026-09-19T11:37:03.709Z",
+          "finished_at": "2026-09-19T11:37:03.729Z"
+        },
+        "completed": 1,
+        "duplicates": 0,
+        "released": true
+      }
+    },
+    {
+      "name": "systemd_duplicate_invocation",
+      "status": "PASS",
+      "detail": {
+        "same_invocation": true,
+        "completions": 1
+      }
+    },
+    {
+      "name": "SIGTERM",
+      "status": "PASS",
+      "detail": {
+        "signal": "SIGTERM",
+        "claim_rolled_back": true,
+        "lock_released": true,
+        "systemd_result": "exit-code"
+      }
+    },
+    {
+      "name": "SIGKILL",
+      "status": "PASS",
+      "detail": {
+        "signal": "SIGKILL",
+        "claim_rolled_back": true,
+        "lock_released": true,
+        "systemd_result": "signal"
+      }
+    },
+    {
+      "name": "worker_timeout",
+      "status": "PASS",
+      "detail": {
+        "systemd_result": "timeout",
+        "claim_rolled_back": true,
+        "lock_released": true
+      }
+    }
+  ],
+  "contracts": [
+    {
+      "name": "due_active_job_dedupe",
+      "status": "PASS",
+      "new_jobs": 0,
+      "next_sync_unchanged": true
+    },
+    {
+      "name": "fail_once_duplicate_denied",
+      "status": "PASS"
+    },
+    {
+      "name": "complete_null_wrong_scope_denied",
+      "status": "PASS",
+      "denials": 3
+    },
+    {
+      "name": "worker_cannot_change_provider_config",
+      "status": "PASS"
+    }
+  ],
+  "locks": [
+    [
+      {
+        "pid": 104408,
+        "granted": true,
+        "classid": "1380013908",
+        "objid": "6",
+        "mode": "ExclusiveLock"
+      }
+    ],
+    [
+      {
+        "pid": 104531,
+        "granted": true,
+        "classid": "1380013908",
+        "objid": "6",
+        "mode": "ExclusiveLock"
+      }
+    ],
+    [
+      {
+        "pid": 104595,
+        "granted": true,
+        "classid": "1380013908",
+        "objid": "6",
+        "mode": "ExclusiveLock"
+      }
+    ],
+    [
+      {
+        "pid": 104688,
+        "granted": true,
+        "classid": "1380013908",
+        "objid": "6",
+        "mode": "ExclusiveLock"
+      }
+    ],
+    [
+      {
+        "pid": 105049,
+        "granted": true,
+        "classid": "1380013908",
+        "objid": "6",
+        "mode": "ExclusiveLock"
+      }
+    ]
+  ],
+  "unchanged_rpc_hashes": {
+    "review_claim_next_sync_run(uuid)": "4153120f966de5c0d9d69e113f2ceadcee7c4bad5cd25075c08ccda87b611989",
+    "review_complete_sync_run(uuid,uuid,jsonb)": "62bf56d1aeae1b6d5f929c605c3b806a22c91368d2dc4b4248b9e09716779aa5",
+    "review_fail_sync_run(uuid,uuid,text)": "35c9f3d5f174ca4c545167ab03d75937572a365fd482fb7672fa6cb3a449ffa2"
+  },
+  "duplicate_processing": 0
+}

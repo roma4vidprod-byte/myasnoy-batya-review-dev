@@ -1,5 +1,7 @@
 # VPS05 — local-only monitoring
 
+VPS06 extension (2026-09-19): optional worker/timer observations are now included when the dedicated unit is installed. This does not activate a worker. See `VPS06_FAILURE_MODEL.md` and actual `evidence/vps06/VPS06_MONITORING.json`. Existing backup/monitor timer definitions are unchanged.
+
 `review-activator-monitor.service` and `.timer` are enabled. Timer: five minutes after boot and five minutes after activation, accuracy30s. These are **operational monitoring**, not review/provider scheduling.
 
 Fixed checks: filesystem free>=5GiB; RAM available>=256MiB; one-minute load<=2×CPU count; no failed systemd units; PostgreSQL17/main, Auth, PostgREST and Node active; fixed loopback `/healthz` and `/readyz` return200; expected TCP listeners; backup growth<=5GiB and completed-manifest age<=36h.

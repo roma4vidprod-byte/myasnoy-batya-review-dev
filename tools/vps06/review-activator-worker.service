@@ -1,0 +1,37 @@
+[Unit]
+Description=Review Activator VPS06 synthetic single-run worker (NO PROVIDERS)
+After=postgresql@17-main.service
+StartLimitIntervalSec=60
+StartLimitBurst=60
+
+[Service]
+Type=oneshot
+User=review-activator
+Group=review-activator
+EnvironmentFile=/etc/review-activator-lab/worker.env
+WorkingDirectory=/opt/review-activator-lab/worker/vps06
+ExecStart=/opt/node/bin/node /opt/review-activator-lab/worker/vps06/tools/vps06/once.mjs --once
+TimeoutStartSec=25
+TimeoutStopSec=5
+KillMode=control-group
+Restart=no
+UMask=0077
+StateDirectory=review-activator-worker
+StateDirectoryMode=0700
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateNetwork=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX
+IPAddressDeny=any
+ReadWritePaths=/var/lib/review-activator-worker
+InaccessiblePaths=/var/backups/review-activator
+MemoryMax=128M
+TasksMax=32

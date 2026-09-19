@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "acceptance": {
+    "same_invocation": true,
+    "active_state": "activating",
+    "timer_active": "active",
+    "cadence": "*-*-* *:*:0/2",
+    "hold_ms": 7000
+  },
+  "final": {
+    "active": "inactive",
+    "enabled": "disabled"
+  },
+  "final_OnCalendar": "hourly",
+  "Persistent": false,
+  "services": "Type=oneshot\nRestart=no\nTimeoutStartUSec=25s\nResult=success\nUser=review-activator\nPrivateNetwork=yes\nRestrictAddressFamilies=AF_UNIX\nActiveState=inactive",
+  "timers": {
+    "review-activator-worker.timer": "ActiveState=inactive\nUnitFileState=disabled",
+    "review-activator-backup.timer": "ActiveState=active\nUnitFileState=enabled",
+    "review-activator-monitor.timer": "ActiveState=active\nUnitFileState=enabled"
+  },
+  "real_provider_scheduler": "OFF"
+}
