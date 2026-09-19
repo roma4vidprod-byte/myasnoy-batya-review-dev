@@ -1,0 +1,40 @@
+{
+  "path": "OFFICIAL_LOOPBACK_DIRECT",
+  "tests": [
+    {
+      "name": "jwt_expired_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "jwt_issuer_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "jwt_audience_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "jwt_role_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "modified_signature_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong_key_pair_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "anon_public_rpc",
+      "result": "PASS"
+    },
+    {
+      "name": "service_role_readiness_only",
+      "result": "PASS"
+    }
+  ],
+  "pass": 8,
+  "fail": 0,
+  "external_effects": 0
+}

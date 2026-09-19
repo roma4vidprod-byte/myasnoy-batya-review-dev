@@ -1,0 +1,41 @@
+{
+  "tests": [
+    {
+      "name": "review-lab-auth_unavailable_fails_closed",
+      "result": "PASS"
+    },
+    {
+      "name": "review-lab-api_unavailable_fails_closed",
+      "result": "PASS"
+    },
+    {
+      "name": "postgresql@17-main_unavailable_fails_closed",
+      "result": "PASS"
+    },
+    {
+      "name": "migration_marker_missing_fails_closed",
+      "result": "PASS"
+    },
+    {
+      "name": "foundation_service_restart",
+      "result": "PASS"
+    },
+    {
+      "name": "node_cannot_read_signer_or_service_credentials",
+      "result": "PASS"
+    },
+    {
+      "name": "auth_owned_tables_and_minimal_authenticator",
+      "result": "PASS"
+    },
+    {
+      "name": "no_scheduler_no_private_material",
+      "result": "PASS"
+    }
+  ],
+  "pass": 8,
+  "fail": 0,
+  "skipped": 0,
+  "deliberate_synthetic_marker_changes": 2,
+  "provider_effects": 0
+}

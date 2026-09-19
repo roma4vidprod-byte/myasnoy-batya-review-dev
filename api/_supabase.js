@@ -1,9 +1,12 @@
-const SUPABASE_URL = 'https://ykiubttldgyjpajmsuas.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_JoMwOnfv-S3MQ5Kr9QKFCQ_NBgvm0fY';
+import { runtimeProfile } from '../lib/server/runtime-profile.js';
 
 export async function rpc(name, payload = {}) {
+  const target = runtimeProfile();
+  if (target.profile === 'vps-lab' && name !== 'review_public_sync_status') throw new Error('LAB_RPC_NOT_ENABLED');
+  const SUPABASE_URL=target.url, SUPABASE_KEY=target.publicKey;
   const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
     method: 'POST',
+    redirect: 'error',
     headers: {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
@@ -28,6 +31,6 @@ export async function rpc(name, payload = {}) {
 
 export const supabaseInfo = {
   connected: true,
-  projectRef: 'ykiubttldgyjpajmsuas',
+  projectRef: runtimeProfile().projectRef,
   mode: 'publishable-rpc'
 };

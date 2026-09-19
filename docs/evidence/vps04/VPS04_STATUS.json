@@ -1,0 +1,133 @@
+{
+  "status": "AUTH_PLATFORM_PASS / APP_BACKEND_PASS / ACCEPTANCE_BLOCKED",
+  "counts": {
+    "admins": 2,
+    "reviews": 2,
+    "companies": 2,
+    "cron_jobs": 0,
+    "locations": 2,
+    "sync_runs": 0,
+    "auth_users": 3,
+    "auth_migrations": 70,
+    "yandex_sessions": 0,
+    "provider_connections": 0
+  },
+  "resources": {
+    "memory": "               total        used        free      shared  buff/cache   available\nMem:            3915         557        2030          22        1604        3357\nSwap:              0           0           0\n",
+    "disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        38G  3.2G   35G   9% /\n",
+    "load": "0.05 0.02 0.00 1/187 91495\n"
+  },
+  "enabled": [
+    "enabled",
+    "enabled",
+    "enabled",
+    "enabled",
+    "enabled"
+  ],
+  "listeners": "State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess\nLISTEN 0      4096      127.0.0.54:53         0.0.0.0:*          \nLISTEN 0      2048       127.0.0.1:13001      0.0.0.0:*          \nLISTEN 0      511        127.0.0.1:13000      0.0.0.0:*          \nLISTEN 0      200        127.0.0.1:5432       0.0.0.0:*          \nLISTEN 0      4096         0.0.0.0:22         0.0.0.0:*          \nLISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*          \nLISTEN 0      4096       127.0.0.1:19999      0.0.0.0:*          \nLISTEN 0      4096            [::]:22            [::]:*          \n",
+  "firewall": "Status: active\n\nTo                         Action      From\n--                         ------      ----\n22/tcp                     ALLOW       Anywhere                   # Review Activator SSH\n22/tcp (v6)                ALLOW       Anywhere (v6)              # Review Activator SSH\n\n",
+  "versions": {
+    "postgresql": "170011",
+    "auth": "v2.196.0",
+    "postgrest": "14.17",
+    "node": "v24.21.0"
+  },
+  "tests": {
+    "targeted_windows": {
+      "pass": 88,
+      "fail": 0,
+      "skip": 0
+    },
+    "native_direct": {
+      "pass": 29,
+      "fail": 0
+    },
+    "native_node": {
+      "pass": 29,
+      "fail": 0
+    },
+    "failure": {
+      "pass": 8,
+      "fail": 0
+    },
+    "windows_full": {
+      "pass": 479,
+      "fail": 10,
+      "skip": 0,
+      "reason": "V8_PGLITE_OOM"
+    },
+    "checks": 125
+  },
+  "effects": {
+    "yandex_reads": 0,
+    "yandex_writes": 0,
+    "twogis": 0,
+    "external_email": 0,
+    "telegram": 0,
+    "ai": 0,
+    "promo": 0,
+    "supabase_cloud_writes": 0,
+    "vercel_writes": 0,
+    "business_os": 0,
+    "production": 0,
+    "official_components_installed": 2,
+    "lab_bootstrap": 1,
+    "synthetic_users_created": 3,
+    "synthetic_review_rows_created": 2,
+    "marker_failure_test_writes": 2,
+    "auth_synthetic_session_writes": "OFFICIAL_AUTH_ONLY_NOT_ROW_COUNTED",
+    "reboots": 0,
+    "effective_enqueue": 0,
+    "worker_runs": 0,
+    "recovery_executions": 0
+  },
+  "blockers": [
+    "WORKING_RESCUE_CONSOLE_REQUIRED_FOR_REBOOT",
+    "WINDOWS_MEMORY_REQUIRED_FOR_COMPLETE_FULL_SUITE"
+  ],
+  "release": {
+    "profile": "vps-lab",
+    "files": [
+      {
+        "path": "lib/server/runtime-profile.js",
+        "sha256": "a3f6ddfa346df1bc0db59d8ad56c74e1d5a63ed424d504f157bba10a1fced39c"
+      },
+      {
+        "path": "lib/server/vps/http-adapter.js",
+        "sha256": "0d074d7aee6c35ab8b02a6e375aca62f28a2200be900db2022b21b8e0f97516a"
+      },
+      {
+        "path": "lib/server/vps/foundation.js",
+        "sha256": "e9d793311a45a7fd66538768f60cb9c54633f0dc2d7f19018aff5824a035e90b"
+      },
+      {
+        "path": "lib/server/vps/foundation-config.js",
+        "sha256": "e7e1443166c7ae420df5bfa989e33f73ff2bafa6ffe7b4ddd5d22ef20edc9522"
+      },
+      {
+        "path": "lib/server/vps/lab-config.js",
+        "sha256": "0a47eee5cb85af373363601259e024cac59affd6896cbcaeccfffdf1f0f5fd65"
+      },
+      {
+        "path": "lib/server/vps/lab.js",
+        "sha256": "087d4d2c1c0cb383ed1a0a4ef1d41fa277b792dd65f88a4adbeb4e26893477c7"
+      },
+      {
+        "path": "scripts/start-vps-lab.mjs",
+        "sha256": "2d69c092cb5296d2de1a7342e2c1f923ab967c414425c798cfb593477b050342"
+      },
+      {
+        "path": "scripts/verify-vps-lab.mjs",
+        "sha256": "79b17d69f37235e7de021b0a22559fee232aaaf98de2e97e818df306baeed63c"
+      },
+      {
+        "path": "admin.html",
+        "sha256": "92b866e0c4ae89e53b481988e1199f17ce53c049c0b9a4e4395059296f942bcc"
+      },
+      {
+        "path": "package.json",
+        "sha256": "a90fc33418afa2b9cbf4768524b021135b965ecdf993457505bfae3ac44a8428"
+      }
+    ]
+  }
+}

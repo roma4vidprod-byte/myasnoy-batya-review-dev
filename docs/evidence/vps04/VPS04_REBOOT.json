@@ -1,0 +1,13 @@
+{
+  "status": "NOT_RUN",
+  "reason": "RESCUE_NOT_VERIFIED",
+  "evidence": "HipHosting authenticated panel available; VNC canvas zero size and Ctrl+Alt+Del disabled.",
+  "reboots": 0,
+  "services_enabled": [
+    "ssh.socket",
+    "postgresql.service",
+    "review-lab-auth",
+    "review-lab-api",
+    "review-activator-foundation"
+  ]
+}

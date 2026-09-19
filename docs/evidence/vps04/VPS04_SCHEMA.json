@@ -1,0 +1,19 @@
+{
+  "baseline_sha256": "71aa35c22cb2aa99a39491b22de8f0f56d390dd53d6165223a8c61f15126176c",
+  "retained": [
+    "20260912095126_review_sync_server_boundary.sql",
+    "20260912103803_yandex_session_transport_v1.sql",
+    "20260913090000_yandex_scoped_persistence_atomic_writer_04.sql",
+    "20260913100000_yandex_persistence_idempotency_05a.sql",
+    "20260913110000_yandex_admin_reviews_scoped_read_06.sql",
+    "20260913112000_yandex_admin_reviews_scope_ambiguity_fix_06a.sql",
+    "20260913150000_yandex_hourly_sync_07.sql",
+    "20260913160000_yandex_enqueue_rpc_07a1_ambiguity_fix.sql",
+    "20260913200000_yandex_connection_state_reconciliation_07a4b.sql",
+    "20260914190000_review_fail_sync_null_guard_08.sql",
+    "20260914210000_yandex_contract_recovery_admin_09.sql"
+  ],
+  "recovery09": "MIGRATION_COMPAT_ONLY",
+  "recovery09a": "NOT_APPLIED",
+  "cloud_writes": 0
+}

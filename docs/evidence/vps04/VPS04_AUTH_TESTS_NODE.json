@@ -1,0 +1,36 @@
+{
+  "path": "NODE_TO_OFFICIAL_COMPONENTS",
+  "tests": [
+    {
+      "name": "password_login_owner",
+      "result": "PASS"
+    },
+    {
+      "name": "password_login_nonadmin",
+      "result": "PASS"
+    },
+    {
+      "name": "password_login_company-b",
+      "result": "PASS"
+    },
+    {
+      "name": "refresh_real_auth_token",
+      "result": "PASS"
+    },
+    {
+      "name": "get_user_verified",
+      "result": "PASS"
+    },
+    {
+      "name": "wrong_password_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "logout_revokes_refresh",
+      "result": "PASS"
+    }
+  ],
+  "pass": 7,
+  "fail": 0,
+  "external_effects": 0
+}

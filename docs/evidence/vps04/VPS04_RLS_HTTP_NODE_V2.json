@@ -1,0 +1,64 @@
+{
+  "path": "NODE_TO_OFFICIAL_COMPONENTS",
+  "tests": [
+    {
+      "name": "anon_admin_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "nonadmin_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "owner_own_company_rpc",
+      "result": "PASS"
+    },
+    {
+      "name": "owner_cross_company_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "second_company_isolated",
+      "result": "PASS"
+    },
+    {
+      "name": "spoofed_headers_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "body_identity_override_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "public_table_rls_own_rows_only",
+      "result": "PASS"
+    },
+    {
+      "name": "nonadmin_table_no_rows",
+      "result": "PASS"
+    },
+    {
+      "name": "anon_table_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "raw_payload_column_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "admin_table_denied",
+      "result": "PASS"
+    },
+    {
+      "name": "private_schema_unavailable",
+      "result": "PASS"
+    },
+    {
+      "name": "actual_private_recovery_objects_unavailable",
+      "result": "PASS"
+    }
+  ],
+  "pass": 14,
+  "fail": 0,
+  "external_effects": 0
+}
