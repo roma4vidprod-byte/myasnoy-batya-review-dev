@@ -1,0 +1,14 @@
+{
+  "status": "NOT_RUN",
+  "blocker": "SESSION_MIGRATION_BLOCKED",
+  "requested_page": null,
+  "yandex_requests": 0,
+  "http_status": null,
+  "transport_attempted": 0,
+  "transport_completed": 0,
+  "pages_parsed": 0,
+  "scope_acceptance": "NOT_TESTED",
+  "parser_acceptance": "NOT_TESTED",
+  "review_persistence": "OFF",
+  "session_transitions": 0
+}

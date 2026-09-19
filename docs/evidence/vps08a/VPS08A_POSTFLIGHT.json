@@ -1,0 +1,35 @@
+{
+  "utc": "2026-09-19T14:01:53.445120+00:00",
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "lab": {
+    "users": 3,
+    "reviews": 2,
+    "sessions": 0,
+    "queue": 0,
+    "running": 0,
+    "vps08a_runtime_roles": 0
+  },
+  "worker_timer": [
+    "ActiveState=inactive",
+    "UnitFileState=disabled"
+  ],
+  "public_listeners": [
+    "0.0.0.0:22",
+    "[::]:22"
+  ],
+  "monitor_status": "PASS",
+  "monitor_codes": [],
+  "backup_age_seconds": 5271,
+  "key_path_present": false,
+  "boot_id": "e1aa28e3-af7e-45ac-b10c-b4d22d8995e6",
+  "observed_address_subset": [
+    "127.0.0.54:53",
+    "0.0.0.0:22",
+    "127.0.0.53%lo:53",
+    "[::]:22"
+  ],
+  "loopback_classification": "127.0.0.0/8 and ::1 excluded; no public DNS listener"
+}

@@ -1,0 +1,19 @@
+{
+  "status":"YANDEX_PAGE1_PASS_FULL_DIAGNOSTIC_BLOCKED",
+  "safe_error":"YANDEX_CONTRACT_DRIFT",
+  "base_sha":"12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "branch":"codex/yandex-live-read-smoke-01",
+  "runtime_hashes":{"files":22,"match":true,"manifest_sha256":"d6c2a92b359fb443fc2f7b73d81494f00779dd76f4232411503f1f4b4d004dbd"},
+  "session_import":{"previous_step":"PASS","new_attempts_this_step":0,"initial_state":"NOT_CONFIGURED","initial_revision":1},
+  "preflight":{"utc":"2026-09-19T16:18:40.961316+00:00","session_rows":1,"exact_scope":true,"healthz":200,"readyz":200,"lab_users":3,"lab_reviews":2,"queue":0,"running":0,"worker_timer":"DISABLED","public_tcp":"SSH_ONLY","monitor":"PASS","ntp":"yes"},
+  "stage_a":{"attempts":1,"operation":"health","elapsed_ms":1302,"exit":0,"ok":true,"state_before":"NOT_CONFIGURED","revision_before":1,"state_after":"READY","revision_after":2,"error":null,"pages":1,"received":20,"transport_attempted":1,"transport_completed":1,"http_statuses":[200],"state_cas":"SUCCESS","parser_contract":"PASS","review_persistence":"OFF","notifications":"OFF"},
+  "stage_b":{"attempts":1,"operation":"full","elapsed_ms":2900,"exit":1,"ok":false,"state_before":"READY","revision_before":2,"state_after":"ERROR","revision_after":3,"error":"YANDEX_CONTRACT_DRIFT","pages_requested":4,"pages_parsed":3,"received_from_validated_pages":60,"unique_count":null,"duplicate_count":null,"pager_total":null,"completeness":"NOT_CONFIRMED","transport_attempted":4,"transport_completed":4,"http_statuses":[200,200,200,200],"state_cas":"SUCCESS","review_persistence":"OFF","notifications":"OFF","max_pages":5,"configured_deadline_ms":30000},
+  "failure_evidence":{"page":4,"basis":"sequential reader; four completed responses, three parsed pages; no retries","item":null,"field":null,"actual_type":null,"detail":"Installed CLI drops the service parser/failure_stage fields; no raw response retained. Exact item/rule is not recoverable from current output."},
+  "count_comparison":{"historical_api":69,"operator_ui":70,"historical_delta":null,"ui_delta":null,"reason":"Full count not established"},
+  "network":{"hostnames":["yandex.ru"],"https":true,"methods":["GET"],"yandex_get":5,"mutation_methods":0,"redirect_follow":0,"automatic_retries":0},
+  "postflight":{"utc":"2026-09-19T16:21:44.851229+00:00","session_rows":1,"exact_scope":true,"session_state":"ERROR","revision":3,"last_error_code":"YANDEX_CONTRACT_DRIFT","last_session_check_at":"2026-09-19T16:19:24.088114+00:00","last_successful_sync_at":null,"healthz":200,"readyz":200,"lab_users":3,"lab_reviews":2,"unrelated_rows_hashes_unchanged":true,"queue_runs_total":0,"provider_connections":0,"worker_timer":"DISABLED","public_tcp":"SSH_ONLY","monitor":"PASS","backup_scope_validation":"PASS"},
+  "log_security":{"result":"PASS_WITH_STATED_SCAN_SCOPE","scope":"named app/Auth/PostgREST/PostgreSQL/worker journals since installation; exact server key check separately","raw_log_output":false,"key_value_matches":0,"ciphertext_value_matches":0,"credential_header_lines":0,"raw_provider_field_lines":0,"raw_envelope_field_lines":0,"provider_payload_retained":false,"plaintext_session_files_created":0,"cookie_decrypt_for_scan":false},
+  "effects_this_live_step":{"session_health_cas_transitions":2,"session_material_replacements":0,"review_inserts":0,"review_updates":0,"review_deletes":0,"yandex_get":5,"yandex_writes":0,"two_gis":0,"email":0,"telegram":0,"ai":0,"promo":0,"matching":0,"enqueue":0,"business_worker":0,"scheduler_changes":0,"supabase_cloud_reads":0,"supabase_cloud_writes":0,"vercel_reads":0,"vercel_writes":0,"business_os":0,"production":0,"reboot":0,"deployments":0,"key_changes":0,"push":0,"commit":0},
+  "next_step":"Separate narrowly scoped rule-level page4 diagnostic proposal; no GET/replay/recovery performed or authorized by this result. No claim that historical Cloud drift has the same cause.",
+  "production_untouched":true
+}

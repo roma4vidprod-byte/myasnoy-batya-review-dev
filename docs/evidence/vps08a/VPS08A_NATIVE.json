@@ -1,0 +1,136 @@
+{
+  "status": "PASS",
+  "tests": [
+    {
+      "name": "least privilege roles",
+      "status": "PASS"
+    },
+    {
+      "name": "anon private RPC denied",
+      "status": "PASS"
+    },
+    {
+      "name": "authenticated private RPC denied",
+      "status": "PASS"
+    },
+    {
+      "name": "service_role private RPC denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-activator private RPC denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-yandex-reader direct table denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-yandex-import direct table denied",
+      "status": "PASS"
+    },
+    {
+      "name": "worker replace denied",
+      "status": "PASS"
+    },
+    {
+      "name": "importer read denied",
+      "status": "PASS"
+    },
+    {
+      "name": "first replace revision1 NOT_CONFIGURED",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate create CAS denied",
+      "status": "PASS"
+    },
+    {
+      "name": "stale revision denied",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong company denied",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong location denied",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong org denied",
+      "status": "PASS"
+    },
+    {
+      "name": "importer transition denied",
+      "status": "PASS"
+    },
+    {
+      "name": "worker health CAS READY",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate health CAS denied",
+      "status": "PASS"
+    },
+    {
+      "name": "sync timestamp mutation denied",
+      "status": "PASS"
+    },
+    {
+      "name": "disable material deletion denied",
+      "status": "PASS"
+    },
+    {
+      "name": "health preserves exact tuple and sync timestamp",
+      "status": "PASS"
+    },
+    {
+      "name": "status strips encrypted material",
+      "status": "PASS"
+    },
+    {
+      "name": "replacement CAS increments revision",
+      "status": "PASS"
+    },
+    {
+      "name": "ERROR transition preserves credential",
+      "status": "PASS"
+    },
+    {
+      "name": "null scope fails closed",
+      "status": "PASS"
+    },
+    {
+      "name": "snapshot and alert actions denied",
+      "status": "PASS"
+    },
+    {
+      "name": "NULL action denied",
+      "status": "PASS"
+    },
+    {
+      "name": "NULL data denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-yandex-reader underlying CAS RPC denied",
+      "status": "PASS"
+    },
+    {
+      "name": "review-yandex-import underlying CAS RPC denied",
+      "status": "PASS"
+    }
+  ],
+  "cleanup": "PASS",
+  "existing_lab_connections": 0,
+  "provider_requests": 0,
+  "source_hashes": {
+    "20260912103803_yandex_session_transport_v1.sql": "a6497dbf4ead5daea77eaa187e35f6b359b1d8f2a3521ee0881cba31d151e52c",
+    "session-access.sql": "94047f6745521435c027bcbf30578564582a5e4bbd5c6773fb04adbf9e6842e4",
+    "native-session.py": "1952a099242faa85f5a9dcae78a5aeb55709147fa0d243313c7ed4db89675dfc"
+  },
+  "server_version_num": 170011,
+  "pass": 30,
+  "fail": 0
+}

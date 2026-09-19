@@ -1,0 +1,209 @@
+{
+  "list": {
+    "items": [
+      {
+        "id": "synthetic-page4-0",
+        "cmnt_entity_id": "synthetic-page4-0",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-1",
+        "cmnt_entity_id": "synthetic-page4-1",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-2",
+        "cmnt_entity_id": "synthetic-page4-2",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-3",
+        "cmnt_entity_id": "synthetic-page4-3",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-4",
+        "cmnt_entity_id": "synthetic-page4-4",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-5",
+        "cmnt_entity_id": "synthetic-page4-5",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-6",
+        "cmnt_entity_id": "synthetic-page4-6",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-7",
+        "cmnt_entity_id": "synthetic-page4-7",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-8",
+        "cmnt_entity_id": "synthetic-page4-8",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-9",
+        "cmnt_entity_id": "synthetic-page4-9",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      },
+      {
+        "id": "synthetic-page4-10",
+        "cmnt_entity_id": "synthetic-page4-10",
+        "author": {
+          "user": "SYNTHETIC AUTHOR"
+        },
+        "full_text": "SYNTHETIC REVIEW",
+        "rating": 5,
+        "time_created": 1577836800000,
+        "owner_comment": {
+          "text": "SYNTHETIC REPLY",
+          "time_created": 1577923200000,
+          "moderation_status": "synthetic"
+        },
+        "comments_count": 1,
+        "lang": "ru",
+        "public_rating": true
+      }
+    ],
+    "pager": {
+      "limit": 20,
+      "offset": 60,
+      "total": 70
+    }
+  }
+}

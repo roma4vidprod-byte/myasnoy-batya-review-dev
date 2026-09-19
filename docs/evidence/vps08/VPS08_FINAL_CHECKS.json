@@ -1,0 +1,42 @@
+{
+  "status": "PASS_LOCAL_CHECKS_ONLY",
+  "utc": "2026-09-19T13:22:39.311Z",
+  "head": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "branch": "codex/yandex-live-read-smoke-01",
+  "tracked_changes": [],
+  "task_untracked_files_at_scan": 14,
+  "this_generated_summary_is_additional_file": true,
+  "original_user_untracked": {
+    "count": 26,
+    "all_sha256_match": true,
+    "manifest_sha256": "9c7e64ba458b8cf5fafeeab1300879d9244b01017b9366b86d388b7eb6cd7b07"
+  },
+  "tests": {
+    "pass": 57,
+    "fail": 0,
+    "skip": 0,
+    "log_sha256": "4f391f714021adcf6b4ce7e98e59580b96704bb6ec75e5c0f74640449bb210c8",
+    "new_tests": 16
+  },
+  "check": {
+    "pass": 128,
+    "log_sha256": "8ae564444affcac3934467f9d26a7319dffc16beb779a197a8acfe0fb566ba9a"
+  },
+  "diff_check": "PASS",
+  "new_file_whitespace": "PASS",
+  "json_parse": "PASS",
+  "secret_scan": {
+    "files": 315,
+    "scope": "TRACKED_PLUS_TASK_FILES_BEFORE_THIS_SUMMARY",
+    "unresolved": 0,
+    "findings": [
+      {"path": "test/support/yandex-dev-keys.test.ps1", "code": "SUPABASE_SECRET", "classification": "REVIEWED_EXISTING_SYNTHETIC_FIXTURE"},
+      {"path": "test/yandex-dev-env.test.mjs", "code": "SUPABASE_SECRET", "classification": "REVIEWED_EXISTING_SYNTHETIC_FIXTURE"}
+    ]
+  },
+  "installed_source_matches": {"ops": true, "worker": true},
+  "live_acceptance": "NOT_RUN",
+  "native_session_tests": "NOT_RUN",
+  "linux_targeted": "NOT_RUN",
+  "new_test_sha256": "947a28b636e82a2ba31942cfa5cb164da63e2c0fc3c3a5c844f2049d3a960959"
+}

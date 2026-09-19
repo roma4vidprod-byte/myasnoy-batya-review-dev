@@ -87,6 +87,7 @@ function Invoke-YandexNativeImportMessage($Message, $Challenge) {
   $material=$null; $result=$null
   try {
     $material=Take-YandexNativeSession $Message $Challenge
+    if ($Challenge.target -ceq 'vps-lab') { return (Invoke-YandexVpsSessionImport -Message $Message -Challenge $Challenge) }
     if ($Challenge.capability) { return (Invoke-YandexRemoteSessionImport -Message $Message -Challenge $Challenge) }
     $result=@(Invoke-YandexManualImport -InputReader {
       $json=$null

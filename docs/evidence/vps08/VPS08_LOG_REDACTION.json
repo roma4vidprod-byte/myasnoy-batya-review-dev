@@ -1,0 +1,11 @@
+{
+  "status": "OFFLINE_ASSERTIONS_PASS_LIVE_NOT_RUN",
+  "synthetic_response_redaction": "PASS",
+  "synthetic_transport_error_redaction": "PASS",
+  "live_log_review": "NOT_RUN",
+  "reason": "NO_PROVIDER_PROCESS_STARTED",
+  "global_journal_cleanliness": "NOT_ASSERTED",
+  "real_session_or_provider_material_read": false,
+  "real_session_or_provider_material_saved": false,
+  "incident_observed_in_this_stage": false
+}

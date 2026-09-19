@@ -1,0 +1,17 @@
+{
+  "status": "NO_PROVIDER_EXECUTION",
+  "provider_request_count": 0,
+  "actual_provider_hosts": [],
+  "actual_provider_methods": [],
+  "actual_provider_status_classes": {},
+  "provider_mutation_methods": 0,
+  "audited_source_allowlist": {"host": "yandex.ru", "scheme": "https", "method": "GET", "path": "/sprav/api/54309413522/reviews", "redirect_follow": false, "max_response_bytes": 2000000, "timeout_ms": 10000},
+  "infrastructure_ssh_read_only_invocations": 2,
+  "supabase_cloud_session_catalog_operations": 0,
+  "public_documentation_lookup_is_not_cloud_data_access": true,
+  "real_review_inserts": 0,
+  "real_review_updates": 0,
+  "real_review_deletes": 0,
+  "effects": {"yandex_reads": 0, "yandex_writes": 0, "two_gis": 0, "email": 0, "telegram": 0, "ai": 0, "promo": 0, "supabase_cloud_writes": 0, "vercel_writes": 0, "vps_application_db_writes": 0, "session_imports": 0, "key_changes": 0, "role_grant_changes": 0, "enqueue": 0, "worker_runs": 0, "scheduler_changes": 0, "backup_creation": 0, "offhost_transfers": 0, "reboot": 0, "business_os": 0, "production": 0, "push": 0},
+  "production_untouched": true
+}

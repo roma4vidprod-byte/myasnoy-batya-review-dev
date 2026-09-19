@@ -1,0 +1,20 @@
+{
+  "status": "BLOCKED",
+  "reason": "SESSION_MIGRATION_BLOCKED",
+  "observation_utc": "2026-09-19T13:09:19.248200+00:00",
+  "source_sha": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "branch": "codex/yandex-live-read-smoke-01",
+  "health": {"healthz": 200, "readyz": 200},
+  "db": {"session_rows": 0, "target_company_exists": false, "target_location_exists": false, "reviews": 2, "users": 3, "connections": 0, "queue": 0, "running": 0, "service_role_session_rpc": false, "worker_session_rpc": false},
+  "worker_timer": {"active": "inactive", "unit_file": "disabled"},
+  "clock": {"timezone": "UTC", "ntp": true, "synchronized": true},
+  "monitor": {"status": "PASS", "codes": [], "utc": "2026-09-19T13:08:44.069252+00:00"},
+  "backup": {"utc": "2026-09-19T12:31:04.949250+00:00", "age_seconds_at_audit": 2295},
+  "public_listeners_ssh_only": true,
+  "services": {"postgresql@17-main.service": "active", "review-lab-auth.service": "active", "review-lab-api.service": "active", "review-activator-foundation.service": "active"},
+  "known_yandex_config_path": {"path": "/etc/review-activator-lab/yandex.env", "present": false},
+  "runtime": {"release_manifest_files": 10, "release_hashes_match": true, "manifest_source_sha": null, "ops_sha256": "8852d11c64f0c468eb3036eb88d7023b8f3df1d3e85e855eb14fc080e724efc2", "worker_sha256": "be51186523e6e7cde11552a134f41a8ff90a958a79e14c4fb36ba8ed8aaa88d0", "yandex_module_installed_in_release": false},
+  "notification_delivery_runtime_acceptance": "NOT_RUN",
+  "read_only": true,
+  "boot_id": "e1aa28e3-af7e-45ac-b10c-b4d22d8995e6"
+}

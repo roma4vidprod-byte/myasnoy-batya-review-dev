@@ -1,0 +1,50 @@
+// Synthetic-only acceptance against installed primitives and a disposable PG17
+// socket. Never the LAB DB. Input is an encrypted synthetic Cloud fixture.
+import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
+const root=process.argv[2];
+assert.equal(root,'/opt/review-activator-yandex');
+assert.match(process.env.PGHOST??'',/^\/tmp\/vps08a-session-test-[A-Za-z0-9_-]+$/);
+assert.equal(process.env.PGDATABASE,'vps08a_disposable');
+globalThis.fetch=()=>{throw Error('NETWORK_FORBIDDEN');};
+const load=p=>import(pathToFileURL(root+'/'+p));
+let packet='';for await(const part of process.stdin){packet+=part;if(packet.length>12000)throw Error('SYNTHETIC_SIZE');}
+const input=JSON.parse(packet);packet='';assert.equal(input.kind,'vps08a-synthetic-source');
+const crypto=await load('lib/server/yandex-session/crypto.js');
+const profiles=await load('lib/server/yandex-session/profile-context.js');
+const {createSessionStore}=await load('lib/server/yandex-session/store.js');
+const {prepareVpsImport}=await load('lib/server/yandex-session/vps-import.js');
+const scope=profiles.VPS_SESSION_SCOPE;
+const source={currentKid:'synthetic-source',keys:{'synthetic-source':Buffer.alloc(32,7)}};
+const target={currentKid:'synthetic-target',keys:{'synthetic-target':Buffer.alloc(32,8)}};
+process.env.RA_RUNTIME_PROFILE='cloud-dev';delete process.env.RA_YANDEX_MODE;
+const material=crypto.decryptSessionClassified(scope,input.encrypted,source);
+assert.equal(material.cookies.length,1);assert.equal(material.cookies[0].value,'SYNTHETIC_VPS08A_NEVER_REAL');
+process.env.RA_RUNTIME_PROFILE='vps-lab';process.env.RA_YANDEX_MODE='read-only-admin';
+const context=profiles.createVpsSessionContext();
+assert.throws(()=>crypto.decryptSessionClassified(scope,input.encrypted,source,Date.now(),context));
+let role='review-yandex-import';
+const rpc=async(name,a)=>{
+  assert.equal(name,'review_yandex_session_store');
+  const quote=s=>"'"+String(s).replaceAll("'","''")+"'";
+  const sql=`select vps_yandex_private.session_call(${quote(a.p_company_id)},${quote(a.p_location_id)},${quote(a.p_org_id)},${quote(a.p_action)},${a.p_expected_revision??'null'},${quote(JSON.stringify(a.p_data))}::jsonb);`;
+  const p=spawnSync('/usr/lib/postgresql/17/bin/psql',['-XqAtw','-v','ON_ERROR_STOP=1','-U',role],{input:sql,encoding:'utf8',timeout:10000,env:{PATH:'/usr/bin:/bin',LANG:'C.UTF-8',PGHOST:process.env.PGHOST,PGPORT:'55488',PGDATABASE:'vps08a_disposable'},maxBuffer:150000});
+  if(p.status!==0)throw Object.assign(Error('SESSION_CHANGED'),{code:'SESSION_CHANGED'});
+  return JSON.parse(p.stdout);
+};
+const store=createSessionStore({rpc,context});
+const importer=prepareVpsImport({context,keyring:target,store,expectedRevision:4});
+const result=await importer.submit({nonce:importer.challenge.nonce,session:material});
+assert.equal(result.revision,5);assert.equal(result.state,'NOT_CONFIGURED');
+role='review-yandex-reader';const row=await store.read(scope);
+const opened=crypto.decryptSessionClassified(scope,row,target,Date.now(),context);
+assert.equal(opened.cookies[0].value,'SYNTHETIC_VPS08A_NEVER_REAL');
+assert.throws(()=>crypto.decryptSessionClassified(scope,row,{keys:{'synthetic-target':Buffer.alloc(32,9)}},Date.now(),context));
+assert.throws(()=>crypto.decryptSessionClassified(scope,{...row,credential_version:'22222222-2222-4222-8222-222222222222'},target,Date.now(),context));
+for(const c of opened.cookies)c.value='';
+role='review-yandex-import';await assert.rejects(()=>store.replace(scope,4,row));
+process.env.RA_RUNTIME_PROFILE='cloud-dev';delete process.env.RA_YANDEX_MODE;
+assert.throws(()=>crypto.decryptSessionClassified(scope,row,target));
+for(const r of [source,target])for(const key of Object.values(r.keys))key.fill(0);
+process.stdout.write(JSON.stringify({status:'PASS',source_decrypt:'PASS',target_reencrypt:'PASS',native_cas:'PASS',cross_profile:'DENIED',wrong_key:'DENIED',wrong_aad:'DENIED',stale_revision:'DENIED',target_database:'vps08a_disposable',lab_writes:0,plaintext_files:0,provider_requests:0})+'\n');

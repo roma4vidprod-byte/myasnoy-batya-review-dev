@@ -1,0 +1,293 @@
+{
+  "status": "YANDEX_PROVIDER_TOTAL_INCONSISTENT",
+  "root_cause_class": "C_TOTAL_IS_STALE_OR_INCONSISTENT",
+  "classification_review": {
+    "runtime_classifier": "G_UNKNOWN",
+    "reviewed_class": "C_TOTAL_IS_STALE_OR_INCONSISTENT",
+    "basis": "Page3 reports total71 while immediate page4 reports total70 and contains11 distinct individually valid reviews at offset60; zero boundary overlap. Conservative runtime classifier requires equal totals for C and therefore emitted G. The proven fact is an internally and cross-response inconsistent total; the provider-side mechanism is UNKNOWN."
+  },
+  "base_sha": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "branch": "codex/yandex-live-read-smoke-01",
+  "diagnostic_response": {
+    "ok": true,
+    "operation": "boundary34",
+    "state_before": "ERROR",
+    "revision_before": 3,
+    "state": "ERROR",
+    "revision": 3,
+    "error": null,
+    "pages": [
+      {
+        "page": 3,
+        "http_status": 200,
+        "content_type": "application/json",
+        "response_bytes": 45365
+      },
+      {
+        "page": 4,
+        "http_status": 200,
+        "content_type": "application/json",
+        "response_bytes": 36737
+      }
+    ],
+    "unique": null,
+    "pager_total": null,
+    "completeness": null,
+    "attempted": 2,
+    "completed": 2,
+    "http_statuses": [
+      200,
+      200
+    ],
+    "review_persistence": "OFF",
+    "notifications": "OFF",
+    "state_cas": "NOT_RUN",
+    "failure_stage": null,
+    "failed_page": null,
+    "diagnostic": {
+      "classification": "G_UNKNOWN",
+      "page3": {
+        "page": 3,
+        "limit": 20,
+        "offset": 40,
+        "reported_total": 71,
+        "item_count": 20,
+        "expected_item_count": 20,
+        "valid_review_count": 20,
+        "invalid_review_count": 0,
+        "missing_required_fields_count": 0,
+        "identity_extractable_valid_reviews": 20,
+        "unique_count": 20,
+        "duplicate_within_page_count": 0,
+        "parser": "PASS",
+        "contract_failure": null,
+        "top_level": [
+          "list"
+        ],
+        "top_level_unknown_keys": 2,
+        "containers": {
+          "response": "object",
+          "list": "object",
+          "items": "array",
+          "pager": "object"
+        },
+        "pager_types": {
+          "limit": "number",
+          "offset": "number",
+          "total": "number"
+        }
+      },
+      "page4": {
+        "page": 4,
+        "limit": 20,
+        "offset": 60,
+        "reported_total": 70,
+        "item_count": 11,
+        "expected_item_count": 10,
+        "valid_review_count": 11,
+        "invalid_review_count": 0,
+        "missing_required_fields_count": 0,
+        "identity_extractable_valid_reviews": 11,
+        "unique_count": 11,
+        "duplicate_within_page_count": 0,
+        "parser": "FAIL",
+        "contract_failure": {
+          "contract_rule_id": "items.page_length",
+          "json_path": "$.list.items.length",
+          "expected_shape": "min(limit,total-offset)",
+          "actual_type": "number",
+          "present": true,
+          "item_index": null
+        },
+        "top_level": [
+          "list"
+        ],
+        "top_level_unknown_keys": 2,
+        "containers": {
+          "response": "object",
+          "list": "object",
+          "items": "array",
+          "pager": "object"
+        },
+        "pager_types": {
+          "limit": "number",
+          "offset": "number",
+          "total": "number"
+        },
+        "structural_classes": [
+          {
+            "class": "SHAPE_1",
+            "count": 11,
+            "seen_on_page3": true
+          }
+        ],
+        "shape_seen_on_page3_count": 11,
+        "alternate_shape_count": 0,
+        "explicit_different_discriminator_count": 0,
+        "uncomparable_discriminator_count": 0,
+        "discriminator_presence": {
+          "type": {
+            "present": false,
+            "distinct_value_count": 0
+          },
+          "item_type": {
+            "present": false,
+            "distinct_value_count": 0
+          },
+          "entity_type": {
+            "present": false,
+            "distinct_value_count": 0
+          },
+          "kind": {
+            "present": false,
+            "distinct_value_count": 0
+          }
+        }
+      },
+      "boundary": {
+        "page3_unique_count": 20,
+        "page4_unique_count": 11,
+        "boundary_overlap_count": 0,
+        "page4_new_unique_vs_page3": 11,
+        "combined_unique_count": 31,
+        "overlap_with_pages_1_2": "UNKNOWN_NOT_READ",
+        "overlap_with_pages_1_3": "UNKNOWN_NOT_RETAINED"
+      },
+      "structure": {
+        "top_level_signature_match": true,
+        "pager_signature_match": true
+      },
+      "parser_semantics": "UNCHANGED",
+      "full_completeness": "NOT_EVALUATED"
+    },
+    "session_mutations": "OFF"
+  },
+  "identity_scope_limitation": "Pages1/2 not fetched; overlap with pages1/2 or all earlier pages UNKNOWN. Combined unique31 refers only to pages3/4.",
+  "parser": {
+    "semantics": "UNCHANGED",
+    "sha256": "9a9238563faeed78834a1373c5352ac5ddc4d6a1104c7b783a8f9840d29a98d1"
+  },
+  "preflight": {
+    "utc": "2026-09-19T17:00:32.513826+00:00",
+    "state": "ERROR",
+    "revision": 3,
+    "healthz": 200,
+    "readyz": 200,
+    "lab_users": 3,
+    "lab_reviews": 2,
+    "queue_runs": 0,
+    "timer": "DISABLED"
+  },
+  "postflight": {
+    "utc": "2026-09-19T17:05:35.070580+00:00",
+    "session_rows": 1,
+    "exact_scope": true,
+    "state": "ERROR",
+    "revision": 3,
+    "last_session_check_at": "2026-09-19T16:19:24.088114+00:00",
+    "last_successful_sync_at": null,
+    "healthz": 200,
+    "readyz": 200,
+    "lab_users": 3,
+    "lab_reviews": 2,
+    "unrelated_table_hashes_unchanged": true,
+    "queue_runs": 0,
+    "provider_connections": 0,
+    "timer": "DISABLED",
+    "monitor": "PASS",
+    "public_tcp": "SSH_ONLY",
+    "ntp": "yes"
+  },
+  "security": {
+    "log_scan_utc": "2026-09-19T17:05:38.024404+00:00",
+    "scope": "named service journals since17:00UTC; installed audit exact key match in server memory",
+    "credential_header_values": 0,
+    "provider_text_values": 0,
+    "envelope_fields": 0,
+    "exact_key_matches": 0,
+    "raw_log_output": false,
+    "plaintext_artifacts": 0,
+    "external_ids_output": 0
+  },
+  "runtime": {
+    "runtime_files": 23,
+    "hash_match": true,
+    "source_checkpoint": "/var/lib/review-activator-ops/vps08c-runtime-before",
+    "changed_hashes": {
+      "tools/vps08a/session.mjs": "40192e7cb4d5df57004027ab7b0718d55feb9f1d22b9e99c5f8ccc9b0b5214eb",
+      "lib/server/yandex-session/service.js": "d81c32c33fbc6eaa00126cf72d9a7c7736653476e85c75bef2840ed21f1fca3c",
+      "lib/server/yandex-session/pagination-structure.js": "9ef1afda1bf491934ed574367de41a696009aacf6675e7349bd9787ee191dce2"
+    }
+  },
+  "tests": {
+    "windows": {
+      "pass": 150,
+      "fail": 0,
+      "skip": 0
+    },
+    "linux": {
+      "pass": 150,
+      "fail": 0,
+      "skip": 0
+    },
+    "vps08c_cases_included": 31,
+    "npm_check": 140,
+    "general_quality_gate": "NOT_RUN"
+  },
+  "effects": {
+    "yandex_get_previous": 6,
+    "yandex_get_new": 2,
+    "yandex_get_cumulative": 8,
+    "yandex_methods": [
+      "GET"
+    ],
+    "yandex_hosts": [
+      "yandex.ru"
+    ],
+    "yandex_mutation_methods": 0,
+    "retries": 0,
+    "redirect_follow": 0,
+    "page1_2_requests": 0,
+    "full_diagnostic": 0,
+    "review_inserts": 0,
+    "review_updates": 0,
+    "review_deletes": 0,
+    "session_mutations": 0,
+    "connection_mutations": 0,
+    "import": 0,
+    "reconcile": 0,
+    "enqueue": 0,
+    "worker_runs": 0,
+    "scheduler_changes": 0,
+    "two_gis": 0,
+    "email": 0,
+    "telegram": 0,
+    "ai": 0,
+    "promo": 0,
+    "cloud_reads": 0,
+    "cloud_writes": 0,
+    "vercel_reads": 0,
+    "vercel_writes": 0,
+    "business_os": 0,
+    "production": 0,
+    "key_env_acl_schema_changes": 0,
+    "private_source_updates": 1,
+    "source_files_updated": 3,
+    "reboot": 0,
+    "push": 0,
+    "commit": 0
+  },
+  "next_safe_step": "Separately design fail-closed pagination acceptance for inconsistent provider totals, with synthetic tests before further live verification. No extra GET in VPS08C.",
+  "final_local_checks": {
+    "diff_check": "PASS",
+    "secret_scan_files": 362,
+    "unexpected_secret_patterns": 0,
+    "unchanged_synthetic_exceptions": 2,
+    "user_files_preserved": 26,
+    "local_runtime_hash_match": true,
+    "parser_unchanged": true,
+    "working_tree": "DIRTY_EXISTING_WORK_PRESERVED",
+    "new_commit": null
+  },
+  "production_untouched": true
+}

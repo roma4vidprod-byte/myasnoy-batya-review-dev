@@ -1,0 +1,19 @@
+{
+  "status": "NOT_RUN",
+  "blocker": "STAGE_A_NOT_RUN",
+  "yandex_requests": 0,
+  "pages_requested": [],
+  "pages_parsed": 0,
+  "received": null,
+  "unique": null,
+  "duplicates": null,
+  "pager_total": null,
+  "completeness": "NOT_TESTED",
+  "scope_acceptance": "NOT_TESTED",
+  "contract_acceptance": "NOT_TESTED",
+  "historical_reference_total": 69,
+  "historical_delta": null,
+  "elapsed_provider_ms": null,
+  "existing_full_diagnostic_max_pages": 5,
+  "review_persistence": "OFF"
+}

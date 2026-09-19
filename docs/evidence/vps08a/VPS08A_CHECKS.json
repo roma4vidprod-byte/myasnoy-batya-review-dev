@@ -1,0 +1,53 @@
+{
+  "status": "SYNTHETIC_GATES_PASS_LIVE_BLOCKED",
+  "start_sha": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "final_head": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "branch": "codex/yandex-live-read-smoke-01",
+  "commit_created": false,
+  "runtime_installed": false,
+  "preservation": {
+    "baseline_files": 41,
+    "unchanged": 36,
+    "original_user_files_unchanged": 26,
+    "append_only_docs": ["docs/VPS08_LIVE_DIAGNOSTIC.md", "docs/VPS08_NETWORK_BOUNDARY.md", "docs/VPS08_SECURITY_EVIDENCE.md", "docs/VPS08_SESSION_MIGRATION.md", "docs/VPS08_TEST_EVIDENCE.md"],
+    "original_document_bytes_preserved": true,
+    "baseline_manifest_sha256": "4240c0af78454ccab6a8634f96628c73061ed4e047cea9f917142f55e191a767"
+  },
+  "tests": {
+    "windows": {"pass": 96, "fail": 0, "skip": 0, "log_sha256": "1f04fdf0ac14f37f432f8fee6954801bcf0c450030686ea5c877dbfc4f35a67b"},
+    "linux": {"pass": 56, "fail": 0, "skip": 0, "log_sha256": "3ced457cb54c2974a7c51122517359bfe302fce3e4be3b815b04e548c4e38a55"},
+    "native": {"pass": 30, "fail": 0, "skip": 0, "server_version_num": 170011, "cleanup": "PASS", "report_sha256": "17eefaceb6f03140cd9c6f8b2df4ae55e34b43bf81ffbc710bcdb37c8b56a7b5"},
+    "source_check": 136,
+    "check_log_sha256": "a60f9a9ccf623146c86da73d307afe17b8b6571902c30d1391e2d55d311c1b5e",
+    "private_cli_final_syntax": "PASS",
+    "deployed_key_permissions": "NOT_RUN",
+    "deployed_peer_authentication": "NOT_RUN",
+    "full_historical_suite": "NOT_RUN",
+    "general_quality_gate": "NOT_RUN"
+  },
+  "diff_check": "PASS",
+  "new_file_whitespace": "PASS",
+  "secret_scan": {"files_before_this_summary": 323, "unresolved": 0, "reviewed_existing_synthetic_fixture_matches": 2},
+  "native_source_hashes": {
+    "session-access.sql": "94047f6745521435c027bcbf30578564582a5e4bbd5c6773fb04adbf9e6842e4",
+    "native-session.py": "1952a099242faa85f5a9dcae78a5aeb55709147fa0d243313c7ed4db89675dfc"
+  },
+  "runtime_candidate_hashes": {
+    "lib/server/yandex-session/crypto.js": "3a707871a260b0a3aa068e4c75990d5d55554ae54b030558bc18ab4b3538a6be",
+    "lib/server/yandex-session/service.js": "ccaecd483ea79339fa7355c3a1f163867adf1fb7867df5f1e5c5a0134ac287ee",
+    "lib/server/yandex-session/store.js": "27239173d5d733d28d67ac21fa5f81fd1d8d559558f64c844a87374eb8996a6b",
+    "lib/server/yandex-session/transport.js": "a256083e8e7d0721b6c4ffc8dc2b26740a6d362368ef0bd6ed606ca47ef1f6fd",
+    "lib/server/yandex-session/profile-context.js": "8ba4dd217a38eaa1dac1175602d9fe6b6fcd6688cc57edc15080a49df3423a5f",
+    "lib/server/yandex-session/vps-diagnostic.js": "8af5f55356577d9128ae714a8a328fa41f85459367505a7eab2ef8887f8c221e",
+    "lib/server/yandex-session/vps-import.js": "8bb377af255464313e25b7a70f99b0fc5f09d22677779a08bcaf1fb7592bfaa5",
+    "tools/vps08a/session.mjs": "97276eee213af555263b35619d4434b99578a072b514adf66247d949a53394de"
+  },
+  "cleanup": {"disposable_pg_clusters_created": 3, "disposable_pg_clusters_removed": 3, "remaining_test_clusters": 0, "source_stage_removed": true, "temporary_transfers_and_report_copies_removed": 12, "local_test_reports_retained": true},
+  "real_source": "NOT_CONFIRMED",
+  "real_import_attempts": 0,
+  "effective_session_replacements": 0,
+  "stage_a": "NOT_RUN",
+  "stage_b": "NOT_RUN",
+  "external_effects": {"supabase_cloud_read_only_catalog_operations": 2, "supabase_cloud_session_reads": 0, "supabase_cloud_writes": 0, "vercel_reads": 0, "vercel_writes": 0, "yandex_get": 0, "yandex_mutations": 0, "real_review_inserts": 0, "real_review_updates": 0, "real_review_deletes": 0, "lab_database_writes": 0, "lab_role_changes": 0, "real_key_generation": 0, "two_gis": 0, "email": 0, "telegram": 0, "ai": 0, "promo": 0, "enqueue": 0, "worker": 0, "scheduler": 0, "new_backup": 0, "offhost_copy": 0, "reboot": 0, "business_os": 0, "production": 0, "push": 0},
+  "production_untouched": true
+}

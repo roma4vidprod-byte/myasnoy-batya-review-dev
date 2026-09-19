@@ -1,0 +1,19 @@
+{
+  "status": "DEPLOYED_SYNTHETIC_PASS_REAL_IMPORT_PENDING",
+  "source_confirmation": "OWNER_CONFIRMED_CHROME_DEFAULT_ACCOUNT_AND_SCOPE",
+  "base_sha": "12d86e776eaf4bb3a943cd1b42be32a52388b6d7",
+  "branch": "codex/yandex-live-read-smoke-01",
+  "source_manifest_sha256": "d6c2a92b359fb443fc2f7b73d81494f00779dd76f4232411503f1f4b4d004dbd",
+  "runtime": "/opt/review-activator-yandex",
+  "runtime_files": 22,
+  "installation_utc": "2026-09-19T16:00:22.561990+00:00",
+  "backup": {"path":"/var/backups/review-activator/20260919T160021130046Z/review_activator_lab.dump","sha256":"3dc27a084d5c89a07ffabb2d7df48ee990f591ec4ccaee9d4334baa8faa7722f","size":464398,"mode":"0600"},
+  "scope_rows_created": {"review_companies":1,"review_locations":1,"location_active":false,"review_provider_connections":0},
+  "new_vps_key": {"created":true,"owner":"root","group":"review-yandex","mode":"0640","cloud_key_reused":false},
+  "roles": {"private_logins":2,"nonlogin_scoped_owner":1,"superuser":false,"bypassrls":false,"direct_table_access":false,"underlying_rpc_access":false,"public_api_private_rpc":"DENIED","web_key_access":"DENIED","peer":"PASS"},
+  "tests": {"windows_targeted":{"pass":96,"fail":0,"skip":0},"source_check":136,"backup_windows":{"pass":50,"fail":0},"backup_linux":{"pass":50,"fail":0},"native_preinstall":{"pass":30,"fail":0,"cleanup":"PASS"},"deployed_native":{"pass":31,"fail":0,"cleanup":"PASS","server_version_num":170011},"deployed_invalid_synthetic_candidate":"DENIED_BEFORE_WRITE","deployed_key_loader":"PASS"},
+  "preimport": {"utc":"2026-09-19T16:06:42.987957+00:00","session_rows":0,"lab_users":3,"lab_reviews":2,"unrelated_rows_hashes_unchanged":true,"queue_runs_total":0,"healthz":200,"readyz":200,"monitor":"PASS","backup_scope":"PASS","ntp":"yes","public_tcp":"SSH_ONLY","worker_timer":"DISABLED","journal_key_matches":0},
+  "real_import_attempts":0,"real_replacements":0,"stage_a":"NOT_RUN","stage_b":"NOT_RUN",
+  "continuation_external_effects":{"supabase_reads":0,"supabase_writes":0,"vercel_reads":0,"vercel_writes":0,"yandex_get":0,"yandex_mutations":0,"review_inserts":0,"review_updates":0,"review_deletes":0,"two_gis":0,"email":0,"telegram":0,"ai":0,"promo":0,"business_os":0,"production":0,"reboot":0,"push":0,"commit":0},
+  "previous_turn_supabase_read_only_catalog_operations":2
+}

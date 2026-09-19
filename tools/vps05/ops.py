@@ -155,21 +155,39 @@ select json_build_object(
  'synthetic_users_only',(select count(*)=3 and bool_and(email in ('owner@vps04.invalid','nonadmin@vps04.invalid','company-b@vps04.invalid')) from auth.users),
  'synthetic_reviews_only',(select count(*)=2 and bool_and(external_location_id in ('lab-org-a','lab-org-b') and company_id in ('10000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002')) from public.review_external_reviews));
 """)
+    # VPS08A adds ONLY the approved catalog scope and encrypted session. Preserve
+    # the synthetic-user/review guard and all other empty-business-table guards.
+    if 'vps_yandex_private' in counts['schemas']:
+        counts['vps08a_scope'] = query_json(database, """select json_build_object(
+ 'companies_valid',(select count(*)=3 and bool_and(id in ('10000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002','13f3cb80-487a-4a19-96a1-fb3103200230')) from public.review_companies),
+ 'locations_valid',(select count(*)=1 and bool_and(company_id='13f3cb80-487a-4a19-96a1-fb3103200230') from public.review_locations where id='9a95f63b-18e6-447b-a449-8530b67ddbae'),
+ 'session_count',(select count(*) from review_private.yandex_sessions),
+ 'session_scope_valid',(select coalesce(bool_and(company_id='13f3cb80-487a-4a19-96a1-fb3103200230' and location_id='9a95f63b-18e6-447b-a449-8530b67ddbae' and external_org_id='54309413522'),true) from review_private.yandex_sessions));""")
     return {'schema_sha256': sha(normalize_schema(schema)), 'tables': tables,
             'rows': rows, 'catalog': counts}
 
 
 def validate_snapshot(s):
-    need(s['catalog']['schemas'] == SCHEMAS and s['catalog']['version'] == 'vps04-auth-api-v1', 'SCHEMA_SCOPE_FAILED')
+    extra = s['catalog'].get('vps08a_scope')
+    schemas = SCHEMAS + (['vps_yandex_private'] if extra is not None else [])
+    need(s['catalog']['schemas'] == schemas and s['catalog']['version'] == 'vps04-auth-api-v1', 'SCHEMA_SCOPE_FAILED')
     need(s['catalog']['synthetic_users_only'] and s['catalog']['synthetic_reviews_only'], 'SYNTHETIC_SCOPE_FAILED')
     expected = {'auth.users': 3, 'public.review_companies': 2, 'public.review_locations': 2,
                 'public.review_admins': 2, 'public.review_external_reviews': 2,
                 'public.review_provider_connections': 0, 'public.review_sync_runs': 0,
                 'review_private.yandex_sessions': 0, 'cron.job': 0}
+    if extra is not None:
+        need(extra['companies_valid'] is True and extra['locations_valid'] is True and
+             extra['session_scope_valid'] is True and type(extra['session_count']) is int and
+             extra['session_count'] in (0, 1), 'VPS08A_SCOPE_FAILED')
+        expected.update({'public.review_companies': 3, 'public.review_locations': 3,
+                         'review_private.yandex_sessions': extra['session_count']})
     for name, count in expected.items():
         need(s['rows'][name]['count'] == count, 'ROW_COUNTS_FAILED')
     nonempty_app = {'public.review_companies', 'public.review_locations', 'public.review_admins',
                     'public.review_external_reviews'}
+    if extra is not None:
+        nonempty_app.add('review_private.yandex_sessions')
     for name, info in s['rows'].items():
         if name.startswith(('public.', 'review_private.', 'cron.')) and name not in nonempty_app:
             need(info['count'] == 0, 'UNEXPECTED_BUSINESS_ROWS')
