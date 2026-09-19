@@ -1,0 +1,384 @@
+{
+  "units": {
+    "review-activator-foundation.service": {
+      "User": "review-activator",
+      "Group": "review-activator",
+      "IPAddressDeny": "0.0.0.0/0 ::/0",
+      "IPAddressAllow": "127.0.0.0/8 ::1/128",
+      "RestrictAddressFamilies": "AF_INET AF_INET6 AF_UNIX",
+      "PrivateNetwork": "no",
+      "NetworkNamespacePath": null,
+      "JoinsNamespaceOf": null,
+      "ProtectSystem": "strict",
+      "ProtectHome": "yes",
+      "NoNewPrivileges": "yes",
+      "EnvironmentFiles": "/etc/review-activator-lab/node.env (ignore_errors=no)",
+      "WorkingDirectory": "/opt/review-activator-lab/releases/vps04-initial",
+      "FragmentPath": "/etc/systemd/system/review-activator-foundation.service",
+      "DropInPaths": "/etc/systemd/system/review-activator-foundation.service.d/vps04.conf",
+      "ActiveState": "active",
+      "Result": "success",
+      "MainPID": "90840",
+      "ControlGroup": "/system.slice/review-activator-foundation.service",
+      "Slice": "system.slice",
+      "environment_presence": {
+        "HTTP_PROXY": false,
+        "HTTPS_PROXY": false,
+        "NO_PROXY": false,
+        "ALL_PROXY": false,
+        "http_proxy": false,
+        "https_proxy": false,
+        "no_proxy": false,
+        "all_proxy": false,
+        "NODE_USE_ENV_PROXY": false,
+        "NODE_OPTIONS": false,
+        "NODE_EXTRA_CA_CERTS": false,
+        "SSL_CERT_FILE": false,
+        "SSL_CERT_DIR": false
+      },
+      "ExecStart": "/opt/node/bin/node /opt/review-activator-lab/releases/vps04-initial/scripts/start-vps-lab.mjs",
+      "cat_sha256": "1d75e134e26fa72346c0668f53c75b555741b12842953be4ee158debadf1cfba",
+      "cat_safe_directives": [
+        "User=review-activator",
+        "Group=review-activator",
+        "WorkingDirectory=/opt/review-activator-foundation/current",
+        "NoNewPrivileges=true",
+        "ProtectSystem=strict",
+        "ProtectHome=true",
+        "RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6",
+        "IPAddressDeny=any",
+        "IPAddressAllow=localhost",
+        "WorkingDirectory=/opt/review-activator-lab/releases/vps04-initial"
+      ],
+      "process_netns": "net:[4026531840]",
+      "process_proxy_presence": {
+        "HTTP_PROXY": false,
+        "HTTPS_PROXY": false,
+        "NO_PROXY": false,
+        "ALL_PROXY": false,
+        "http_proxy": false,
+        "https_proxy": false,
+        "no_proxy": false,
+        "all_proxy": false,
+        "NODE_USE_ENV_PROXY": false,
+        "NODE_OPTIONS": false,
+        "NODE_EXTRA_CA_CERTS": false,
+        "SSL_CERT_FILE": false,
+        "SSL_CERT_DIR": false
+      }
+    },
+    "review-activator-worker.service": {
+      "User": "review-activator",
+      "Group": "review-activator",
+      "IPAddressDeny": "0.0.0.0/0 ::/0",
+      "IPAddressAllow": null,
+      "RestrictAddressFamilies": "AF_UNIX",
+      "PrivateNetwork": "yes",
+      "NetworkNamespacePath": null,
+      "JoinsNamespaceOf": null,
+      "ProtectSystem": "strict",
+      "ProtectHome": "yes",
+      "NoNewPrivileges": "yes",
+      "EnvironmentFiles": "/etc/review-activator-lab/worker.env (ignore_errors=no)",
+      "WorkingDirectory": "/opt/review-activator-lab/worker/vps06",
+      "FragmentPath": "/etc/systemd/system/review-activator-worker.service",
+      "DropInPaths": null,
+      "ActiveState": "inactive",
+      "Result": "success",
+      "MainPID": "0",
+      "ControlGroup": null,
+      "Slice": "system.slice",
+      "environment_presence": {
+        "HTTP_PROXY": false,
+        "HTTPS_PROXY": false,
+        "NO_PROXY": false,
+        "ALL_PROXY": false,
+        "http_proxy": false,
+        "https_proxy": false,
+        "no_proxy": false,
+        "all_proxy": false,
+        "NODE_USE_ENV_PROXY": false,
+        "NODE_OPTIONS": false,
+        "NODE_EXTRA_CA_CERTS": false,
+        "SSL_CERT_FILE": false,
+        "SSL_CERT_DIR": false
+      },
+      "ExecStart": "/opt/node/bin/node /opt/review-activator-lab/worker/vps06/tools/vps06/once.mjs --once",
+      "cat_sha256": "4bc472e615e16eb0ebe3c35a3ba5bc6b1ec8bd05a7684ba5f976d7f83d79595a",
+      "cat_safe_directives": [
+        "User=review-activator",
+        "Group=review-activator",
+        "WorkingDirectory=/opt/review-activator-lab/worker/vps06",
+        "NoNewPrivileges=yes",
+        "PrivateNetwork=yes",
+        "ProtectSystem=strict",
+        "ProtectHome=yes",
+        "RestrictAddressFamilies=AF_UNIX",
+        "IPAddressDeny=any"
+      ]
+    },
+    "review-activator-monitor.service": {
+      "User": "root",
+      "Group": null,
+      "IPAddressDeny": "0.0.0.0/0 ::/0",
+      "IPAddressAllow": "127.0.0.0/8 ::1/128",
+      "RestrictAddressFamilies": "AF_INET AF_INET6 AF_NETLINK AF_UNIX",
+      "PrivateNetwork": "no",
+      "NetworkNamespacePath": null,
+      "JoinsNamespaceOf": null,
+      "ProtectSystem": "strict",
+      "ProtectHome": "yes",
+      "NoNewPrivileges": "yes",
+      "EnvironmentFiles": null,
+      "WorkingDirectory": null,
+      "FragmentPath": "/etc/systemd/system/review-activator-monitor.service",
+      "DropInPaths": null,
+      "ActiveState": "failed",
+      "Result": "exit-code",
+      "MainPID": "0",
+      "ControlGroup": null,
+      "Slice": "system.slice",
+      "environment_presence": {
+        "HTTP_PROXY": false,
+        "HTTPS_PROXY": false,
+        "NO_PROXY": false,
+        "ALL_PROXY": false,
+        "http_proxy": false,
+        "https_proxy": false,
+        "no_proxy": false,
+        "all_proxy": false,
+        "NODE_USE_ENV_PROXY": false,
+        "NODE_OPTIONS": false,
+        "NODE_EXTRA_CA_CERTS": false,
+        "SSL_CERT_FILE": false,
+        "SSL_CERT_DIR": false
+      },
+      "ExecStart": "/usr/bin/flock --nonblock /var/lib/review-activator-ops/monitor.lock /usr/bin/python3 -B /opt/review-activator-lab/ops/vps05/ops.py monitor",
+      "cat_sha256": "94b1660ca84c1f948064c610285019f2e106a84975b2d3a251b163601ec41da8",
+      "cat_safe_directives": [
+        "User=root",
+        "NoNewPrivileges=yes",
+        "ProtectSystem=strict",
+        "ProtectHome=yes",
+        "RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK",
+        "IPAddressDeny=any",
+        "IPAddressAllow=localhost"
+      ]
+    },
+    "review-activator-backup.service": {
+      "User": "root",
+      "Group": null,
+      "IPAddressDeny": "0.0.0.0/0 ::/0",
+      "IPAddressAllow": null,
+      "RestrictAddressFamilies": "AF_NETLINK AF_UNIX",
+      "PrivateNetwork": "no",
+      "NetworkNamespacePath": null,
+      "JoinsNamespaceOf": null,
+      "ProtectSystem": "strict",
+      "ProtectHome": "yes",
+      "NoNewPrivileges": "yes",
+      "EnvironmentFiles": null,
+      "WorkingDirectory": null,
+      "FragmentPath": "/etc/systemd/system/review-activator-backup.service",
+      "DropInPaths": null,
+      "ActiveState": "inactive",
+      "Result": "success",
+      "MainPID": "0",
+      "ControlGroup": null,
+      "Slice": "system.slice",
+      "environment_presence": {
+        "HTTP_PROXY": false,
+        "HTTPS_PROXY": false,
+        "NO_PROXY": false,
+        "ALL_PROXY": false,
+        "http_proxy": false,
+        "https_proxy": false,
+        "no_proxy": false,
+        "all_proxy": false,
+        "NODE_USE_ENV_PROXY": false,
+        "NODE_OPTIONS": false,
+        "NODE_EXTRA_CA_CERTS": false,
+        "SSL_CERT_FILE": false,
+        "SSL_CERT_DIR": false
+      },
+      "ExecStart": "/usr/bin/flock --nonblock /var/lib/review-activator-ops/backup.lock /usr/bin/python3 -B /opt/review-activator-lab/ops/vps05/ops.py backup",
+      "cat_sha256": "bb301f6a5d48b0f1baa93bd341889ec68ce79f5baff6fe3b95ee458f90673c0c",
+      "cat_safe_directives": [
+        "User=root",
+        "NoNewPrivileges=yes",
+        "ProtectSystem=strict",
+        "ProtectHome=yes",
+        "RestrictAddressFamilies=AF_UNIX AF_NETLINK",
+        "IPAddressDeny=any"
+      ]
+    }
+  },
+  "admin_current": {
+    "uid": 0,
+    "cwd": "/home/reviewadmin",
+    "netns": "net:[4026531840]",
+    "host_netns": "net:[4026531840]",
+    "cgroup": "0::/user.slice/user-1001.slice/session-1228.scope",
+    "proxy_presence": {
+      "HTTP_PROXY": false,
+      "HTTPS_PROXY": false,
+      "NO_PROXY": false,
+      "ALL_PROXY": false,
+      "http_proxy": false,
+      "https_proxy": false,
+      "no_proxy": false,
+      "all_proxy": false,
+      "NODE_USE_ENV_PROXY": false,
+      "NODE_OPTIONS": false,
+      "NODE_EXTRA_CA_CERTS": false,
+      "SSL_CERT_FILE": false,
+      "SSL_CERT_DIR": false
+    }
+  },
+  "related_unit_files": [
+    "review-activator-backup.service     static   -",
+    "review-activator-foundation.service enabled  enabled",
+    "review-activator-monitor.service    static   -",
+    "review-activator-worker.service     static   -",
+    "review-lab-api.service              enabled  enabled",
+    "review-lab-auth.service             enabled  enabled",
+    "review-activator-backup.timer       enabled  enabled",
+    "review-activator-monitor.timer      enabled  enabled",
+    "review-activator-worker.timer       disabled enabled"
+  ],
+  "node_version": "v24.21.0",
+  "default_routes_v4": "[{\"dst\":\"default\",\"gateway\":\"141.98.87.1\",\"dev\":\"ens3\",\"protocol\":\"dhcp\",\"prefsrc\":\"141.98.87.15\",\"metric\":100,\"flags\":[]}]",
+  "default_routes_v6": "[]",
+  "dns_status": "Global:\nLink 2 (ens3): 8.8.8.8 8.8.4.4",
+  "utc": "2026-09-19T18:20:55Z",
+  "ntp": "yes",
+  "ca_bundle": {
+    "exists": true,
+    "readable": true,
+    "size": 182140
+  },
+  "historical_launches": [
+    {
+      "mode": "mutable-full",
+      "utc": "2026-09-19T17:28:36.638783+00:00",
+      "reader_user": true,
+      "env_i": true,
+      "vps_profile": true,
+      "read_only_mode": true,
+      "exact_node": true,
+      "working_directory": "/home/reviewadmin"
+    },
+    {
+      "mode": "manual-first",
+      "utc": "2026-09-19T18:06:13.878094+00:00",
+      "reader_user": true,
+      "env_i": true,
+      "vps_profile": true,
+      "read_only_mode": true,
+      "exact_node": true,
+      "working_directory": "/home/reviewadmin"
+    }
+  ],
+  "historical_cgroups": [
+    {
+      "mode": "mutable-full",
+      "cgroup": "/user.slice/user-1001.slice/session-1186.scope",
+      "systemd_unit": "session-1186.scope"
+    },
+    {
+      "mode": "manual-first",
+      "cgroup": "/user.slice/user-1001.slice/session-1220.scope",
+      "systemd_unit": "session-1220.scope"
+    }
+  ],
+  "historical_netns": "NOT_RECORDED",
+  "firewall": {
+    "ufw_default": "Default: deny (incoming), allow (outgoing), disabled (routed)",
+    "output_chain_policy": "-P OUTPUT ACCEPT",
+    "owner_match_present": false,
+    "nft_read_ok": true
+  },
+  "metadata_only_sandbox": {
+    "http_dns_tcp_tls_requests": 0,
+    "exit": 0,
+    "effective": {
+      "ControlGroup": "/system.slice/review-activator-vps09a-policy.service",
+      "IPAddressAllow": "",
+      "IPAddressDeny": "0.0.0.0/0 ::/0",
+      "WorkingDirectory": "/opt/review-activator-lab/worker/vps06",
+      "User": "review-activator",
+      "Group": "review-activator",
+      "PrivateNetwork": "yes",
+      "ProtectHome": "yes",
+      "ProtectSystem": "strict",
+      "NoNewPrivileges": "yes",
+      "RestrictAddressFamilies": "AF_UNIX",
+      "NetworkNamespacePath": "",
+      "JoinsNamespaceOf": ""
+    },
+    "cleanup": "not-found"
+  },
+  "timeout_source": [
+    {
+      "node": "v24.21.0",
+      "undici": "7.29.1",
+      "builtin_source_only": true,
+      "network_calls": 0,
+      "timeout_definitions": [
+        {
+          "line": 3288,
+          "source": "timeout = timeout == null ? 1e4 : timeout;"
+        }
+      ]
+    },
+    {
+      "node": "v24.21.0",
+      "undici": "7.29.1",
+      "builtin_source_only": true,
+      "network_calls": 0,
+      "timeout_definitions": [
+        {
+          "line": 48,
+          "source": "var kHeadersTimeoutError = /* @__PURE__ */ Symbol.for(\"undici.error.UND_ERR_HEADERS_TIMEOUT\");"
+        },
+        {
+          "line": 60,
+          "source": "return instance && instance[kHeadersTimeoutError] === true;"
+        },
+        {
+          "line": 84,
+          "source": "var kBodyTimeoutError = /* @__PURE__ */ Symbol.for(\"undici.error.UND_ERR_BODY_TIMEOUT\");"
+        },
+        {
+          "line": 96,
+          "source": "return instance && instance[kBodyTimeoutError] === true;"
+        },
+        {
+          "line": 9387,
+          "source": "this[kBodyTimeout] = bodyTimeout != null ? bodyTimeout : 3e5;"
+        },
+        {
+          "line": 9388,
+          "source": "this[kHeadersTimeout] = headersTimeout != null ? headersTimeout : 3e5;"
+        }
+      ]
+    }
+  ],
+  "comparison": {
+    "os_user": "same review-yandex-reader",
+    "invocation": "direct sudo env -i, not app/worker service",
+    "cwd": "same /home/reviewadmin",
+    "node": "same /opt/node/bin/node, version24.21.0 at accepted checkpoint/current",
+    "profile": "same vps-lab / read-only-admin",
+    "operation": "mutable-full vs manual-first",
+    "transport_hash_unchanged": true,
+    "request_timeout_ms": 10000,
+    "full_read_deadline_ms": 30000,
+    "undici_connect_default_ms": 10000,
+    "undici_headers_default_ms": 300000,
+    "undici_body_default_ms": 300000,
+    "custom_agent_dispatcher_dns_ca_proxy": "NOT_CONFIGURED in the inspected execution graph",
+    "current_proxy_presence": "all inspected flags false",
+    "network_namespace_historical": "not recorded; no claim of identical historical inode"
+  }
+}

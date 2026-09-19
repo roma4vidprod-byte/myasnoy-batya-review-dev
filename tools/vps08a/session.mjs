@@ -74,7 +74,7 @@ try {
         review_persistence:'OFF',notifications:'OFF',state_cas:result.stateCas??'NOT_RUN',
         ...(manual?{review_persistence:result.review_persistence,persistence_result:result.persistence_result,
           pagination_report:result.pagination_report,scope_valid:result.scope_valid??null,contract_valid:result.contract_valid??null,
-          session_mutations:'OFF',parser:result.parser??null}:{}),
+          session_mutations:'OFF',parser:result.parser??null,network_diagnostic:result.network_diagnostic??null}:{}),
         ...(operation==='page4'?{state:result.state_after,revision:result.revision,page:result.page,
           http_status:result.http_status,content_type:result.content_type,response_bytes:result.response_bytes,
           parser:result.parser??null,contract_failure:result.contract_failure??null,

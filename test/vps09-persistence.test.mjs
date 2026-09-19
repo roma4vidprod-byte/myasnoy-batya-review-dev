@@ -24,7 +24,8 @@ async function fixture(fn,opt={}){
   }});
   const service=createYandexSessionService({store,keyring,context,allowRead:true,allowManualPersistence:true,persistenceWriter:writer,notify:deny,fetchImpl:async(url,options)=>{
    const n=Number(new URL(url).searchParams.get('page'));calls.push(n);assert.equal(options.method,'GET');assert.equal(options.redirect,'manual');assert.equal(new URL(url).hostname,'yandex.ru');
-   if(opt.networkFail&&n===2)throw Error(secret);
+   if(opt.networkFail&&n===2)throw Object.assign(Error(secret),{cause:{code:opt.networkCode,message:secret}});
+   if(opt.bodyFail&&n===2)return {status:200,ok:true,body:{getReader:()=>({read:async()=>{throw Object.assign(Error(secret),{code:'ECONNRESET'});}})}};
    if(opt.race&&n===2)row.revision++;
    const items=Array.from({length:n===4?11:20},(_,i)=>review((n-1)*20+i));
    if(opt.bad&&n===4)items[0].rating=6;
@@ -52,3 +53,15 @@ test('VPS09 wrong scope before provider/writer',()=>fixture(async f=>{
 test('VPS09 cannot use diagnostic options as a persistence bypass',()=>fixture(async f=>{
  const r=await f.service.contractDiagnosticFull(scope,{expectedRevision:4,paginationMode:'MUTABLE_OFFSET',persist:true});assert.equal(r.ok,false);assert.equal(f.writes.length,0);assert.equal(f.calls.length,0);
 }));
+test('VPS09A real service/transport preserves safe network cause; writer stays NOT_RUN',()=>fixture(async f=>{
+ const r=await f.service.persistManual(scope,{expectedRevision:4});assert.equal(r.error,'YANDEX_NETWORK_ERROR');
+ assert.equal(r.network_diagnostic.category,'ROUTE_UNREACHABLE');assert.deepEqual(r.network_diagnostic.codes,['ENETUNREACH']);
+ assert.equal(r.network_diagnostic.phase,'REQUEST_HEADERS');assert.equal(r.review_persistence,'NOT_RUN');assert.equal(f.writes.length,0);
+ assert.doesNotMatch(JSON.stringify(r),new RegExp(secret));
+},{networkFail:true,networkCode:'ENETUNREACH'}));
+test('VPS09A body network failure remains distinct from pre-response failure',()=>fixture(async f=>{
+ const r=await f.service.persistManual(scope,{expectedRevision:4});assert.equal(r.error,'YANDEX_NETWORK_ERROR');
+ assert.equal(r.transport_completed,2);assert.equal(r.network_diagnostic.phase,'RESPONSE_BODY');
+ assert.equal(r.network_diagnostic.category,'CONNECTION_RESET');assert.equal(f.writes.length,0);
+ assert.doesNotMatch(JSON.stringify(r),new RegExp(secret));
+},{bodyFail:true}));

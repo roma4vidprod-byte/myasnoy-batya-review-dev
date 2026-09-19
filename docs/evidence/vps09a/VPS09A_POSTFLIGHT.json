@@ -1,0 +1,72 @@
+{
+  "utc": "2026-09-19T18:40:34.640721+00:00",
+  "session": {
+    "rows": 1,
+    "scope_valid": true,
+    "state": "READY",
+    "revision": 4,
+    "last_successful_sync_at": null
+  },
+  "reviews": {
+    "real": 0,
+    "synthetic": 2,
+    "duplicates": 0,
+    "with_owner_reply": 0,
+    "without_owner_reply": 0,
+    "scope_valid": true,
+    "ratings_valid": true,
+    "raw_allowed": true
+  },
+  "lab_users": 3,
+  "queue_runs": 0,
+  "all_table_hashes_equal_to_vps09": true,
+  "health": {
+    "healthz": 200,
+    "readyz": 200
+  },
+  "public_tcp": "SSH_ONLY",
+  "business_timer": [
+    "ActiveState=inactive",
+    "UnitFileState=disabled"
+  ],
+  "monitor_receipt": {
+    "last_successful_persistence": null,
+    "last_successful_provider_read": null,
+    "last_sync_result": "FAIL",
+    "real_review_count": 0,
+    "sync_failure": "SYNC_NOT_CONFIRMED"
+  },
+  "vps09_attempt_unchanged": true,
+  "second_sync_not_run": true,
+  "runtime_hashes_match": true,
+  "historical_transport_hash": "373b7c5b5a7f02d67e4e69ee2e9b245c39a00e607f9498abca3192fba1f25942",
+  "current_transport_hash": "373b7c5b5a7f02d67e4e69ee2e9b245c39a00e607f9498abca3192fba1f25942",
+  "historical_cgroups": [
+    {
+      "mode": "mutable-full",
+      "cgroup": "/user.slice/user-1001.slice/session-1186.scope",
+      "systemd_unit": "session-1186.scope"
+    },
+    {
+      "mode": "manual-first",
+      "cgroup": "/user.slice/user-1001.slice/session-1220.scope",
+      "systemd_unit": "session-1220.scope"
+    }
+  ],
+  "unit_hashes": {
+    "review-activator-foundation.service": "1d75e134e26fa72346c0668f53c75b555741b12842953be4ee158debadf1cfba",
+    "review-activator-worker.service": "4bc472e615e16eb0ebe3c35a3ba5bc6b1ec8bd05a7684ba5f976d7f83d79595a",
+    "review-activator-monitor.service": "94b1660ca84c1f948064c610285019f2e106a84975b2d3a251b163601ec41da8",
+    "review-activator-backup.service": "bb301f6a5d48b0f1baa93bd341889ec68ce79f5baff6fe3b95ee458f90673c0c"
+  },
+  "diagnostic_units": {
+    "review-activator-vps09a-network.service": "not-found",
+    "review-activator-vps09a-policy.service": "not-found"
+  },
+  "log_scan": {
+    "since": "2026-09-19T18:20:55Z",
+    "exit": 0,
+    "sensitive_pattern_matches": 0,
+    "known_values_scan": "NOT_RUN_NO_CREDENTIALS_LOADED"
+  }
+}

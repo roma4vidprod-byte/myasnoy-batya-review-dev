@@ -1,0 +1,559 @@
+{
+  "classification": "K. UNKNOWN",
+  "scope": "Exact historical VPS09 failure cause not proven; current intermittent TCP-connect failure observed without business HTTP",
+  "direct": [
+    {
+      "context": "root_DIRECT",
+      "exit": 0,
+      "report": {
+        "hostname": "yandex.ru",
+        "http_requests": 0,
+        "credentials_loaded": false,
+        "utc": "2026-09-19T18:29:24.825Z",
+        "node": "v24.21.0",
+        "undici": "7.29.1",
+        "user": "root",
+        "uid": 0,
+        "cwd": "/home/reviewadmin",
+        "netns": "net:[4026531840]",
+        "cgroup": "0::/user.slice/user-1001.slice/session-1234.scope",
+        "no_new_privileges": "0",
+        "proxy_presence": {
+          "HTTP_PROXY": false,
+          "HTTPS_PROXY": false,
+          "NO_PROXY": false,
+          "ALL_PROXY": false,
+          "http_proxy": false,
+          "https_proxy": false,
+          "no_proxy": false,
+          "all_proxy": false,
+          "NODE_USE_ENV_PROXY": false,
+          "NODE_OPTIONS": false,
+          "NODE_EXTRA_CA_CERTS": false,
+          "SSL_CERT_FILE": false,
+          "SSL_CERT_DIR": false
+        },
+        "dns_order": "verbatim",
+        "auto_select_family": true,
+        "auto_select_family_attempt_timeout_ms": 250,
+        "timeout_per_probe_ms": 5000,
+        "ca_count": 121,
+        "probes": [
+          {
+            "result": "FAIL",
+            "family": 4,
+            "elapsed_ms": 5001,
+            "tcp_connected": false,
+            "tls": false,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          },
+          {
+            "result": "PASS",
+            "family": 4,
+            "elapsed_ms": 88,
+            "tcp_connected": true,
+            "tls": true,
+            "authorized": true,
+            "timeout_phase": null,
+            "diagnostic": null
+          },
+          {
+            "result": "FAIL",
+            "family": 6,
+            "elapsed_ms": 1,
+            "tcp_connected": false,
+            "tls": false,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": {
+              "category": "ROUTE_UNREACHABLE",
+              "phase": "TCP_CONNECT",
+              "codes": [
+                "ENETUNREACH"
+              ],
+              "syscall": "connect",
+              "hostname": "yandex.ru",
+              "aborted": false
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": 6,
+            "elapsed_ms": 1,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": {
+              "category": "ROUTE_UNREACHABLE",
+              "phase": "TCP_CONNECT",
+              "codes": [
+                "ENETUNREACH"
+              ],
+              "syscall": "connect",
+              "hostname": "yandex.ru",
+              "aborted": false
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": "AUTO",
+            "elapsed_ms": 5001,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          }
+        ],
+        "dns": {
+          "result": "PASS",
+          "addresses": [
+            {
+              "address": "77.88.44.55",
+              "family": 4
+            },
+            {
+              "address": "5.255.255.77",
+              "family": 4
+            },
+            {
+              "address": "77.88.55.88",
+              "family": 4
+            },
+            {
+              "address": "2a02:6b8:a::a",
+              "family": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "context": "review-activator_DIRECT",
+      "exit": 0,
+      "report": {
+        "hostname": "yandex.ru",
+        "http_requests": 0,
+        "credentials_loaded": false,
+        "utc": "2026-09-19T18:29:35.020Z",
+        "node": "v24.21.0",
+        "undici": "7.29.1",
+        "user": "review-activator",
+        "uid": 999,
+        "cwd": "/home/reviewadmin",
+        "netns": "net:[4026531840]",
+        "cgroup": "0::/user.slice/user-1001.slice/session-1234.scope",
+        "no_new_privileges": "0",
+        "proxy_presence": {
+          "HTTP_PROXY": false,
+          "HTTPS_PROXY": false,
+          "NO_PROXY": false,
+          "ALL_PROXY": false,
+          "http_proxy": false,
+          "https_proxy": false,
+          "no_proxy": false,
+          "all_proxy": false,
+          "NODE_USE_ENV_PROXY": false,
+          "NODE_OPTIONS": false,
+          "NODE_EXTRA_CA_CERTS": false,
+          "SSL_CERT_FILE": false,
+          "SSL_CERT_DIR": false
+        },
+        "dns_order": "verbatim",
+        "auto_select_family": true,
+        "auto_select_family_attempt_timeout_ms": 250,
+        "timeout_per_probe_ms": 5000,
+        "ca_count": 121,
+        "probes": [
+          {
+            "result": "PASS",
+            "family": 4,
+            "elapsed_ms": 23,
+            "tcp_connected": true,
+            "tls": false,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": null
+          },
+          {
+            "result": "FAIL",
+            "family": 4,
+            "elapsed_ms": 5000,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": 6,
+            "elapsed_ms": 1,
+            "tcp_connected": false,
+            "tls": false,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": {
+              "category": "ROUTE_UNREACHABLE",
+              "phase": "TCP_CONNECT",
+              "codes": [
+                "ENETUNREACH"
+              ],
+              "syscall": "connect",
+              "hostname": "yandex.ru",
+              "aborted": false
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": 6,
+            "elapsed_ms": 1,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": {
+              "category": "ROUTE_UNREACHABLE",
+              "phase": "TCP_CONNECT",
+              "codes": [
+                "ENETUNREACH"
+              ],
+              "syscall": "connect",
+              "hostname": "yandex.ru",
+              "aborted": false
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": "AUTO",
+            "elapsed_ms": 4999,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          }
+        ],
+        "dns": {
+          "result": "PASS",
+          "addresses": [
+            {
+              "address": "77.88.44.55",
+              "family": 4
+            },
+            {
+              "address": "77.88.55.88",
+              "family": 4
+            },
+            {
+              "address": "5.255.255.77",
+              "family": 4
+            },
+            {
+              "address": "2a02:6b8:a::a",
+              "family": 6
+            }
+          ]
+        }
+      }
+    },
+    {
+      "context": "review-yandex-reader_DIRECT",
+      "exit": 0,
+      "report": {
+        "hostname": "yandex.ru",
+        "http_requests": 0,
+        "credentials_loaded": false,
+        "utc": "2026-09-19T18:29:45.137Z",
+        "node": "v24.21.0",
+        "undici": "7.29.1",
+        "user": "review-yandex-reader",
+        "uid": 994,
+        "cwd": "/home/reviewadmin",
+        "netns": "net:[4026531840]",
+        "cgroup": "0::/user.slice/user-1001.slice/session-1234.scope",
+        "no_new_privileges": "0",
+        "proxy_presence": {
+          "HTTP_PROXY": false,
+          "HTTPS_PROXY": false,
+          "NO_PROXY": false,
+          "ALL_PROXY": false,
+          "http_proxy": false,
+          "https_proxy": false,
+          "no_proxy": false,
+          "all_proxy": false,
+          "NODE_USE_ENV_PROXY": false,
+          "NODE_OPTIONS": false,
+          "NODE_EXTRA_CA_CERTS": false,
+          "SSL_CERT_FILE": false,
+          "SSL_CERT_DIR": false
+        },
+        "dns_order": "verbatim",
+        "auto_select_family": true,
+        "auto_select_family_attempt_timeout_ms": 250,
+        "timeout_per_probe_ms": 5000,
+        "ca_count": 121,
+        "probes": [
+          {
+            "result": "FAIL",
+            "family": 4,
+            "elapsed_ms": 5000,
+            "tcp_connected": false,
+            "tls": false,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": 4,
+            "elapsed_ms": 5002,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": 6,
+            "elapsed_ms": 2,
+            "tcp_connected": false,
+            "tls": false,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": {
+              "category": "ROUTE_UNREACHABLE",
+              "phase": "TCP_CONNECT",
+              "codes": [
+                "ENETUNREACH"
+              ],
+              "syscall": "connect",
+              "hostname": "yandex.ru",
+              "aborted": false
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": 6,
+            "elapsed_ms": 1,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": null,
+            "diagnostic": {
+              "category": "ROUTE_UNREACHABLE",
+              "phase": "TCP_CONNECT",
+              "codes": [
+                "ENETUNREACH"
+              ],
+              "syscall": "connect",
+              "hostname": "yandex.ru",
+              "aborted": false
+            }
+          },
+          {
+            "result": "FAIL",
+            "family": "AUTO",
+            "elapsed_ms": 5004,
+            "tcp_connected": false,
+            "tls": true,
+            "authorized": null,
+            "timeout_phase": "TCP_CONNECT",
+            "diagnostic": {
+              "category": "ABORT_TIMEOUT",
+              "phase": "TCP_CONNECT",
+              "codes": [],
+              "syscall": null,
+              "hostname": "yandex.ru",
+              "aborted": true
+            }
+          }
+        ],
+        "dns": {
+          "result": "PASS",
+          "addresses": [
+            {
+              "address": "5.255.255.77",
+              "family": 4
+            },
+            {
+              "address": "77.88.55.88",
+              "family": 4
+            },
+            {
+              "address": "77.88.44.55",
+              "family": 4
+            },
+            {
+              "address": "2a02:6b8:a::a",
+              "family": 6
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "sandbox": {
+    "context": "SYNTHETIC_WORKER_SANDBOX_CONTROL_NOT_ACTUAL_VPS09",
+    "exit": 0,
+    "report": {
+      "hostname": "yandex.ru",
+      "http_requests": 0,
+      "credentials_loaded": false,
+      "utc": "2026-09-19T18:31:52.457Z",
+      "node": "v24.21.0",
+      "undici": "7.29.1",
+      "user": "review-activator",
+      "uid": 999,
+      "cwd": "/opt/review-activator-lab/worker/vps06",
+      "netns": "net:[4026532298]",
+      "cgroup": "0::/system.slice/review-activator-vps09a-network.service",
+      "no_new_privileges": "1",
+      "proxy_presence": {
+        "HTTP_PROXY": false,
+        "HTTPS_PROXY": false,
+        "NO_PROXY": false,
+        "ALL_PROXY": false,
+        "http_proxy": false,
+        "https_proxy": false,
+        "no_proxy": false,
+        "all_proxy": false,
+        "NODE_USE_ENV_PROXY": false,
+        "NODE_OPTIONS": false,
+        "NODE_EXTRA_CA_CERTS": false,
+        "SSL_CERT_FILE": false,
+        "SSL_CERT_DIR": false
+      },
+      "dns_order": "verbatim",
+      "auto_select_family": true,
+      "auto_select_family_attempt_timeout_ms": 250,
+      "timeout_per_probe_ms": 5000,
+      "ca_count": 121,
+      "probes": [
+        {
+          "result": "FAIL",
+          "family": "AUTO",
+          "elapsed_ms": 10,
+          "tcp_connected": false,
+          "tls": true,
+          "authorized": null,
+          "timeout_phase": null,
+          "diagnostic": {
+            "category": "DNS_FAILED",
+            "phase": "TCP_CONNECT",
+            "codes": [
+              "EAI_AGAIN"
+            ],
+            "syscall": "getaddrinfo",
+            "hostname": "yandex.ru",
+            "aborted": false
+          }
+        }
+      ],
+      "dns": {
+        "result": "FAIL",
+        "diagnostic": {
+          "category": "DNS_FAILED",
+          "phase": "DNS",
+          "codes": [
+            "EAI_AGAIN"
+          ],
+          "syscall": "getaddrinfo",
+          "hostname": "yandex.ru",
+          "aborted": false
+        }
+      }
+    },
+    "credential_env_loaded": false,
+    "original_unit_changed": false,
+    "diagnostic_unit_state": "not-found",
+    "effective_capture": "UNAVAILABLE: process finished and unit was collected before initial show. Separate metadata-only unit verified effective directives."
+  },
+  "final_single_tls_trace": {
+    "context": "review-yandex-reader_DEFAULT_TLS_10S_SINGLE_TRACE",
+    "node": "v24.21.0",
+    "http_requests": 0,
+    "credentials_loaded": false,
+    "timeout_ms": 10000,
+    "connection_events": [
+      {
+        "event": "ATTEMPT",
+        "ms": 31,
+        "address": "77.88.55.88",
+        "port": 443,
+        "family": 4
+      }
+    ],
+    "result": "PASS",
+    "tcp_connected": true,
+    "tls_authorized": true,
+    "elapsed_ms": 88,
+    "diagnostic": null
+  },
+  "counts": {
+    "business_http_get": 0,
+    "business_mutation_methods": 0,
+    "dns_explicit_lookup_calls": 4,
+    "tcp_probe_calls": 6,
+    "tls_probe_calls": 11,
+    "socket_probes_total": 17,
+    "application_retry_loops": 0,
+    "cumulative_business_get_attempts": 13
+  },
+  "interpretation": {
+    "dns_direct": "PASS",
+    "ipv4": "INTERMITTENT: explicit TCP/TLS can pass or time out before connect",
+    "ipv6": "ENETUNREACH; host IPv6 default route absent",
+    "last_default_tls_10s": "PASS in88ms; verified certificate, no HTTP",
+    "historical_os_cause": "UNAVAILABLE: original catch discarded it",
+    "systemd_sandbox": "Blocks diagnostic control, but actual VPS08/VPS09 processes were SSH-session cgroups",
+    "local_network_policy_fix": "NONE_JUSTIFIED",
+    "live_get_gate": "NOT_MET: root cause not proven and fixed"
+  }
+}

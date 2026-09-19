@@ -54,3 +54,5 @@ Writer NOT_RUN. All LAB table hashes remain equal, real review INSERT/UPDATE/DEL
 Next gate requires a separately scoped network-cause investigation and explicit new live attempt budget. No automatic retry, idempotency run, session reimport, provider scheduler or real business workflow is authorized by this stopped attempt.
 
 See [test evidence](VPS09_TEST_EVIDENCE.md), [result](evidence/vps09/VPS09_RESULT.json), and [final report](evidence/vps09/VPS09_FINAL_REPORT.md).
+
+VPS09A follow-up: [network/context diagnostic](VPS09A_NETWORK_DIAGNOSTIC.md) reproduced intermittent no-auth TCP connectivity but did not prove the original OS cause. No new business GET or sync; runtime and failed receipt unchanged. Safe error metadata changes exist locally with targeted regressions, not deployed to the private reader.
