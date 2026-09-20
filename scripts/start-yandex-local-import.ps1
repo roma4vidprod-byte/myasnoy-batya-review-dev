@@ -2,7 +2,7 @@
 # explicit private VPS target uses pinned SSH, never a local AES key. This
 # listener reuses same-user pipes; the selected server owns validation/CAS.
 function Invoke-YandexLocalImport {
-  param([ValidateSet('cloud-dev','vps-lab')][string] $Target = 'cloud-dev')
+  param([ValidateSet('cloud-dev','vps-lab','vps-refresh')][string] $Target = 'cloud-dev')
   $ErrorActionPreference='Stop'
   $pipe=$null; $challenge=$null; $remoteApproval=$null; $message=$null; $secure=$null; $result=$null; $wireReply=$null
   $failure='NATIVE_WINDOWS_POWERSHELL_7_REQUIRED'
@@ -14,9 +14,10 @@ function Invoke-YandexLocalImport {
     }
     . (Join-Path $PSScriptRoot 'yandex-native-protocol.ps1')
     if ($Target -eq 'vps-lab') { . (Join-Path $PSScriptRoot 'yandex-vps-import.ps1') }
+    elseif ($Target -eq 'vps-refresh') { . (Join-Path $PSScriptRoot 'yandex-vps-refresh.ps1') }
     else { . (Join-Path $PSScriptRoot 'import-yandex-session.ps1') }
     $failure='NATIVE_REMOTE_APPROVAL_FAILED'
-    $remoteApproval=if ($Target -eq 'vps-lab') { Get-YandexVpsImportApproval } else { Get-YandexRemoteImportApproval }
+    $remoteApproval=if ($Target -in @('vps-lab','vps-refresh')) { Get-YandexVpsImportApproval } else { Get-YandexRemoteImportApproval }
     $deadline = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()+120000
     $options = [IO.Pipes.PipeOptions]::Asynchronous -bor [IO.Pipes.PipeOptions]::CurrentUserOnly -bor [IO.Pipes.PipeOptions]::FirstPipeInstance
     $failure='NATIVE_PIPE_UNAVAILABLE'
@@ -28,7 +29,7 @@ function Invoke-YandexLocalImport {
     $null=$wait.GetAwaiter().GetResult()
     $message=Read-YandexNativeFrame $pipe $deadline
     $challenge=New-YandexNativeChallenge $message $deadline $remoteApproval
-    if ($Target -eq 'vps-lab') { $challenge.target='vps-lab' }
+    if ($Target -in @('vps-lab','vps-refresh')) { $challenge.target='vps-lab' }
     Write-YandexNativeFrame $pipe @{version=1;nonce=$challenge.nonce;expiresAt=$challenge.deadline} $deadline
     $message=Read-YandexNativeFrame $pipe $deadline
     # Selected server owns validation, encryption and CAS; scope/revision are fixed there.
@@ -47,7 +48,7 @@ function Invoke-YandexLocalImport {
   } catch {
     Write-Output ('Import stopped ['+$failure+']. If submission started, check status before retry.')
   } finally {
-    if ($Target -eq 'vps-lab' -and (Get-Command Close-YandexVpsImport -ErrorAction SilentlyContinue)) { Close-YandexVpsImport }
+    if ($Target -in @('vps-lab','vps-refresh') -and (Get-Command Close-YandexVpsImport -ErrorAction SilentlyContinue)) { Close-YandexVpsImport }
     if ($pipe) { $pipe.Dispose() }
     if ($secure) { $secure.Dispose() }
     if ($challenge) { $challenge.nonce=$null; $challenge.capability=$null; $challenge.used=$true }

@@ -99,3 +99,17 @@ Approval fingerprint changes when text or review identity changes.
    exact reply text for the first real write E2E.
 
 Until step 5, **Yandex WRITE remains 0**.
+
+## Session refresh foundation
+
+The expired session blocker is handled by a separate one-shot refresh path rather than by relaxing cookie validation.
+
+Added source:
+- `tools/vps14/session-refresh.mjs` — exact current session guard, `revision 4 -> 5`, Native Messaging payload only, CAS replacement via existing `prepareVpsImport`, provider requests/writes = 0.
+- `scripts/yandex-vps-refresh.ps1` — pinned VDSina SSH target, strict host-key checking, no password/keyboard auth, no Cloud fallback.
+- `scripts/start-yandex-vps-refresh.ps1` — explicit human-started refresh entrypoint.
+- `scripts/start-yandex-local-import.ps1` now accepts a separate `vps-refresh` target while preserving `cloud-dev` as the default and the historical `vps-lab` path.
+
+Verification: VPS14 targeted tests 14/14 PASS, PowerShell parser PASS, source/config checks 156 PASS.
+
+A successful refresh is expected to produce `NOT_CONFIGURED / revision 5`. It must then pass the existing health path before any VPS14 contract discovery continues.
