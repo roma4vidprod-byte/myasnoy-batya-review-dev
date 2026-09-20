@@ -127,3 +127,13 @@ A fixed Node `ssh2` bridge now pins:
 The bridge only forwards bounded stdin/stdout; it does not parse, log or persist session material. PowerShell parser checks PASS. A real challenge-only preflight against VDSina returned `VPS_REFRESH_PREPARE_PASS revision=4 provider_writes=0`, then the child was closed before any browser session was submitted. Database/session state was not changed by this preflight.
 
 Remaining refresh gate: the installed Chrome extension must collect a fresh session from the active Yandex Business Reviews tab and submit it through the same-user Native Messaging pipe. This requires the human browser action by design.
+
+### Native Messaging host repair
+
+Chrome reported `NATIVE_HOST_START_FAILED` before any import call. Safe status confirmed the VDSina session stayed at revision 4.
+
+The historical registration pointed to `host.cmd`. A compiled local console wrapper was added as source in `tools/vps14/native-host-launcher.cs`. It starts the unchanged `yandex-native-host.ps1`, forwards raw stdin/stdout bytes, suppresses no protocol content, and restricts Chrome argv. The generated local `host_v2.exe` passed the exact Native Messaging diagnostic frame both with the extension origin and with a synthetic `--parent-window` argument: native response PASS, import_calls=0.
+
+HKCU still points to the same manifest. The manifest now points to the absolute `host_v2.exe` path. Code Integrity, Defender and Application logs showed no launch block/crash for the wrapper. Because the currently running Chrome process continued to report `NATIVE_HOST_START_FAILED`, the remaining gate is a full Chrome process restart so it reloads the Native Messaging host configuration.
+
+Verification after wrapper source: VPS14 targeted 16/16 PASS; source/config checks 157 PASS. Yandex WRITE remains 0.
