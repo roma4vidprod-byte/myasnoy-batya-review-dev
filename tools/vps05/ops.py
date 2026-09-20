@@ -1,6 +1,6 @@
 """Fixed synthetic LAB operations. No credentials, external endpoints or business jobs.
 
-Run explicitly as root on hiplet-120706. Dumps stay root-only on that host.
+Run explicitly as root on the allowlisted VPS. RA_EXPECTED_HOSTNAME must match the live host. Dumps stay root-only on that host.
 All child errors are reduced to fixed codes; never emit stderr/body/config.
 """
 import argparse
@@ -112,8 +112,9 @@ def metadata(path):
 
 
 def guard():
-    need(sys.platform == 'linux' and os.geteuid() == 0 and socket.gethostname() == 'hiplet-120706',
-         'HOST_ROOT_GUARD')
+    expected_hostname = os.environ.get('RA_EXPECTED_HOSTNAME')
+    need(sys.platform == 'linux' and os.geteuid() == 0 and expected_hostname and
+         socket.gethostname() == expected_hostname, 'HOST_ROOT_GUARD')
     need(sql(DB, "select version from vps_lab_private.version;") == 'vps04-auth-api-v1',
          'LAB_VERSION_REQUIRED')
     need(sql(DB, "show server_version_num;") == '170011', 'PG_VERSION_GUARD')
@@ -613,7 +614,9 @@ def evaluate_monitor(sample):
 
 def monitor():
     # No DB connection or secret config read; metrics and two fixed local HTTP endpoints.
-    need(sys.platform == 'linux' and os.geteuid() == 0 and socket.gethostname() == 'hiplet-120706', 'HOST_ROOT_GUARD')
+    expected_hostname = os.environ.get('RA_EXPECTED_HOSTNAME')
+    need(sys.platform == 'linux' and os.geteuid() == 0 and expected_hostname and
+         socket.gethostname() == expected_hostname, 'HOST_ROOT_GUARD')
     root_dir(ROOT)
     root_dir(STATE)
     mem = dict(line.split(':', 1) for line in Path('/proc/meminfo').read_text().splitlines())

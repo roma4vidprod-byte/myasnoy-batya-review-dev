@@ -119,9 +119,18 @@ class BackupRestore(unittest.TestCase):
     def test_backup_peer_auth_bounded_capabilities(self):
         text = Path(__file__).with_name('review-activator-backup.service').read_text()
         self.assertIn('User=root', text)
+        self.assertIn('Environment=RA_EXPECTED_HOSTNAME=v3248121.hosted-by-vdsina.ru', text)
         self.assertIn('NoNewPrivileges=yes', text)
         self.assertIn('CapabilityBoundingSet=CAP_SETUID CAP_SETGID\n', text)
         self.assertIn('AmbientCapabilities=CAP_SETUID CAP_SETGID\n', text)
+
+    def test_backup_host_guard_is_explicit_env_not_legacy_hostname(self):
+        source = Path(__file__).with_name('ops.py').read_text()
+        self.assertIn("os.environ.get('RA_EXPECTED_HOSTNAME')", source)
+        self.assertIn("socket.gethostname() == expected_hostname", source)
+        self.assertNotIn("socket.gethostname() == 'hiplet-120706'", source)
+        monitor_unit = Path(__file__).with_name('review-activator-monitor.service').read_text()
+        self.assertIn('Environment=RA_EXPECTED_HOSTNAME=v3248121.hosted-by-vdsina.ru', monitor_unit)
 
     def test_disk_guard_pass(self):
         ops.disk_guard(20*1024**3, 1024**3)

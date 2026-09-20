@@ -5,6 +5,7 @@ After=postgresql@17-main.service
 [Service]
 Type=oneshot
 User=root
+Environment=RA_EXPECTED_HOSTNAME=v3248121.hosted-by-vdsina.ru
 UMask=0077
 ExecStart=/usr/bin/flock --nonblock /var/lib/review-activator-ops/backup.lock /usr/bin/python3 -B /opt/review-activator-lab/ops/vps05/ops.py backup
 TimeoutStartSec=10min
