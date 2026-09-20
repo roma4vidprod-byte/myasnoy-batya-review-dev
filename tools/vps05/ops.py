@@ -188,6 +188,22 @@ select json_build_object(
 ) select json_build_object('synthetic_count',count(*) filter(where synthetic),
  'real_count',count(*) filter(where approved_real),'unexpected_count',count(*) filter(where (synthetic or approved_real) is not true),
  'ratings_valid',coalesce(bool_and(rating between 1 and 5) filter(where approved_real),true)) from classified;""")
+    counts['reply_actions_scope'] = query_json(database, """select json_build_object(
+ 'count',count(*),
+ 'scope_valid',coalesce(bool_and(
+   a.company_id='13f3cb80-487a-4a19-96a1-fb3103200230'
+   and a.provider='yandex'
+   and r.id=a.external_review_row_id
+   and r.company_id=a.company_id
+   and r.location_id='9a95f63b-18e6-447b-a449-8530b67ddbae'
+   and r.provider=a.provider
+   and r.external_location_id='54309413522'
+   and r.external_review_id=a.external_review_id
+ ),true),
+ 'status_valid',coalesce(bool_and(a.status in ('DRAFT','QUEUED','SENDING','SENT','FAILED','CANCELLED')),true),
+ 'active_count',count(*) filter(where a.status in ('DRAFT','QUEUED','SENDING'))
+) from public.review_reply_actions a
+left join public.review_external_reviews r on r.id=a.external_review_row_id;""")
     return {'schema_sha256': sha(normalize_schema(schema)), 'tables': tables,
             'rows': rows, 'catalog': counts}
 
@@ -202,6 +218,17 @@ def validate_snapshot(s):
     operator_scope_valid = s['catalog'].get('operator_scope_valid', not operator_enabled)
     need(auth_users_valid and type(operator_enabled) is bool and operator_scope_valid is True,
          'AUTH_SCOPE_FAILED')
+    reply_row_count = s.get('rows', {}).get('public.review_reply_actions', {}).get('count', 0)
+    reply_scope = s['catalog'].get('reply_actions_scope')
+    if reply_scope is None:
+        reply_scope = {'count': reply_row_count, 'scope_valid': reply_row_count == 0,
+                       'status_valid': reply_row_count == 0, 'active_count': 0}
+    need(type(reply_row_count) is int and reply_row_count >= 0 and
+         type(reply_scope.get('count')) is int and reply_scope['count'] == reply_row_count and
+         reply_scope.get('scope_valid') is True and reply_scope.get('status_valid') is True and
+         type(reply_scope.get('active_count')) is int and
+         0 <= reply_scope['active_count'] <= reply_row_count,
+         'REPLY_ACTION_SCOPE_FAILED')
     if real is None:
         need(s['catalog']['synthetic_reviews_only'], 'SYNTHETIC_SCOPE_FAILED')
     else:
@@ -221,10 +248,12 @@ def validate_snapshot(s):
                          'review_private.yandex_sessions': extra['session_count']})
     if real is not None:
         expected['public.review_external_reviews'] = 2 + real['real_count']
+    if 'public.review_reply_actions' in s['rows']:
+        expected['public.review_reply_actions'] = reply_row_count
     for name, count in expected.items():
         need(s['rows'][name]['count'] == count, 'ROW_COUNTS_FAILED')
     nonempty_app = {'public.review_companies', 'public.review_locations', 'public.review_admins',
-                    'public.review_external_reviews'}
+                    'public.review_external_reviews', 'public.review_reply_actions'}
     if extra is not None:
         nonempty_app.add('review_private.yandex_sessions')
     for name, info in s['rows'].items():
@@ -246,6 +275,13 @@ def normalize_snapshot_contract(s):
     catalog.setdefault('auth_users_valid', catalog.get('synthetic_users_only') is True)
     catalog.setdefault('operator_enabled', False)
     catalog.setdefault('operator_scope_valid', True)
+    reply_count = s.get('rows', {}).get('public.review_reply_actions', {}).get('count', 0)
+    catalog.setdefault('reply_actions_scope', {
+        'count': reply_count,
+        'scope_valid': reply_count == 0,
+        'status_valid': reply_count == 0,
+        'active_count': 0,
+    })
     return {**s, 'catalog': catalog}
 
 

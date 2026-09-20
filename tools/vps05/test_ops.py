@@ -182,6 +182,45 @@ class BackupRestore(unittest.TestCase):
         with self.assertRaisesRegex(ops.SafeFailure, 'AUTH_SCOPE_FAILED'):
             ops.validate_snapshot(s)
 
+    def test_scoped_cancelled_reply_action_allowed(self):
+        s = snapshot()
+        s['rows']['public.review_reply_actions'] = {'count': 1, 'sha256': 'synthetic-reply'}
+        s['catalog']['reply_actions_scope'] = {
+            'count': 1, 'scope_valid': True, 'status_valid': True, 'active_count': 0}
+        ops.validate_snapshot(s)
+
+    def test_scoped_active_reply_action_allowed_for_backup(self):
+        s = snapshot()
+        s['rows']['public.review_reply_actions'] = {'count': 1, 'sha256': 'synthetic-reply'}
+        s['catalog']['reply_actions_scope'] = {
+            'count': 1, 'scope_valid': True, 'status_valid': True, 'active_count': 1}
+        ops.validate_snapshot(s)
+
+    def test_reply_action_scope_or_status_mismatch_denied(self):
+        for field in ('scope_valid', 'status_valid'):
+            s = snapshot()
+            s['rows']['public.review_reply_actions'] = {'count': 1, 'sha256': 'synthetic-reply'}
+            scope = {'count': 1, 'scope_valid': True, 'status_valid': True, 'active_count': 0}
+            scope[field] = False
+            s['catalog']['reply_actions_scope'] = scope
+            with self.subTest(field=field), self.assertRaisesRegex(ops.SafeFailure, 'REPLY_ACTION_SCOPE_FAILED'):
+                ops.validate_snapshot(s)
+
+    def test_reply_action_count_mismatch_denied(self):
+        s = snapshot()
+        s['rows']['public.review_reply_actions'] = {'count': 1, 'sha256': 'synthetic-reply'}
+        s['catalog']['reply_actions_scope'] = {
+            'count': 2, 'scope_valid': True, 'status_valid': True, 'active_count': 0}
+        with self.assertRaisesRegex(ops.SafeFailure, 'REPLY_ACTION_SCOPE_FAILED'):
+            ops.validate_snapshot(s)
+
+    def test_legacy_nonempty_reply_action_without_scope_evidence_denied(self):
+        s = snapshot()
+        s['rows']['public.review_reply_actions'] = {'count': 1, 'sha256': 'synthetic-reply'}
+        normalized = ops.normalize_snapshot_contract(s)
+        with self.assertRaisesRegex(ops.SafeFailure, 'REPLY_ACTION_SCOPE_FAILED'):
+            ops.validate_snapshot(normalized)
+
     def test_old_snapshot_contract_still_compares(self):
         old = snapshot()
         current = copy.deepcopy(old)
