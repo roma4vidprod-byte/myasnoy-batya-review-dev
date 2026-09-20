@@ -126,9 +126,10 @@ class BackupRestore(unittest.TestCase):
 
     def test_backup_host_guard_is_explicit_env_not_legacy_hostname(self):
         source = Path(__file__).with_name('ops.py').read_text()
-        self.assertIn("os.environ.get('RA_EXPECTED_HOSTNAME')", source)
-        self.assertIn("socket.gethostname() == expected_hostname", source)
-        self.assertNotIn("socket.gethostname() == 'hiplet-120706'", source)
+        self.assertIn("EXPECTED_HOSTNAME = 'v3248121.hosted-by-vdsina.ru'", source)
+        self.assertIn("os.environ.get('RA_EXPECTED_HOSTNAME', EXPECTED_HOSTNAME)", source)
+        self.assertIn("socket.gethostname() == EXPECTED_HOSTNAME", source)
+        self.assertNotIn("hiplet-120706", source)
         monitor_unit = Path(__file__).with_name('review-activator-monitor.service').read_text()
         self.assertIn('Environment=RA_EXPECTED_HOSTNAME=v3248121.hosted-by-vdsina.ru', monitor_unit)
 

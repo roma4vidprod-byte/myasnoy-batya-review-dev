@@ -20,6 +20,7 @@ import time
 from datetime import datetime, timezone
 
 DB = 'review_activator_lab'
+EXPECTED_HOSTNAME = 'v3248121.hosted-by-vdsina.ru'
 RESTORE = 'review_activator_restore_test'
 PG = '/usr/lib/postgresql/17/bin/'
 ROOT = Path('/var/backups/review-activator')
@@ -111,10 +112,15 @@ def metadata(path):
             'mode': oct(stat.S_IMODE(st.st_mode)), 'size': st.st_size, 'sha256': file_hash(path)}
 
 
+def host_guard():
+    expected_hostname = os.environ.get('RA_EXPECTED_HOSTNAME', EXPECTED_HOSTNAME)
+    need(expected_hostname == EXPECTED_HOSTNAME and sys.platform == 'linux' and
+         os.geteuid() == 0 and socket.gethostname() == EXPECTED_HOSTNAME,
+         'HOST_ROOT_GUARD')
+
+
 def guard():
-    expected_hostname = os.environ.get('RA_EXPECTED_HOSTNAME')
-    need(sys.platform == 'linux' and os.geteuid() == 0 and expected_hostname and
-         socket.gethostname() == expected_hostname, 'HOST_ROOT_GUARD')
+    host_guard()
     need(sql(DB, "select version from vps_lab_private.version;") == 'vps04-auth-api-v1',
          'LAB_VERSION_REQUIRED')
     need(sql(DB, "show server_version_num;") == '170011', 'PG_VERSION_GUARD')
@@ -614,9 +620,7 @@ def evaluate_monitor(sample):
 
 def monitor():
     # No DB connection or secret config read; metrics and two fixed local HTTP endpoints.
-    expected_hostname = os.environ.get('RA_EXPECTED_HOSTNAME')
-    need(sys.platform == 'linux' and os.geteuid() == 0 and expected_hostname and
-         socket.gethostname() == expected_hostname, 'HOST_ROOT_GUARD')
+    host_guard()
     root_dir(ROOT)
     root_dir(STATE)
     mem = dict(line.split(':', 1) for line in Path('/proc/meminfo').read_text().splitlines())
