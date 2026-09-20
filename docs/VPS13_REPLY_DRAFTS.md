@@ -1,7 +1,7 @@
 # VPS13 — scoped reply drafts foundation
 
 Date: 2026-09-20
-Status: **SOURCE READY; LIVE DDL APPLY BLOCKED BY REMOTE TOOL SAFETY**
+Status: **DEPLOYED; OPERATOR DRAFT E2E PENDING**
 Yandex WRITE: **0**
 
 ## Goal
@@ -65,7 +65,7 @@ The historical unscoped draft RPC and any publish/queue/provider paths remain de
 - after rollback the new VPS13 functions count remained 0
 - pre-apply backup: **PASS**
   - /var/backups/review-activator/20260920T110358687984Z/manifest.json
-## Live apply status
+## Earlier live apply status (superseded by the authorized deployment below)
 
 The remote execution safety layer blocked the permanent DDL apply command even after
 the successful rollback-only rehearsal. That block was not bypassed.
@@ -86,3 +86,75 @@ save draft -> reload -> draft persists -> discard -> state returns to NONE.
 
 Only after VPS13 is accepted should a separate provider-write contract be implemented
 for explicit human-approved publication to Yandex.
+
+## Authorized deployment — 2026-09-20
+
+Starting source: `5e7aaba0ba04582135e638752c44d2adf164bb56`, branch
+`codex/yandex-live-read-smoke-01`. The 28 existing untracked files were hashed
+before work and excluded from this change.
+
+One blocking source defect was reproduced before deployment: the gateway permitted
+the new draft RPCs but `lib/server/vps/lab.js` did not. The real gateway/internal-app
+composition returned HTTP 404 for the scoped list RPC. The minimal fix adds exactly
+the three scoped draft RPCs to the internal allowlist. The new executable regression
+uses loopback HTTP with a synthetic PostgREST boundary; it also verifies denial of
+unscoped/publish/queue/owner-claim/arbitrary paths and wrong Origin.
+
+Local results: 14/14 required targeted tests (including the new regression),
+822/822 tracked tests, 148 source checks; no skips/failures. Historical untracked
+tests were not included or modified. Tests block external Fetch.
+
+Fresh pre-deploy backup: `Result=success`, `ExecMainStatus=0`.
+Manifest: `/var/backups/review-activator/20260920T115012374808Z/manifest.json`.
+
+The exact prepared `tools/vps13/reply-drafts.sql` was applied with `ON_ERROR_STOP=1`
+and its own transaction. SHA-256 of the transferred file:
+`8da4270a0d92433847fc11a1916f389b78d8c444561218e79155e5ef46e05f40`.
+All three RPCs exist; authenticated EXECUTE is true, anon/service_role/PUBLIC false.
+Canonical row digests before/after DDL matched: 74 reviews and 0 reply actions.
+No user triggers exist on either table. Read-only authenticated SQL verified a scoped
+list of 20 rows and denial of foreign company/location. This is a DB policy test,
+not a substitute for the real browser E2E.
+
+New release: `/opt/review-activator-lab/releases/vps13-draft-only-20260920T115012`.
+Derived from the unchanged rollback target
+`/opt/review-activator-lab/releases/vps11-admin-real-readonly`.
+Only `admin.html` and `lib/server/vps/lab.js` differ; the other eight manifest files
+are byte-identical. All ten SHA-256 entries were recomputed and the existing release
+verifier passed before switching. Manifest SHA-256:
+`2b8cf8de66ae04db47e12e4239768b2478dfe80c8975fd38dcde27404e6d94a9`.
+
+Gateway and drop-in rollback copies are retained under
+`/root/review-vps13-20260920T115012/` (`gateway-before.mjs`, `vps04-before.conf`).
+PostgREST received a schema-cache reload notification. Only foundation and gateway
+were restarted; Caddy configuration, UFW and existing timers were not changed.
+Foundation, gateway, Caddy, Auth and PostgREST are active. Public HTTPS admin,
+healthz and readyz each returned 200 with TLS verification success.
+
+Public negative tests: wrong Origin 403 `ORIGIN_NOT_ALLOWED`; arbitrary path,
+historical unscoped draft, guessed publish, guessed queue, arbitrary table, provider
+worker and initial-owner claim each 404 `HTTPS_GATEWAY_DRAFT_ONLY`.
+
+No Yandex provider operation was invoked by this deployment. The installed web
+release has no provider write transport. The existing hourly read scheduler remains
+unchanged. No FULL PASS is claimed until the real operator saves, reloads and
+cancels the one authorized neutral draft and final DB state is verified.
+
+Final infrastructure postflight: foundation runs as `review-activator`, gateway as
+`review-gateway`; both units deny non-loopback IP destinations. Ports 13000, 13001,
+13010, 19999 and 5432 remain loopback-only; UFW public TCP remains 22/80/443.
+Transferred admin/internal-app/gateway hashes match the local source files. The
+fresh backup manifest is `0600 root:root`. Existing backup, monitor and Yandex-read
+timers were preserved, not enabled or reconfigured by this deployment.
+
+**Partial closeout:** operator E2E has not run. The browser login submission was
+blocked by the browser action safety layer after conflicting form observations;
+the user was asked to complete login directly. No credentials were copied into
+source, logs, evidence or this document. No test review was selected, and no draft
+save/discard was attempted. Final DB aggregates: 74 reviews, 0 reply actions,
+0 active DRAFT and 0 QUEUED/SENDING/SENT. This is not a draft lifecycle PASS.
+
+The four changed tracked files passed a secret-pattern scan (only the explicitly
+synthetic regression token is excluded), and `git diff --check` passed. All 28
+pre-existing untracked file hashes matched the starting inventory. Runtime rollback
+was not needed; the accepted old release and gateway/drop-in backups remain intact.

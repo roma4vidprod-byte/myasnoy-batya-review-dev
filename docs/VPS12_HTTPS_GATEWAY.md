@@ -79,3 +79,14 @@ The cabinet opened successfully and real reviews were visible. The VPS11 mobile 
 72 total reviews, page 2 pagination, 1–3 / 4–5 rating filters and 12 unanswered.
 
 **VPS12 = FULL PASS.**
+
+## VPS13 successor (2026-09-20)
+
+The authorized draft-only successor is recorded in `VPS13_REPLY_DRAFTS.md`.
+It retains this HTTPS/Caddy/auth boundary and adds only three scoped draft RPCs.
+The internal app also needs those exact routes in its allowlist; the VPS13
+deployment includes that minimal correction. Historical unscoped draft, publish,
+queue, initial-owner claim, arbitrary REST and provider paths remain denied.
+For VPS13 rollback, restore the saved gateway and foundation drop-in to
+`vps11-admin-real-readonly`; do not disable Caddy or remove HTTPS firewall rules.
+VPS12 remains the accepted rollback baseline; VPS13 operator E2E is a separate gate.
