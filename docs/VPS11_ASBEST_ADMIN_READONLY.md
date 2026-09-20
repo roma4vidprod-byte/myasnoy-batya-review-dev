@@ -153,3 +153,21 @@ Final postflight:
 - signup disabled: true
 - operator active owner rows: 1
 - operator Asbest memberships: 1
+## Manual mobile UI acceptance — 2026-09-20
+
+User-performed browser acceptance over a temporary HTTPS preview is **PASS**.
+
+Observed on iPhone:
+- real operator login: PASS (`tas.food@yandex.ru`, role `owner`)
+- first page: `1–20 of 72`, unanswered `12`
+- pagination: page 2 shows `21–40 of 72`
+- rating filter `1–3 ★`: `12 of 12`, unanswered `1`
+- rating filter `4–5 ★`: `1–20 of 60`, unanswered `11`
+- answer filter `Без ответа`: `1–12 of 12`, unanswered `12`
+
+The preview exposed only login/profile/scoped-review read paths.
+No reply composer or Yandex write path was present.
+Yandex WRITE remained `0`.
+Production/public cutover was not performed as part of this acceptance.
+
+**VPS11 MANUAL UI GATE = PASS.**
