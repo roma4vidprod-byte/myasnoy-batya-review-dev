@@ -1,0 +1,11 @@
+[Unit]
+Description=Review Activator hourly real Yandex review sync
+
+[Timer]
+OnCalendar=hourly
+Persistent=false
+AccuracySec=1min
+Unit=review-activator-yandex-sync.service
+
+[Install]
+WantedBy=timers.target
