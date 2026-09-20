@@ -16,26 +16,16 @@ function Get-YandexVpsImportApproval {
   try {
     if ($script:YandexVpsChild) { throw 'VPS_REFRESH_ALREADY_STARTED' }
     $start=[Diagnostics.ProcessStartInfo]::new()
-    $start.FileName=(Get-Command ssh.exe -CommandType Application -ErrorAction Stop).Source
+    $start.FileName=(Get-Command node.exe -CommandType Application -ErrorAction Stop).Source
     $start.UseShellExecute=$false
     $start.CreateNoWindow=$true
     $start.RedirectStandardInput=$true
     $start.RedirectStandardOutput=$true
     $start.RedirectStandardError=$true
     $start.StandardInputEncoding=[Text.UTF8Encoding]::new($false)
-    foreach ($arg in @(
-      '-T','-4',
-      '-o','BatchMode=yes',
-      '-o','IdentitiesOnly=yes',
-      '-o','StrictHostKeyChecking=yes',
-      '-o','PasswordAuthentication=no',
-      '-o','KbdInteractiveAuthentication=no',
-      '-o','ConnectTimeout=12',
-      '-o','UserKnownHostsFile=C:\Users\tasfo\BusinessOS\Review-Activator-Tools\vps\vdsina_known_hosts',
-      '-i','C:\Users\tasfo\BusinessOS\Review-Activator-Tools\vps\reviewadmin_ed25519',
-      'root@83.217.214.29',
-      '/usr/sbin/runuser -u review-yandex-import -- /usr/bin/env -i PATH=/usr/bin:/bin RA_RUNTIME_PROFILE=vps-lab RA_YANDEX_MODE=read-only-admin /opt/node/bin/node /opt/review-activator-yandex/tools/vps14/session-refresh.mjs'
-    )) { $start.ArgumentList.Add($arg) }
+    $bridge=(Resolve-Path (Join-Path $PSScriptRoot '..\tools\vps14\vdsina-refresh-bridge.cjs')).Path
+    $start.ArgumentList.Add($bridge)
+    $start.Environment['NODE_PATH']='C:\Users\tasfo\BusinessOS\Review-Activator-Tools\vps\ssh2node\node_modules'
 
     $script:YandexVpsChild=[Diagnostics.Process]::Start($start)
     $script:YandexVpsErrors=$script:YandexVpsChild.StandardError.ReadToEndAsync()

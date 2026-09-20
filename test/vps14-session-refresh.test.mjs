@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 
 const refresh=readFileSync(new URL('../tools/vps14/session-refresh.mjs',import.meta.url),'utf8');
 const adapter=readFileSync(new URL('../scripts/yandex-vps-refresh.ps1',import.meta.url),'utf8');
+const bridge=readFileSync(new URL('../tools/vps14/vdsina-refresh-bridge.cjs',import.meta.url),'utf8');
 const launcher=readFileSync(new URL('../scripts/start-yandex-local-import.ps1',import.meta.url),'utf8');
 const entry=readFileSync(new URL('../scripts/start-yandex-vps-refresh.ps1',import.meta.url),'utf8');
 
@@ -17,22 +18,22 @@ test('VPS14 session refresh is one-shot revision 4 to 5 with no provider IO',()=
   assert.doesNotMatch(refresh,/createYandexReadTransport/);
 });
 
-test('VPS14 refresh adapter pins current VDSina and current known-hosts file',()=>{
+test('VPS14 refresh bridge pins current VDSina and host fingerprint',()=>{
   for(const literal of [
-    'root@83.217.214.29',
-    'vdsina_known_hosts',
+    "HOST='83.217.214.29'",
+    "USER='root'",
     'reviewadmin_ed25519',
-    'StrictHostKeyChecking=yes',
-    'PasswordAuthentication=no',
-    'KbdInteractiveAuthentication=no',
+    'SHA256:ji67KADy5JFkBqWMOX6N8hSvknW8Tznlj9zDCJ2dwaQ',
     'session-refresh.mjs',
-    'expectedRevision=4',
-    'revision -ne 5',
-    'provider_requests -ne 0',
-    'provider_writes -ne 0'
+    "hostHash:'sha256'",
+    'hostVerifier'
+  ])assert.ok(bridge.includes(literal),literal);
+  assert.equal(bridge.includes('141.98.87.15'),false);
+  assert.equal(bridge.includes('REVIEW_WORKER_SECRET'),false);
+  for(const literal of [
+    'vdsina-refresh-bridge.cjs','expectedRevision=4','revision -ne 5',
+    'provider_requests -ne 0','provider_writes -ne 0'
   ])assert.ok(adapter.includes(literal),literal);
-  assert.equal(adapter.includes('141.98.87.15'),false);
-  assert.equal(adapter.includes('REVIEW_WORKER_SECRET'),false);
 });
 
 test('VPS14 local native pipe adds refresh target without changing cloud default',()=>{

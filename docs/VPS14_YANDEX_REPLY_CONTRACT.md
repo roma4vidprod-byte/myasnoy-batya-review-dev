@@ -113,3 +113,17 @@ Added source:
 Verification: VPS14 targeted tests 14/14 PASS, PowerShell parser PASS, source/config checks 156 PASS.
 
 A successful refresh is expected to produce `NOT_CONFIGURED / revision 5`. It must then pass the existing health path before any VPS14 contract discovery continues.
+
+### Refresh transport preflight
+
+The first Windows adapter attempt reproduced the known local OpenSSH failure (`ssh.exe` exited 255 without usable stderr). The refresh path does not depend on that binary anymore.
+
+A fixed Node `ssh2` bridge now pins:
+- VDSina host `83.217.214.29`
+- root key file already used by the project
+- exact SHA-256 host fingerprint
+- one fixed remote `review-yandex-import` command
+
+The bridge only forwards bounded stdin/stdout; it does not parse, log or persist session material. PowerShell parser checks PASS. A real challenge-only preflight against VDSina returned `VPS_REFRESH_PREPARE_PASS revision=4 provider_writes=0`, then the child was closed before any browser session was submitted. Database/session state was not changed by this preflight.
+
+Remaining refresh gate: the installed Chrome extension must collect a fresh session from the active Yandex Business Reviews tab and submit it through the same-user Native Messaging pipe. This requires the human browser action by design.
