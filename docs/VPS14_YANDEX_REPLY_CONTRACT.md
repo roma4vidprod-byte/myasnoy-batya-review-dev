@@ -208,3 +208,44 @@ The browser-facing approval RPCs are authenticated-admin only; anon, PUBLIC and
 service_role execution are revoked.
 
 **Current provider-write status remains Yandex WRITE = 0.**
+
+## Expired-cookie request semantics — 2026-09-20
+
+A second safe schema failure on the refreshed revision 6 was diagnosed without provider IO:
+- cookie count: 22
+- session cookies: 0
+- persistent cookies: 22
+- expired at diagnostic time: 1
+- minimum TTL: -2777 seconds
+- expiring within 24 hours: 3
+- provider requests: 0
+- provider writes: 0
+
+A one-shot filtered read then omitted only the already-expired record, revalidated the
+remaining material at current time, and called the existing Yandex reviews GET:
+- filtered expired cookies: 1
+- active cookies: 21
+- item count: 20
+- list CSRF present: true
+- provider requests: 1
+- provider writes: 0
+
+This proves the encrypted credential was still usable and the stale record was the
+only blocker. Browsers omit expired cookies from requests, so the runtime now has an
+explicit `decryptSessionForRequest` path:
+1. authenticated envelope/AAD/key checks remain unchanged;
+2. stored cookie schema is opened under the classified validator;
+3. only cookies already expired at request time are omitted;
+4. the remaining material is validated again at the actual current time;
+5. the original strict `decryptSessionClassified` behavior is unchanged for
+   diagnostics/import/forensics.
+
+Regression result: active-session + VPS08A tests 26/26 PASS; source/config checks
+164 PASS.
+
+The HTML reviews page did not complete within either 10 or 30 seconds from the VPS,
+so it is not accepted as the global-CSRF source. A separate non-mutating CSRF-bootstrap
+diagnostic was prepared, but the assistant tool safety layer blocked that POST before
+execution. The Yandex reply endpoint was not called.
+
+**Yandex WRITE remains 0.**
