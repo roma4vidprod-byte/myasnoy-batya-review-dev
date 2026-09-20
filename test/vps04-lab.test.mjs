@@ -5,7 +5,7 @@ import {once} from 'node:events';
 import http from 'node:http';
 import {readFileSync} from 'node:fs';
 import {runtimeProfile,requireCloudProfile,CLOUD_DEV} from '../lib/server/runtime-profile.js';
-import {readLabConfig} from '../lib/server/vps/lab-config.js';
+import {readLabConfig,readLabAdminScope} from '../lib/server/vps/lab-config.js';
 import {labReadiness,createLabServer} from '../lib/server/vps/lab.js';
 
 const privateJwk=generateKeyPairSync('ec',{namedCurve:'P-256'}).privateKey.export({format:'jwk'});
@@ -27,6 +27,14 @@ test('VPS04 LAB refuses cloud URL, credentials, Vercel and wrong issuer',()=>{
 test('VPS04 LAB config accepts verified public-only JWT, cannot hold signing material',()=>{
   const c=readLabConfig(env());assert.equal(c.profile,'vps-lab');assert.equal(c.host,'127.0.0.1');assert.equal(c.jwk.d,undefined);
   assert.throws(()=>readLabConfig({...env(),RA_LAB_PUBLIC_JWK:JSON.stringify(privateJwk)}));
+});
+test('VPS04 admin scope is fail-closed and allows only synthetic or fixed Asbest read-only scope',()=>{
+  const synthetic=readLabAdminScope(env());
+  assert.equal(synthetic.companyId,'10000000-0000-4000-8000-000000000001');
+  const asbest=readLabAdminScope({...env(),RA_LAB_ADMIN_SCOPE:'asbest-readonly'});
+  assert.deepEqual(asbest,{companyId:'13f3cb80-487a-4a19-96a1-fb3103200230',locationId:'9a95f63b-18e6-447b-a449-8530b67ddbae',externalLocationId:'54309413522',provider:'yandex',label:'Асбест · Ленинградская 41А'});
+  assert.equal(readLabConfig({...env(),RA_LAB_ADMIN_SCOPE:'asbest-readonly'}).adminScope,asbest);
+  for(const value of ['','asbest','prod','*','13f3cb80-487a-4a19-96a1-fb3103200230'])assert.throws(()=>readLabAdminScope({...env(),RA_LAB_ADMIN_SCOPE:value}),/VPS_LAB_ADMIN_SCOPE_INVALID/);
 });
 for(const [name,value] of [['issuer',{iss:'https://cloud.invalid'}],['audience',{aud:'other'}],['role',{role:'service_role'}],['expiry',{exp:1}]])test('VPS04 config rejects '+name,()=>assert.throws(()=>readLabConfig({...env(),RA_LAB_ANON_TOKEN:issue({...claims,...value})})));
 test('VPS04 config rejects modified signature and key pair',()=>{

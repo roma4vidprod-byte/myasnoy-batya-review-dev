@@ -6,8 +6,7 @@ try {
   if(typeof process.getuid!=='function'||process.getuid()===0)throw new Error();
   const config=readLabConfig();
   const admin=readFileSync(new URL('../admin.html',import.meta.url),'utf8');
-  const publicConfig={profile:'vps-lab',url:config.target.url,publicKey:config.target.publicKey,
-    scope:{companyId:'10000000-0000-4000-8000-000000000001',locationId:'20000000-0000-4000-8000-000000000001',externalLocationId:'lab-org-a',provider:'yandex',label:'Synthetic LAB A'}};
+  const publicConfig={profile:'vps-lab',url:config.target.url,publicKey:config.target.publicKey,scope:config.adminScope};
   const escaped=JSON.stringify(publicConfig).replaceAll('<','\\u003c');
   const adminHtml=admin.replace('<head>',`<head><script>window.REVIEW_ACTIVATOR_RUNTIME=${escaped};</script>`);
   const app=createLabServer({config,adminHtml,logger:e=>process.stdout.write(JSON.stringify(e)+'\n')});
