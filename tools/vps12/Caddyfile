@@ -1,0 +1,18 @@
+review-83-217-214-29.sslip.io {
+    encode gzip
+
+    reverse_proxy 127.0.0.1:13010
+
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "no-referrer"
+        X-Frame-Options "DENY"
+        -Server
+    }
+
+    log {
+        output file /var/log/caddy/review-access.log
+        format json
+    }
+}

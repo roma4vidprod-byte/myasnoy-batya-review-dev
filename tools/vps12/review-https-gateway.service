@@ -1,0 +1,32 @@
+[Unit]
+Description=Review Activator HTTPS read-only gateway
+After=network-online.target review-lab-api.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=review-gateway
+Group=review-gateway
+Environment=RA_PUBLIC_ORIGIN=https://review-83-217-214-29.sslip.io
+Environment=RA_OPERATOR_EMAIL=tas.food@yandex.ru
+ExecStart=/opt/node/bin/node /opt/review-activator-gateway/https-gateway.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+IPAddressDeny=any
+IPAddressAllow=localhost
+CapabilityBoundingSet=
+AmbientCapabilities=
+
+[Install]
+WantedBy=multi-user.target
