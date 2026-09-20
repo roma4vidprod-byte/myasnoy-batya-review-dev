@@ -496,9 +496,9 @@ def restore(path):
         result['health'] = app_health()
         if not result['source_unchanged'] or result['cleanup'] != 'PASS' or any(v != 200 for v in result['health'].values()):
             result['status'] = 'FAIL'
-        write_json(STATE / 'VPS05_RESTORE.json', result)
+        write_json(STATE / 'VPS05_RESTORE.json', result, replace=True)
         if 'comparison' in result:
-            write_json(STATE / 'VPS05_SCHEMA_COMPARE.json', result['comparison'])
+            write_json(STATE / 'VPS05_SCHEMA_COMPARE.json', result['comparison'], replace=True)
     need(result['status'] == 'PASS', result.get('error', 'RESTORE_ACCEPTANCE_FAILED'))
     return result
 

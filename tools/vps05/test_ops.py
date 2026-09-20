@@ -133,6 +133,11 @@ class BackupRestore(unittest.TestCase):
         monitor_unit = Path(__file__).with_name('review-activator-monitor.service').read_text()
         self.assertIn('Environment=RA_EXPECTED_HOSTNAME=v3248121.hosted-by-vdsina.ru', monitor_unit)
 
+    def test_restore_receipts_are_replaceable(self):
+        source = Path(__file__).with_name('ops.py').read_text()
+        self.assertIn("write_json(STATE / 'VPS05_RESTORE.json', result, replace=True)", source)
+        self.assertIn("write_json(STATE / 'VPS05_SCHEMA_COMPARE.json', result['comparison'], replace=True)", source)
+
     def test_disk_guard_pass(self):
         ops.disk_guard(20*1024**3, 1024**3)
 
