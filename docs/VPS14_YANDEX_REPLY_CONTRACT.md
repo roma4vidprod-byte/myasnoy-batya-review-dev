@@ -1,7 +1,7 @@
 # VPS14 — Yandex reply contract and explicit approval boundary
 
 Date: 2026-09-20
-Status: **SOURCE FOUNDATION READY; LIVE CONTRACT DISCOVERY BLOCKED BY EXPIRED SESSION**
+Status: **PARTIAL PASS — SESSION REFRESH + LIVE READ-ONLY REPLY CONTRACT DISCOVERY PASS; PROVIDER WRITE DISABLED**
 Yandex WRITE: **0**
 
 ## Goal
@@ -137,3 +137,74 @@ The historical registration pointed to `host.cmd`. A compiled local console wrap
 HKCU still points to the same manifest. The manifest now points to the absolute `host_v2.exe` path. Code Integrity, Defender and Application logs showed no launch block/crash for the wrapper. Because the currently running Chrome process continued to report `NATIVE_HOST_START_FAILED`, the remaining gate is a full Chrome process restart so it reloads the Native Messaging host configuration.
 
 Verification after wrapper source: VPS14 targeted 16/16 PASS; source/config checks 157 PASS. Yandex WRITE remains 0.
+
+
+## Live session refresh and contract discovery — 2026-09-20
+
+The Chrome Native Messaging failure was resolved without weakening cookie/session
+validation. The final extension diagnostic reported:
+- stage: METADATA_ONLY
+- code: PASS_VALUES_NOT_CHECKED
+- import calls: 0
+- total cookie records observed: 140
+- metadata eligible: 22
+- partitioned records excluded: 118
+- eligible duplicate-name groups/excess: 0/0
+- expired: 0
+- scope mismatch: 0
+- counts complete: true
+
+The one-shot browser-native refresh then completed:
+- session imported: true
+- state after replace: NOT_CONFIGURED
+- revision after replace: 5
+
+A single existing read-only health call followed:
+- state before: NOT_CONFIGURED
+- revision before: 5
+- final state: READY
+- final revision: 6
+- Yandex requests: 1
+- HTTP statuses: [200]
+- received reviews: 20
+- review persistence: OFF
+- notifications: OFF
+- state CAS: SUCCESS
+
+The VPS14 read-only reply-contract diagnostic then completed on the refreshed real
+session:
+- provider requests: 1
+- provider writes: 0
+- answer endpoint called: false
+- page items: 20
+- review IDs present: 20/20
+- list CSRF present: true
+- business_answer_csrf_token present: 20/20
+- author privacy metadata present: 20/20
+- unanswered reviews on the inspected page: 1
+
+This confirms the per-review/list token fields needed for the candidate reply
+contract without calling the reply endpoint.
+
+## Approval/queue foundation
+
+A separate local-only publication state foundation is now prepared in
+`tools/vps14/reply-publish-foundation.sql`. It extends the existing
+`review_reply_actions` skeleton rather than introducing a parallel engine.
+
+The foundation provides:
+- exact-scope preparation of an approval fingerprint for a DRAFT
+- SHA-256 binding of action ID, review ID, exact reply text, company, location and provider
+- bounded approval TTL
+- automatic invalidation when the DRAFT text changes
+- explicit approval transition DRAFT -> QUEUED
+- per-action idempotency key
+- cancellation QUEUED -> DRAFT before any provider send
+- no SENDING/SENT transition
+- no HTTP/provider transport
+- no Yandex endpoint call
+
+The browser-facing approval RPCs are authenticated-admin only; anon, PUBLIC and
+service_role execution are revoked.
+
+**Current provider-write status remains Yandex WRITE = 0.**
