@@ -116,8 +116,8 @@ Guards:
 
 Tests:
 
-- Windows pure validation tests: 4/4 PASS
-- Linux validation tests on VDSina: 4/4 PASS
+- Windows VPS10 validation tests: 7/7 PASS
+- Linux VPS10 validation tests on VDSina: 7/7 PASS
 - Python compile: PASS
 - staging/runtime SHA-256: MATCH
 - `systemd-analyze verify`: PASS
@@ -125,7 +125,10 @@ Tests:
 - manual service result: unchanged 72/72, provider requests 4
 - lock contention: ALREADY_RUNNING, provider requests 0
 - receipt unchanged during lock contention: PASS
+- provider-watch positive test: PASS
+- provider-watch timer-off negative test: PROVIDER_TIMER_NOT_ACTIVE
 - service restarts: 0
+
 Scheduler state after acceptance:
 
 - real Yandex timer: **active + enabled**
@@ -156,6 +159,20 @@ existed. The older evidence was archived, not deleted, and the same restore
 was rerun successfully without weakening the no-overwrite guard.
 
 Final local monitor: PASS, no failure codes.
+
+VPS10 also installs a local `provider_watch.py` gate as `ExecStartPre`
+for the existing 5-minute monitor. It performs no DB/provider access and
+requires:
+
+- real Yandex timer active + enabled
+- last real Yandex service result = success
+- last provider read/persistence receipt = PASS
+- provider receipt freshness <= 3 hours
+
+A stopped real timer was detected immediately as
+`PROVIDER_TIMER_NOT_ACTIVE`; the timer was then restarted and the monitor
+returned PASS.
+
 ## Network/security postflight
 
 - UFW: active
