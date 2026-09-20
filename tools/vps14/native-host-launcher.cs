@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading;
 
@@ -18,6 +19,21 @@ internal static class Program
             return false;
         }
         return true;
+    }
+
+    private static void Trace(string stage)
+    {
+        try
+        {
+            var dir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "ReviewActivatorDev", "YandexNativeV4");
+            Directory.CreateDirectory(dir);
+            File.AppendAllText(
+                Path.Combine(dir, "host_v3.trace"),
+                DateTime.UtcNow.ToString("O") + " " + stage + Environment.NewLine);
+        }
+        catch { }
     }
 
     public static int Main(string[] args)
@@ -44,9 +60,11 @@ internal static class Program
             }
             psi.Arguments = b.ToString();
 
+            Trace("START args=" + args.Length);
             using (var child = Process.Start(psi))
             {
                 if (child == null) return 111;
+                Trace("CHILD_STARTED");
 
                 var parentIn = Console.OpenStandardInput();
                 var parentOut = Console.OpenStandardOutput();
@@ -54,26 +72,54 @@ internal static class Program
                 var inputPump = new Thread(() => {
                     try
                     {
-                        parentIn.CopyTo(child.StandardInput.BaseStream);
+                        var buffer = new byte[4096];
+                        int read;
+                        while ((read = parentIn.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            child.StandardInput.BaseStream.Write(buffer, 0, read);
+                            child.StandardInput.BaseStream.Flush();
+                            Trace("IN " + read);
+                        }
                         child.StandardInput.Close();
+                        Trace("IN_EOF");
                     }
-                    catch { }
+                    catch { Trace("IN_ERROR"); }
                 });
                 var outputPump = new Thread(() => {
                     try
                     {
-                        child.StandardOutput.BaseStream.CopyTo(parentOut);
-                        parentOut.Flush();
+                        var buffer = new byte[4096];
+                        int read;
+                        while ((read = child.StandardOutput.BaseStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            parentOut.Write(buffer, 0, read);
+                            parentOut.Flush();
+                            Trace("OUT " + read);
+                        }
+                        Trace("OUT_EOF");
                     }
-                    catch { }
+                    catch { Trace("OUT_ERROR"); }
+                });
+                var errorPump = new Thread(() => {
+                    try
+                    {
+                        var buffer = new char[1024];
+                        int read;
+                        while ((read = child.StandardError.Read(buffer, 0, buffer.Length)) > 0)
+                            Trace("ERR " + read);
+                    }
+                    catch { Trace("ERR_ERROR"); }
                 });
 
                 inputPump.IsBackground = true;
                 outputPump.IsBackground = true;
+                errorPump.IsBackground = true;
                 inputPump.Start();
                 outputPump.Start();
+                errorPump.Start();
 
                 child.WaitForExit();
+                Trace("CHILD_EXIT " + child.ExitCode);
                 outputPump.Join(2000);
                 return child.ExitCode;
             }

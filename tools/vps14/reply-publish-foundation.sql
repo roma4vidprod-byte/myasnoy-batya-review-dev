@@ -166,7 +166,7 @@ begin
       approval_expires_at=v_expires,
       approved_by=null,approved_at=null,idempotency_key=null,
       queued_at=null,last_error=null,updated_at=clock_timestamp()
-  where id=v_action.id and status='DRAFT';
+  where id=v_action.id and public.review_reply_actions.status='DRAFT';
 
   return query select v_action.id,v_fingerprint,v_expires,length(v_action.reply_text);
 end;
@@ -235,7 +235,7 @@ begin
   set status='QUEUED',approved_by=auth.uid(),approved_at=clock_timestamp(),
       idempotency_key=v_key,queued_at=clock_timestamp(),last_error=null,
       updated_at=clock_timestamp()
-  where id=v_action.id and status='DRAFT';
+  where id=v_action.id and public.review_reply_actions.status='DRAFT';
 
   update public.review_external_reviews
   set reply_state='QUEUED'
