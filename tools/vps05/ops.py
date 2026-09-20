@@ -152,7 +152,23 @@ select json_build_object(
  'constraints',(select count(*) from pg_constraint c join pg_namespace n on n.oid=c.connamespace where n.nspname in ('auth','cron','public','review_private','vps_lab_private')),
  'indexes',(select count(*) from pg_indexes where schemaname in ('auth','cron','public','review_private','vps_lab_private')),
  'version',(select version from vps_lab_private.version),
- 'synthetic_users_only',(select count(*)=3 and bool_and(email in ('owner@vps04.invalid','nonadmin@vps04.invalid','company-b@vps04.invalid')) from auth.users),
+ 'synthetic_users_only',(select count(*)=3 and bool_and(lower(email) in ('owner@vps04.invalid','nonadmin@vps04.invalid','company-b@vps04.invalid')) from auth.users),
+ 'auth_users_valid',(select count(*) in (3,4)
+   and count(*) filter(where lower(email)='owner@vps04.invalid')=1
+   and count(*) filter(where lower(email)='nonadmin@vps04.invalid')=1
+   and count(*) filter(where lower(email)='company-b@vps04.invalid')=1
+   and count(*) filter(where lower(email)='tas.food@yandex.ru') in (0,1)
+   and bool_and(lower(email) in ('owner@vps04.invalid','nonadmin@vps04.invalid','company-b@vps04.invalid','tas.food@yandex.ru'))
+   from auth.users),
+ 'operator_enabled',(select count(*)=1 from auth.users where lower(email)='tas.food@yandex.ru'),
+ 'operator_scope_valid',(select case
+   when exists(select 1 from auth.users where lower(email)='tas.food@yandex.ru') then
+     (select count(*)=1 and bool_and(a.role='owner' and a.active and lower(a.email)='tas.food@yandex.ru')
+      from public.review_admins a join auth.users u on u.id=a.user_id where lower(u.email)='tas.food@yandex.ru')
+     and
+     (select count(*)=1 and bool_and(m.company_id='13f3cb80-487a-4a19-96a1-fb3103200230')
+      from vps_lab_private.memberships m join auth.users u on u.id=m.user_id where lower(u.email)='tas.food@yandex.ru')
+   else true end),
  'synthetic_reviews_only',(select count(*)=2 and bool_and(external_location_id in ('lab-org-a','lab-org-b') and company_id in ('10000000-0000-4000-8000-000000000001','10000000-0000-4000-8000-000000000002')) from public.review_external_reviews));
 """)
     # VPS08A adds ONLY the approved catalog scope and encrypted session. Preserve
@@ -181,15 +197,20 @@ def validate_snapshot(s):
     schemas = SCHEMAS + (['vps_yandex_private'] if extra is not None else [])
     need(s['catalog']['schemas'] == schemas and s['catalog']['version'] == 'vps04-auth-api-v1', 'SCHEMA_SCOPE_FAILED')
     real = s['catalog'].get('vps09_persistence')
-    need(s['catalog']['synthetic_users_only'], 'SYNTHETIC_SCOPE_FAILED')
+    operator_enabled = s['catalog'].get('operator_enabled', False)
+    auth_users_valid = s['catalog'].get('auth_users_valid', s['catalog'].get('synthetic_users_only') is True)
+    operator_scope_valid = s['catalog'].get('operator_scope_valid', not operator_enabled)
+    need(auth_users_valid and type(operator_enabled) is bool and operator_scope_valid is True,
+         'AUTH_SCOPE_FAILED')
     if real is None:
         need(s['catalog']['synthetic_reviews_only'], 'SYNTHETIC_SCOPE_FAILED')
     else:
         need(extra is not None and real['synthetic_count']==2 and real['unexpected_count']==0 and
              type(real['real_count']) is int and real['real_count']>=0 and real['ratings_valid'] is True,
              'VPS09_REVIEW_SCOPE_FAILED')
-    expected = {'auth.users': 3, 'public.review_companies': 2, 'public.review_locations': 2,
-                'public.review_admins': 2, 'public.review_external_reviews': 2,
+    operator_delta = 1 if operator_enabled else 0
+    expected = {'auth.users': 3 + operator_delta, 'public.review_companies': 2, 'public.review_locations': 2,
+                'public.review_admins': 2 + operator_delta, 'public.review_external_reviews': 2,
                 'public.review_provider_connections': 0, 'public.review_sync_runs': 0,
                 'review_private.yandex_sessions': 0, 'cron.job': 0}
     if extra is not None:
@@ -218,7 +239,19 @@ def validate_snapshot(s):
             need(t['owner'] == 'supabase_auth_admin', 'AUTH_OWNER_FAILED')
 
 
+def normalize_snapshot_contract(s):
+    # Backward-compatible with pre-VPS11 backup manifests: the approved operator
+    # fields are additive and default to the historical synthetic-only state.
+    catalog = dict(s['catalog'])
+    catalog.setdefault('auth_users_valid', catalog.get('synthetic_users_only') is True)
+    catalog.setdefault('operator_enabled', False)
+    catalog.setdefault('operator_scope_valid', True)
+    return {**s, 'catalog': catalog}
+
+
 def compare(source, restored):
+    source = normalize_snapshot_contract(source)
+    restored = normalize_snapshot_contract(restored)
     validate_snapshot(source)
     validate_snapshot(restored)
     need(source == restored, 'RESTORE_SNAPSHOT_MISMATCH')

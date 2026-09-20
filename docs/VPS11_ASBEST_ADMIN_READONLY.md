@@ -79,3 +79,77 @@ under PostgreSQL role `authenticated`, plus the served UI/runtime checks above.
 Next gate: create/approve a real operator admin login and test the UI through a
 controlled SSH tunnel or later HTTPS endpoint. Public HTTPS/domain cutover remains
 separate, and Yandex reply WRITE remains disabled.
+## Real operator onboarding acceptance
+
+A real operator account was created for the approved Asbest admin flow.
+The password was supplied interactively through stdin only and is not stored in repository files, helper scripts, command arguments or acceptance evidence.
+
+Temporary signup was enabled only on the loopback Auth service while a local SSH tunnel was active.
+Immediately after account creation:
+
+- `GOTRUE_DISABLE_SIGNUP` was restored to `true`
+- Auth was restarted and remained active
+- the temporary local Auth tunnel on port 19999 was closed
+- temporary onboarding helper files were deleted
+- the regular admin tunnel on 127.0.0.1:13000 remains available
+
+The account is bound to:
+
+- role: `owner`
+- active admin rows: 1
+- approved Asbest company memberships: 1
+- no additional company membership was added
+
+End-to-end authentication and real review read path:
+
+- direct self-hosted Auth password login: HTTP 200
+- login through Review Activator Node proxy: HTTP 200
+- `review_admin_profile`: HTTP 200
+- `review_admin_reviews_scoped`: HTTP 200
+- first page: 20 rows
+- total real Asbest reviews: 72
+- unanswered reviews: 12
+## Backup/restore guard after real operator creation
+
+The existing VPS05 backup preflight originally required exactly three synthetic Auth users.
+After adding the approved operator, the first backup correctly failed closed with `SYNTHETIC_SCOPE_FAILED`.
+
+The guard was updated without broadening access:
+
+- allowed Auth set is exactly the historical three synthetic users plus zero or one approved operator
+- each synthetic identity must appear exactly once
+- the approved operator may appear at most once
+- any unknown Auth user fails `AUTH_SCOPE_FAILED`
+- when the operator exists, exactly one active `owner` admin row is required
+- when the operator exists, exactly one membership is required and it must be the approved Asbest company
+- historical pre-VPS11 backup manifests remain restore-compatible
+
+Offline regressions after the guard change:
+
+- VPS05 Python tests: 43/43 PASS
+- Python compile: PASS
+- `npm run check`: 146 PASS
+- `git diff --check`: PASS
+
+Runtime acceptance on VDSina:
+
+- backup after operator creation: PASS
+- fresh backup manifest: `/var/backups/review-activator/20260920T090233932138Z/manifest.json`
+- first restore attempt reached VERIFY_RESTORE but collided with existing immutable evidence files
+- old evidence was archived, not deleted
+- restore target database had already been cleaned up
+- second restore into isolated temporary DB: PASS
+- restore cleanup: PASS
+- working source DB remained unchanged
+- post-restore monitor: PASS
+
+Final postflight:
+
+- real Yandex reviews: 72
+- duplicate review groups: 0
+- Yandex timer: active + enabled
+- last observed scheduled fire: 12:00:05 MSK
+- next scheduled fire: 13:00 MSK
+- signup disabled: true
+- operator active owner rows: 1
+- operator Asbest memberships: 1

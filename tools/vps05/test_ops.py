@@ -150,11 +150,47 @@ class BackupRestore(unittest.TestCase):
         with self.assertRaises(ops.SafeFailure):
             ops.compare(a, b)
 
-    def test_real_user_denied(self):
+    def test_rogue_auth_user_denied(self):
         s = snapshot()
         s['catalog']['synthetic_users_only'] = False
-        with self.assertRaises(ops.SafeFailure):
+        s['catalog']['auth_users_valid'] = False
+        with self.assertRaisesRegex(ops.SafeFailure, 'AUTH_SCOPE_FAILED'):
             ops.validate_snapshot(s)
+
+    def test_approved_operator_allowed(self):
+        s = snapshot()
+        s['catalog'].update({
+            'synthetic_users_only': False,
+            'auth_users_valid': True,
+            'operator_enabled': True,
+            'operator_scope_valid': True,
+        })
+        s['rows']['auth.users']['count'] = 4
+        s['rows']['public.review_admins']['count'] = 3
+        ops.validate_snapshot(s)
+
+    def test_operator_scope_mismatch_denied(self):
+        s = snapshot()
+        s['catalog'].update({
+            'synthetic_users_only': False,
+            'auth_users_valid': True,
+            'operator_enabled': True,
+            'operator_scope_valid': False,
+        })
+        s['rows']['auth.users']['count'] = 4
+        s['rows']['public.review_admins']['count'] = 3
+        with self.assertRaisesRegex(ops.SafeFailure, 'AUTH_SCOPE_FAILED'):
+            ops.validate_snapshot(s)
+
+    def test_old_snapshot_contract_still_compares(self):
+        old = snapshot()
+        current = copy.deepcopy(old)
+        current['catalog'].update({
+            'auth_users_valid': True,
+            'operator_enabled': False,
+            'operator_scope_valid': True,
+        })
+        self.assertTrue(ops.compare(old, current)['schema_equal'])
 
     def test_wrong_count_denied(self):
         s = snapshot()
