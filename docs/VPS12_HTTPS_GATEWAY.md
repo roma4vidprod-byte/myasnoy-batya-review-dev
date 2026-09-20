@@ -1,7 +1,7 @@
 # VPS12 — permanent HTTPS admin gateway
 
 Date: 2026-09-20
-Status: **DEPLOYED; PUBLIC HTTPS PASS; OPERATOR LOGIN RECHECK PENDING**
+Status: **FULL PASS — PERMANENT HTTPS + REAL OPERATOR UI ACCEPTED**
 
 ## Public endpoint
 
@@ -72,8 +72,10 @@ If VPS12 must be removed:
 
 No database migration, review-row mutation or Yandex write is required for rollback.
 
-## Remaining gate
+## Final operator acceptance
 
-Perform one real operator browser login through the permanent HTTPS hostname and
-confirm the same VPS11 UI contract already accepted on mobile:
+Real operator browser login through the permanent HTTPS hostname was confirmed by the user on 2026-09-20.
+The cabinet opened successfully and real reviews were visible. The VPS11 mobile acceptance had already verified
 72 total reviews, page 2 pagination, 1–3 / 4–5 rating filters and 12 unanswered.
+
+**VPS12 = FULL PASS.**

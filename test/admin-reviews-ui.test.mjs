@@ -27,7 +27,7 @@ test('admin reviews UI uses the Asbest DEV scoped read path', () => {
   assert.equal(admin.includes('cookie'), false);
   assert.equal(admin.includes('csrf'), false);
   assert.equal(admin.includes('sessionMaterial'), false);
-  assert.equal(admin.includes('review_admin_save_reply_draft'), false);
+  assert.equal(admin.includes("client.rpc('review_admin_save_reply_draft',"), false);
   assert.equal(admin.includes('admin-review-reply-draft'), false);
   assert.equal(admin.includes('function aiDraft'), false);
 });

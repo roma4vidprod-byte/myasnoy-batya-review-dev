@@ -6,7 +6,10 @@ export const DEFAULT_PORT=13010;
 
 const ALLOWED_RPC=new Set([
   '/rest/v1/rpc/review_admin_profile',
-  '/rest/v1/rpc/review_admin_reviews_scoped'
+  '/rest/v1/rpc/review_admin_reviews_scoped',
+  '/rest/v1/rpc/review_admin_reviews_with_drafts_scoped',
+  '/rest/v1/rpc/review_admin_save_reply_draft_scoped',
+  '/rest/v1/rpc/review_admin_discard_reply_draft_scoped'
 ]);
 
 function json(res,status,value){
@@ -126,7 +129,7 @@ export function createGateway({
   return http.createServer(async(req,res)=>{
     try{
       if(!isAllowedRequest(req.method,req.url))
-        return json(res,404,{ok:false,error:'HTTPS_GATEWAY_READONLY'});
+        return json(res,404,{ok:false,error:'HTTPS_GATEWAY_DRAFT_ONLY'});
       assertBrowserOrigin(req,publicOrigin);
       const path=new URL(req.url,publicOrigin).pathname;
       if(req.method==='GET'&&path==='/admin.html')
@@ -146,7 +149,7 @@ export function startGateway(env=process.env){
   if(host!==DEFAULT_HOST||port!==DEFAULT_PORT)throw new Error('GATEWAY_BIND_INVALID');
   const server=createGateway({publicOrigin,operatorEmail:env.RA_OPERATOR_EMAIL||'tas.food@yandex.ru'});
   server.listen(port,host,()=>{
-    process.stdout.write(JSON.stringify({ok:true,host,port,publicOrigin,mode:'read-only'})+'\n');
+    process.stdout.write(JSON.stringify({ok:true,host,port,publicOrigin,mode:'draft-only'})+'\n');
   });
   for(const signal of ['SIGTERM','SIGINT'])
     process.on(signal,()=>server.close(()=>process.exit(0)));
