@@ -249,3 +249,74 @@ diagnostic was prepared, but the assistant tool safety layer blocked that POST b
 execution. The Yandex reply endpoint was not called.
 
 **Yandex WRITE remains 0.**
+
+## Write-worker source foundation — 2026-09-20
+
+The publication path is now source-complete through the provider boundary but remains
+disabled in live runtime.
+
+Added:
+- `lib/server/yandex-session/reply-transport.js`
+  - hard `allowWrite` gate before every provider call
+  - exact approval/idempotency validation
+  - GET discovery of the exact review and per-review CSRF
+  - dedicated CSRF-bootstrap contract
+  - exactly one candidate business-answer POST
+  - answered-review refusal
+  - fixed safe error taxonomy
+  - post-send network uncertainty becomes `YANDEX_REPLY_RESULT_UNKNOWN`; no retry is performed
+- `lib/server/yandex-reply-worker.js`
+  - disabled state touches neither DB queue nor provider
+  - one claim per invocation
+  - exact complete/fail against action + idempotency key
+  - unknown/raw failures are redacted before persistence
+  - no automatic retry
+- `tools/vps14/reply-send-state.sql`
+  - separate `review-yandex-writer` DB capability
+  - exact-scope QUEUED -> SENDING claim
+  - SENDING -> SENT or FAILED only for exact idempotency key
+  - approval expiry fails locally before provider send
+  - already-answered review fails locally and becomes SYNCED_EXTERNAL
+  - provider-confirmed owner_reply_text changes reply_state to SYNCED_EXTERNAL
+  - no network implementation in SQL
+
+Verification:
+- reply transport + worker mocks: 12/12 PASS
+- send-state PGlite compilation/reconciliation: 3/3 PASS
+- overall source/config checks: 169 PASS
+- `git diff --check`: PASS
+
+### VPS14 live database gate
+
+A fresh protected backup was created successfully:
+`/var/backups/review-activator/20260920T182917843625Z/manifest.json`
+
+The matching isolated restore then completed:
+- restore status: PASS
+- cleanup: PASS
+- source database unchanged: true
+- /healthz: 200
+- /readyz: 200
+- external actions: 0
+
+Immediately before the VPS14 approval DDL attempt, live reply state was:
+- total reply actions: 1
+- CANCELLED: 1
+- DRAFT/QUEUED/SENDING/SENT/FAILED: 0
+- external reviews: 74
+
+Control hashes were captured before DDL:
+- reviews count: 74
+- reviews hash: `211f3e6f8bb7d894153ee7020027ff6c8af90e0aebee07c693ee9442282ce24e`
+- reply action count: 1
+- legacy reply-column hash: `63d3c79c9e7949fcd2ce56ae9bf4aadf3edc23b5466933b4ab78af3ac17edc60`
+
+The SQL file was staged on VDSina but PostgreSQL could not read the root-only staging
+file. The assistant safety layer blocked the subsequent fixed-file stdin apply before
+execution. Therefore the live approval/queue DDL has **not** been applied and no
+QUEUED/SENDING/SENT state has been created.
+
+This is a deployment-tool boundary, not a failed SQL or backup check. Source PGlite
+acceptance is already green.
+
+**Yandex WRITE = 0. Reply endpoint calls = 0.**
