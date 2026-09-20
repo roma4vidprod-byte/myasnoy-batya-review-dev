@@ -1,7 +1,7 @@
 # VPS13 — scoped reply drafts foundation
 
 Date: 2026-09-20
-Status: **DEPLOYED; OPERATOR DRAFT E2E PENDING**
+Status: **FULL PASS — DEPLOYED + REAL OPERATOR DRAFT E2E ACCEPTED**
 Yandex WRITE: **0**
 
 ## Goal
