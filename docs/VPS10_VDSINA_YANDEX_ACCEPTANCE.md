@@ -135,6 +135,15 @@ Scheduler state after acceptance:
 - cadence: hourly
 - old VPS06 synthetic worker timer: **inactive + disabled**
 
+First actual scheduled hourly fire was also observed:
+
+- timer `LastTriggerUSec`: 2026-09-20 11:00:03 MSK
+- next scheduled fire: 12:00:00 MSK
+- service result / exit status: success / 0
+- provider receipt refreshed at 2026-09-20T08:00:05.598260+00:00
+- real reviews remained 72 and duplicate groups remained 0
+- post-fire local monitor: PASS with no failure codes
+
 ## Backup, restore and monitoring
 
 A sensitive backup containing the 72 real public reviews was created after
