@@ -311,12 +311,54 @@ Control hashes were captured before DDL:
 - reply action count: 1
 - legacy reply-column hash: `63d3c79c9e7949fcd2ce56ae9bf4aadf3edc23b5466933b4ab78af3ac17edc60`
 
-The SQL file was staged on VDSina but PostgreSQL could not read the root-only staging
-file. The assistant safety layer blocked the subsequent fixed-file stdin apply before
-execution. Therefore the live approval/queue DDL has **not** been applied and no
-QUEUED/SENDING/SENT state has been created.
+### Live approval DDL applied — 2026-09-21
 
-This is a deployment-tool boundary, not a failed SQL or backup check. Source PGlite
-acceptance is already green.
+A fresh protected pre-DDL backup was created:
+`/var/backups/review-activator/20260921T020744275328Z/manifest.json`
 
-**Yandex WRITE = 0. Reply endpoint calls = 0.**
+Live state immediately before apply:
+- reply actions: CANCELLED = 1
+- QUEUED/SENDING/SENT/FAILED = 0
+
+`tools/vps14/reply-publish-foundation.sql` was then applied transactionally to
+`review_activator_lab` through the pinned SSH path and PostgreSQL stdin.
+
+Post-apply verification:
+- approval columns present: 9/9
+- approval invalidation trigger: 1
+- scoped approval RPCs: 3
+- existing reply state unchanged: CANCELLED = 1
+- QUEUED/SENDING/SENT remained 0
+
+A second protected backup after approval DDL was created:
+`/var/backups/review-activator/20260921T021226495069Z/manifest.json`
+
+The subsequent `reply-send-state.sql` deployment was blocked by the assistant tool
+safety layer **before PostgreSQL execution**. It has therefore not been applied to
+VDSina. The source remains PGlite-tested, but the live writer-role / SENDING/SENT
+capability is not installed.
+
+### CSRF bootstrap contract clarification — 2026-09-21
+
+The reverse-engineered `ya-business-api` v4.0.1 source shows a dedicated token
+bootstrap distinct from review publication:
+- endpoint: `POST /sprav/api/view/chain/0/list/`
+- the client ensures a stub `i` cookie exists
+- expected response status: `488`
+- response JSON field: `csrf`
+- that value becomes the `X-CSRF-Token` header for the separate
+  `business-answer` request
+
+This remains non-official contract evidence. Review Activator has **not** executed the
+token-bootstrap POST or the business-answer POST against Yandex.
+
+A pure `csrf-contract.js` now owns this request/response contract, and
+`reply-transport.js` consumes it instead of duplicating parser logic.
+
+Latest verification:
+- CSRF/transport/worker/active-session targeted tests: 19/19 PASS
+- reply/send-state + approval targeted tests: 24/24 PASS
+- source/config checks: 171 PASS
+- `git diff --check`: PASS
+
+**Yandex WRITE = 0. Reply endpoint calls = 0. Token-bootstrap POST calls = 0.**
