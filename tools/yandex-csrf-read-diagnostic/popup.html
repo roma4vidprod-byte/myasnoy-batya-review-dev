@@ -4,8 +4,9 @@
 <body>
   <h1>Yandex CSRF — только чтение</h1>
   <p>Оставьте активной страницу организации 54309413522 в Яндекс Бизнесе.</p>
-  <p>Будет выполнен один GET. Ответ в Яндекс не публикуется.</p>
-  <button id="run" type="button">Проверить GET-контракт</button>
+  <p>PRELOAD-проверка не делает сетевых запросов. Старый GET-тест сохранён отдельно.</p>
+  <button id="preload" type="button">Проверить PRELOAD CSRF</button>
+  <button id="run" type="button">Повторить старый GET-тест</button>
   <p id="status" role="status" aria-live="polite">Ожидается запуск.</p>
   <script src="popup.js"></script>
 </body>

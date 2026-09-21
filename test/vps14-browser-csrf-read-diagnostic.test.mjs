@@ -7,6 +7,7 @@ const root=new URL('../tools/yandex-csrf-read-diagnostic/',import.meta.url);
 const manifest=JSON.parse(readFileSync(new URL('manifest.json',root),'utf8'));
 const content=readFileSync(new URL('content.js',root),'utf8');
 const popup=readFileSync(new URL('popup.js',root),'utf8');
+const pageInspect=readFileSync(new URL('page-inspect.js',root),'utf8');
 
 test('VPS14 CSRF browser diagnostic is a separate minimal extension',()=>{
   assert.deepEqual(manifest.permissions,[]);
@@ -43,9 +44,11 @@ test('VPS14 CSRF browser diagnostic returns aggregates only',()=>{
 
 test('VPS14 CSRF browser diagnostic is exact-org and exact-message gated',()=>{
   assert.match(content,/54309413522/);
-  assert.match(content,/message\.op!=='csrf_get_diagnostic'/);
+  assert.match(content,/csrf_get_diagnostic/);
+  assert.match(content,/csrf_preload_diagnostic/);
   assert.match(content,/sender\.id!==chrome\.runtime\.id/);
   assert.match(popup,/csrf_get_diagnostic/);
+  assert.match(popup,/csrf_preload_diagnostic/);
   assert.match(popup,/54309413522/);
 });
 
@@ -118,4 +121,93 @@ test('VPS14 CSRF content behavior denies wrong organization page before fetch',a
   assert.equal(result.value.provider_requests,0);
   assert.equal(result.value.provider_writes,0);
   assert.equal(h.fetchCalls.length,0);
+});
+
+
+test('VPS14 PRELOAD inspector reads exact page-state path with zero network',()=>{
+  assert.deepEqual(manifest.web_accessible_resources,[{
+    resources:['page-inspect.js'],matches:['https://yandex.ru/sprav/*']
+  }]);
+  assert.ok(pageInspect.includes('window?.__PRELOAD_DATA?.initialState?.env?.csrf'));
+  assert.ok(pageInspect.includes('initialState?.edit?.company?.permanent_id'));
+  assert.match(pageInspect,/window\.postMessage\(/);
+  assert.doesNotMatch(pageInspect,/\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon/i);
+  assert.doesNotMatch(pageInspect,/method\s*:\s*['"]POST['"]|business-answer/i);
+  assert.doesNotMatch(pageInspect,/\bcsrf\s*:/);
+});
+
+function preloadHarness({csrfPresent=true,orgMatch=true}={}){
+  let listener=null,fetchCalls=0;
+  const messageListeners=new Set();
+  const windowObj={
+    addEventListener(type,fn){if(type==='message')messageListeners.add(fn);},
+    removeEventListener(type,fn){if(type==='message')messageListeners.delete(fn);}
+  };
+  const documentObj={
+    createElement(){return {src:'',dataset:{}};},
+    documentElement:{appendChild(script){
+      const data={
+        source:'review-activator-csrf-read',version:1,requestId:script.dataset.requestId,
+        op:'preload_result',csrf_present:csrfPresent,
+        csrf_length:csrfPresent?24:null,
+        permanent_id_present:true,permanent_id_match:orgMatch
+      };
+      for(const fn of [...messageListeners])
+        fn({source:windowObj,origin:'https://yandex.ru',data});
+    }},
+    head:null
+  };
+  const context={
+    location:{origin:'https://yandex.ru',pathname:'/sprav/54309413522/edit/reviews'},
+    TextEncoder,AbortSignal,setTimeout,clearTimeout,
+    crypto:{randomUUID:()=> 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'},
+    window:windowObj,document:documentObj,
+    chrome:{runtime:{
+      id:'synthetic-extension',
+      getURL:path=>'chrome-extension://synthetic-extension/'+path,
+      onMessage:{addListener(fn){listener=fn;}}
+    }},
+    fetch:async()=>{fetchCalls++;throw new Error('NETWORK_FORBIDDEN');}
+  };
+  vm.runInNewContext(content,context,{filename:'content.js'});
+  const send=message=>new Promise((resolve,reject)=>{
+    let returnedValue,callbackValue,callbackCalled=false;
+    const callback=value=>{
+      callbackCalled=true;callbackValue=value;
+      if(returnedValue!==undefined)resolve({returned:returnedValue,value:callbackValue});
+    };
+    returnedValue=listener(message,{id:'synthetic-extension'},callback);
+    if(callbackCalled)resolve({returned:returnedValue,value:callbackValue});
+    else if(returnedValue!==true)reject(new Error('NO_RESPONSE'));
+  });
+  return {send,getFetchCalls:()=>fetchCalls};
+}
+
+test('VPS14 PRELOAD behavior proves token presence and org binding with zero provider request',async()=>{
+  const h=preloadHarness();
+  const result=await h.send({version:1,op:'csrf_preload_diagnostic'});
+  assert.equal(result.returned,true);
+  assert.equal(result.value.ok,true);
+  assert.equal(result.value.code,'PASS_PRELOAD_CSRF_PRESENT');
+  assert.equal(result.value.csrf_present,true);
+  assert.equal(result.value.csrf_length,24);
+  assert.equal(result.value.permanent_id_present,true);
+  assert.equal(result.value.permanent_id_match,true);
+  assert.equal(result.value.provider_requests,0);
+  assert.equal(result.value.provider_writes,0);
+  assert.equal(result.value.answer_endpoint_called,false);
+  assert.equal(Object.hasOwn(result.value,'csrf'),false);
+  assert.equal(Object.hasOwn(result.value,'token'),false);
+  assert.equal(h.getFetchCalls(),0);
+});
+
+test('VPS14 PRELOAD behavior fails closed on wrong organization without network',async()=>{
+  const h=preloadHarness({orgMatch:false});
+  const result=await h.send({version:1,op:'csrf_preload_diagnostic'});
+  assert.equal(result.value.ok,false);
+  assert.equal(result.value.code,'PRELOAD_CSRF_NOT_PROVEN');
+  assert.equal(result.value.permanent_id_match,false);
+  assert.equal(result.value.provider_requests,0);
+  assert.equal(result.value.provider_writes,0);
+  assert.equal(h.getFetchCalls(),0);
 });
