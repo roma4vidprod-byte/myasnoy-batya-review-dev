@@ -15,7 +15,8 @@ export function loadWriterKeyring(env=process.env){
   let raw;
   try{
     const s=fstatSync(fd);
-    if(!s.isFile()||s.nlink!==1||s.size<40||s.size>1024||(s.mode&0o077)!==0)
+    if(!s.isFile()||s.uid!==0||s.gid!==0||s.nlink!==1||s.size<40||s.size>1024||
+       (s.mode&0o777)!==0o440)
       fail('SESSION_KEY_NOT_CONFIGURED');
     raw=readFileSync(fd);
     const value=JSON.parse(raw.toString('utf8'));
