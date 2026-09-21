@@ -1,0 +1,39 @@
+[Unit]
+Description=Review Activator VPS14 reply runtime (WRITE OFF installation)
+ConditionHost=v3248121.hosted-by-vdsina.ru
+
+[Service]
+Type=oneshot
+User=review-yandex-writer
+Group=review-yandex-writer
+WorkingDirectory=/opt/review-activator-reply/current
+EnvironmentFile=/etc/review-activator-reply/writer.env
+ExecStart=/opt/node/bin/node /opt/review-activator-reply/current/tools/vps14/writer-once.mjs
+Restart=no
+TimeoutStartSec=15
+TimeoutStopSec=5
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateNetwork=yes
+RestrictAddressFamilies=AF_UNIX
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+InaccessiblePaths=-/etc/review-activator-yandex -/etc/review-activator-lab -/var/backups/review-activator
+MemoryMax=128M
+TasksMax=32
+LimitCORE=0
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+# Intentionally no [Install], timer, socket or automatic restart.
