@@ -126,7 +126,7 @@ test('VPS14 CSRF content behavior denies wrong organization page before fetch',a
 
 test('VPS14 PRELOAD inspector reads exact page-state path with zero network',()=>{
   assert.deepEqual(manifest.web_accessible_resources,[{
-    resources:['page-inspect.js'],matches:['https://yandex.ru/sprav/*']
+    resources:['page-inspect.js'],matches:['https://yandex.ru/*']
   }]);
   assert.ok(pageInspect.includes('window?.__PRELOAD_DATA?.initialState?.env?.csrf'));
   assert.ok(pageInspect.includes('initialState?.edit?.company?.permanent_id'));
