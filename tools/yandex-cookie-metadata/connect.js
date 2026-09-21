@@ -97,3 +97,34 @@ export async function connectBusiness(api,channel,{now=Date.now,cancelled=()=>fa
   } catch { stop(); }
   finally { if(session){session.cookies.length=0;} session=null;hello=null;channel.close(); }
 }
+export async function connectCsrfReadiness(api,channel,{now=Date.now,cancelled=()=>false}={}){
+  let hello,extracted;
+  try{
+    if(cancelled())stop();
+    hello=await channel.exchange({version:1,op:'hello'});
+    if(!hello||Object.keys(hello).sort().join()!=='expiresAt,nonce,version'||
+       hello.version!==1||typeof hello.nonce!=='string'||
+       !/^[A-Za-z0-9+/]{43}=$/.test(hello.nonce)||
+       !Number.isSafeInteger(hello.expiresAt)||hello.expiresAt<=now()||
+       hello.expiresAt-now()>120000)stop();
+    const tabs=await api.queryTabs({active:true,currentWindow:true});
+    if(!Array.isArray(tabs)||tabs.length!==1||!Number.isInteger(tabs[0].id)||
+       tabs[0].incognito!==false)stop();
+    const url=new URL(tabs[0].url);
+    if(url.origin!=='https://yandex.ru'||!url.pathname.startsWith('/sprav/')||
+       !url.pathname.split('/').includes('54309413522'))stop();
+    extracted=await api.extractCsrf(tabs[0].id);
+    if(cancelled()||now()>=hello.expiresAt||!extracted||extracted.version!==1||
+       extracted.ok!==true||extracted.organizationId!=='54309413522'||
+       typeof extracted.token!=='string'||extracted.token.length<8||
+       extracted.token.length>1024||!/^[\x21-\x7e]+$/.test(extracted.token))stop();
+    const result=await channel.exchange({
+      version:1,op:'csrf_handoff',nonce:hello.nonce,
+      organizationId:'54309413522',token:extracted.token
+    });
+    if(!result||Object.keys(result).sort().join()!=='ok,state'||
+       result.ok!==true||result.state!=='CSRF_READY')stop();
+    return {ok:true,state:'CSRF_READY'};
+  }catch{stop();}
+  finally{if(extracted)extracted.token='';extracted=null;hello=null;channel.close();}
+}

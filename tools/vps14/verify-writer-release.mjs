@@ -6,7 +6,7 @@ try{
   if(process.argv.length!==3)throw Error();
   const root=realpathSync(process.argv[2]);
   const m=JSON.parse(readFileSync(resolve(root,'MANIFEST.json'),'utf8'));
-  if(m.stage!==5||m.writeEnabled!==false||!/^[a-f0-9]{40}$/.test(m.sourceSha)||
+  if(m.stage!==6.5||m.writeEnabled!==false||!/^[a-f0-9]{40}$/.test(m.sourceSha)||
     !m.files||Object.keys(m.files).length<10||Object.keys(m.files).length>30)throw Error();
   for(const [name,hash] of Object.entries(m.files)){
     if(!/^[a-zA-Z0-9_./-]+$/.test(name)||name.startsWith('/')||name.split('/').includes('..'))throw Error();
