@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {
-  ACCOUNT,encryptSession,decryptSessionClassified,decryptSessionForRequest
+  ACCOUNT,encryptSession,decryptSessionClassified,
+  decryptSessionForRequest,decryptSessionForRequestClassified
 } from '../lib/server/yandex-session/crypto.js';
 import {
   createVpsSessionContext,VPS_SESSION_SCOPE as scope
@@ -53,7 +54,7 @@ test('request decrypt fails closed if no active cookie remains',()=>vps(ctx=>{
   const input={account:ACCOUNT,cookies:[cookie('expired',now/1000-1)]};
   const row=encryptSession(scope,input,ring,now-120_000,ctx);
   assert.throws(
-    ()=>decryptSessionForRequest(scope,row,ring,now,ctx),
+    ()=>decryptSessionForRequestClassified(scope,row,ring,now,ctx),
     error=>error?.code==='SESSION_PLAINTEXT_SCHEMA_INVALID'&&
       error?.rule?.code==='SESSION_COOKIE_COUNT_INVALID'
   );
@@ -63,11 +64,11 @@ test('wrong key and AAD remain rejected before active-cookie filtering',()=>vps(
   const input={account:ACCOUNT,cookies:[cookie('future',now/1000+3600)]};
   const row=encryptSession(scope,input,ring,now,ctx);
   assert.throws(
-    ()=>decryptSessionForRequest(scope,row,{currentKid:'synthetic',keys:{synthetic:Buffer.alloc(32,92)}},now,ctx),
+    ()=>decryptSessionForRequestClassified(scope,row,{currentKid:'synthetic',keys:{synthetic:Buffer.alloc(32,92)}},now,ctx),
     error=>error?.code==='SESSION_AES_GCM_AUTH_FAILED'
   );
   assert.throws(
-    ()=>decryptSessionForRequest(scope,{...row,credential_version:'11111111-1111-4111-8111-111111111111'},ring,now,ctx),
+    ()=>decryptSessionForRequestClassified(scope,{...row,credential_version:'11111111-1111-4111-8111-111111111111'},ring,now,ctx),
     error=>error?.code==='SESSION_AES_GCM_AUTH_FAILED'
   );
 }));

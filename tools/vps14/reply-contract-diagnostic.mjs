@@ -1,7 +1,7 @@
 import {openSync,closeSync,fstatSync,readFileSync,constants} from 'node:fs';
 import {userInfo} from 'node:os';
 import {createVpsSessionContext,VPS_SESSION_SCOPE as scope} from '../../lib/server/yandex-session/profile-context.js';
-import {decryptSessionForRequest,fail} from '../../lib/server/yandex-session/crypto.js';
+import {decryptSessionForRequestClassified,fail} from '../../lib/server/yandex-session/crypto.js';
 import {createSessionStore} from '../../lib/server/yandex-session/store.js';
 import {createYandexReadTransport} from '../../lib/server/yandex-session/transport.js';
 import {safeSchemaRule} from '../../lib/server/yandex-session/preflight.js';
@@ -39,7 +39,7 @@ try{
 
   const row=await store.read(scope);
   if(!row||row.state!=='READY')fail('SESSION_NOT_READY');
-  session=decryptSessionForRequest(scope,row,ring,Date.now(),context);
+  session=decryptSessionForRequestClassified(scope,row,ring,Date.now(),context);
 
   let attempted=0;
   const read=createYandexReadTransport({
