@@ -15,7 +15,7 @@ function fixture(change=()=>{}){
     writeFileSync(join(root,name),body);
     files[name]=createHash('sha256').update(body).digest('hex');
   }
-  const m={stage:5,sourceSha:'a'.repeat(40),writeEnabled:false,files};
+  const m={stage:6.5,sourceSha:'a'.repeat(40),writeEnabled:false,files};
   change(m,root);writeFileSync(join(root,'MANIFEST.json'),JSON.stringify(m));
   const env={...process.env};delete env.NODE_OPTIONS;delete env.NODE_PATH;
   try{return spawnSync(process.execPath,[cli,root],{env,encoding:'utf8',timeout:10000});}

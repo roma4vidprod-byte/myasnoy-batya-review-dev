@@ -30,7 +30,7 @@ function Invoke-YandexNativeHost([string] $Origin) {
     $message=$null
     $reply=Read-YandexNativeFrame $pipe $deadline
     Assert-YandexNativeKeys $reply @('ok','state')
-    if ($reply.ok -isnot [bool] -or $reply.state -cnotin @('NOT_CONFIGURED','NOT_CONFIRMED')) { throw 'STOP' }
+    if ($reply.ok -isnot [bool] -or $reply.state -cnotin @('NOT_CONFIGURED','NOT_CONFIRMED','CSRF_READY')) { throw 'STOP' }
     Write-YandexNativeFrame $outputStream $reply $deadline
   } catch {
     # Fixed response only, including malformed input/pipe failures. No exception replay.

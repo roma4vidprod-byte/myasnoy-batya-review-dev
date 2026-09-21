@@ -15,7 +15,9 @@ FILES = [
  'lib/server/yandex-session/profile-context.js', 'lib/server/yandex-session/crypto.js',
  'lib/server/yandex-session/reply-contract.js', 'lib/server/yandex-session/reply-transport.js',
  'lib/server/yandex-session/transport.js', 'lib/server/yandex-session/network-diagnostic.js',
- 'lib/server/yandex-session/csrf-contract.js', 'tools/vps14/reply-worker-store.mjs',
+ 'lib/server/yandex-session/csrf-contract.js', 'lib/server/yandex-session/csrf-handoff.js',
+ 'tools/vps14/reply-worker-store.mjs', 'tools/vps14/writer-session-adapter.mjs',
+ 'tools/vps14/writer-readiness.mjs',
  'tools/vps14/writer-runtime.mjs', 'tools/vps14/writer-once.mjs',
  'tools/vps14/review-activator-reply.service', 'tools/vps14/writer-disabled.env',
  'tools/vps14/verify-writer-release.mjs'
@@ -31,12 +33,12 @@ def main():
         raise ValueError('INVALID_SHA')
     git('diff', '--exit-code', 'HEAD', '--', *FILES)
     blobs = {name: git('show', sha + ':' + name) for name in FILES}
-    manifest = {'stage': 5, 'writeEnabled': False, 'sourceSha': sha,
+    manifest = {'stage': 6.5, 'writeEnabled': False, 'sourceSha': sha,
         'files': {name: hashlib.sha256(data).hexdigest() for name, data in blobs.items()}}
     blobs['MANIFEST.json'] = (json.dumps(manifest, sort_keys=True, indent=2) + '\n').encode()
     out = Path(sys.argv[1]).resolve()
     out.mkdir(parents=True, exist_ok=True)
-    archive = out / ('vps14-stage5-' + sha + '.tar')
+    archive = out / ('vps14-remediation-' + sha + '.tar')
     with tarfile.open(archive, 'x') as tar:
         for name, data in blobs.items():
             info = tarfile.TarInfo(name)
