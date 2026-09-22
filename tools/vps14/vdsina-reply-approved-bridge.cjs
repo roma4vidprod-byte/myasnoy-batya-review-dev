@@ -13,7 +13,7 @@ const IDEMPOTENCY='703eafa5-be32-4480-9909-fd50a1a2b20b';
 const COMMAND=[
   '/usr/bin/systemd-run','--quiet','--wait','--collect','--pipe',
   '--service-type=exec','--uid=review-yandex-writer','--gid=review-yandex-writer',
-  '-p','NoNewPrivileges=yes','-p','RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6',
+  '-p','NoNewPrivileges=yes','-p',"'RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6'",
   '-p','ProtectSystem=strict','-p','ProtectHome=yes','-p','PrivateTmp=yes',
   '-p','PrivateDevices=yes','-p','CapabilityBoundingSet=',
   '-p','LoadCredential=yandex-session-key:/etc/review-activator-yandex/session-key.json',
@@ -49,5 +49,5 @@ conn.on('error',()=>stop(1));
 conn.connect({host:HOST,port:22,username:USER,privateKey:fs.readFileSync(KEY),
   hostHash:'sha256',hostVerifier:hash=>'SHA256:'+Buffer.from(hash,'hex')
     .toString('base64').replace(/=+$/,'')===HOSTKEY,
-  readyTimeout:15000,keepaliveInterval:10000,keepaliveCountMax:2});
+  readyTimeout:15000});
 process.on('SIGINT',()=>stop(130));process.on('SIGTERM',()=>stop(143));

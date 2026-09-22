@@ -28,7 +28,7 @@ test('stage9 bridge is one-shot credentialed network runtime for the exact packa
     '703eafa5-be32-4480-9909-fd50a1a2b20b',
     'LoadCredential=yandex-session-key:/etc/review-activator-yandex/session-key.json',
     'RA_YANDEX_MODE=reply-write-one-shot','RA_YANDEX_REPLY_WRITE_ENABLED=true',
-    'RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6','writer-approved-once.mjs'
+    "'RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6'",'writer-approved-once.mjs'
   ]) assert.ok(bridge.includes(value),value);
   assert.equal(bridge.includes('PrivateNetwork=yes'),false);
 });
