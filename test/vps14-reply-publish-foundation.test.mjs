@@ -34,12 +34,14 @@ test('VPS14 approval fingerprint is SHA-256 and edit invalidates proposal',()=>{
   assert.match(sql,/new\.reply_text is distinct from old\.reply_text/);
 });
 
-test('VPS14 approval, not preparation, is the only admin path to QUEUED',()=>{
+test('VPS14 preparation reserves idempotency but only approval can QUEUE',()=>{
   const prepare=sql.slice(
     sql.indexOf('create or replace function public.review_admin_prepare_reply_approval_scoped'),
     sql.indexOf('create or replace function public.review_admin_approve_reply_scoped')
   );
   assert.doesNotMatch(prepare,/status='QUEUED'/);
+  assert.match(prepare,/coalesce\(v_action\.idempotency_key,gen_random_uuid\(\)\)/);
+  assert.match(prepare,/idempotency_key=v_key/);
   const approve=sql.slice(
     sql.indexOf('create or replace function public.review_admin_approve_reply_scoped'),
     sql.indexOf('create or replace function public.review_admin_cancel_queued_reply_scoped')

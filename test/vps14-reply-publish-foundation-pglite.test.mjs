@@ -100,6 +100,7 @@ test('prepare keeps DRAFT and creates a bounded approval proposal',async t=>{
   )).rows[0];
   assert.equal(proposal.action_id,A);
   assert.match(proposal.approval_fingerprint,/^[a-f0-9]{64}$/);
+  assert.match(proposal.idempotency_key,/^[0-9a-f-]{36}$/);
   assert.equal(proposal.reply_length,'Спасибо за обратную связь'.length);
 
   const action=(await db.query(
@@ -108,7 +109,7 @@ test('prepare keeps DRAFT and creates a bounded approval proposal',async t=>{
   )).rows[0];
   assert.equal(action.status,'DRAFT');
   assert.equal(action.approval_fingerprint,proposal.approval_fingerprint);
-  assert.equal(action.idempotency_key,null);
+  assert.equal(action.idempotency_key,proposal.idempotency_key);
 });
 
 test('editing exact reply text invalidates prepared approval',async t=>{
@@ -125,12 +126,13 @@ test('editing exact reply text invalidates prepared approval',async t=>{
     [A]
   );
   const action=(await db.query(
-    'select status,approval_fingerprint,approval_expires_at from public.review_reply_actions where id=$1',
+    'select status,approval_fingerprint,approval_expires_at,idempotency_key from public.review_reply_actions where id=$1',
     [A]
   )).rows[0];
   assert.equal(action.status,'DRAFT');
   assert.equal(action.approval_fingerprint,null);
   assert.equal(action.approval_expires_at,null);
+  assert.equal(action.idempotency_key,null);
 
   await assert.rejects(
     db.query(
@@ -160,7 +162,7 @@ test('explicit approve moves only the selected action to QUEUED',async t=>{
 
   assert.equal(queued.action_id,A);
   assert.equal(queued.status,'QUEUED');
-  assert.ok(queued.idempotency_key);
+  assert.equal(queued.idempotency_key,proposal.idempotency_key);
 
   const review=(await db.query(
     'select reply_state from public.review_external_reviews where id=$1',[R]

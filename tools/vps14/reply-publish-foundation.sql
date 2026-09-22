@@ -115,7 +115,7 @@ create or replace function public.review_admin_prepare_reply_approval_scoped(
   p_provider text,
   p_ttl_seconds integer default 600
 )
-returns table(action_id uuid,approval_fingerprint text,approval_expires_at timestamptz,reply_length integer)
+returns table(action_id uuid,approval_fingerprint text,idempotency_key uuid,approval_expires_at timestamptz,reply_length integer)
 language plpgsql
 security definer
 set search_path='pg_catalog','public'
@@ -124,6 +124,7 @@ declare
   v_review public.review_external_reviews%rowtype;
   v_action public.review_reply_actions%rowtype;
   v_fingerprint text;
+  v_key uuid;
   v_expires timestamptz;
 begin
   if not public.review_is_admin() then raise exception 'ADMIN_REQUIRED'; end if;
@@ -157,6 +158,7 @@ begin
   v_fingerprint:=vps_lab_private.reply_approval_fingerprint(
     v_action.id,v_action.external_review_id,v_action.reply_text,
     v_action.company_id,p_location_id,v_action.provider);
+  v_key:=coalesce(v_action.idempotency_key,gen_random_uuid());
   v_expires:=clock_timestamp()+make_interval(secs=>p_ttl_seconds);
 
   update public.review_reply_actions
@@ -164,11 +166,11 @@ begin
       approval_prepared_by=auth.uid(),
       approval_prepared_at=clock_timestamp(),
       approval_expires_at=v_expires,
-      approved_by=null,approved_at=null,idempotency_key=null,
+      approved_by=null,approved_at=null,idempotency_key=v_key,
       queued_at=null,last_error=null,updated_at=clock_timestamp()
   where id=v_action.id and public.review_reply_actions.status='DRAFT';
 
-  return query select v_action.id,v_fingerprint,v_expires,length(v_action.reply_text);
+  return query select v_action.id,v_fingerprint,v_key,v_expires,length(v_action.reply_text);
 end;
 $$;
 
@@ -190,7 +192,6 @@ declare
   v_review public.review_external_reviews%rowtype;
   v_action public.review_reply_actions%rowtype;
   v_current text;
-  v_key uuid:=gen_random_uuid();
 begin
   if not public.review_is_admin() then raise exception 'ADMIN_REQUIRED'; end if;
   if not vps_lab_private.has_company(p_company_id) then
@@ -222,6 +223,7 @@ begin
      or clock_timestamp() > v_action.approval_expires_at then
     raise exception 'REPLY_APPROVAL_EXPIRED';
   end if;
+  if v_action.idempotency_key is null then raise exception 'REPLY_IDEMPOTENCY_NOT_PREPARED'; end if;
 
   v_current:=vps_lab_private.reply_approval_fingerprint(
     v_action.id,v_action.external_review_id,v_action.reply_text,
@@ -233,7 +235,7 @@ begin
 
   update public.review_reply_actions
   set status='QUEUED',approved_by=auth.uid(),approved_at=clock_timestamp(),
-      idempotency_key=v_key,queued_at=clock_timestamp(),last_error=null,
+      queued_at=clock_timestamp(),last_error=null,
       updated_at=clock_timestamp()
   where id=v_action.id and public.review_reply_actions.status='DRAFT';
 
