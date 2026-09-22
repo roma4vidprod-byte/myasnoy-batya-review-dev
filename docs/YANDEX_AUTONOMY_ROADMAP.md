@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 17
+# Yandex + AI Autonomy Roadmap — after Stage 18
 
-Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS with sanitized telemetry, allowlisted playbook proposals and fail-closed provider isolation. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS. Stage 18 deterministic AI-assisted Automatic Recovery Orchestrator PASS with hash/freshness binding, allowlisted execution, persistent no-retry fingerprints and reconciliation-only RESULT_UNKNOWN handling. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -39,12 +39,10 @@ Deterministic `AUTH -> SESSION -> CSRF -> READ` safe telemetry is deployed. A 15
 ### Stage 17 — AI Yandex Ops Agent Foundation — PASS
 A root-only network-off collector now converts fixed Stage16 lifecycle and sync evidence into a strict sanitized telemetry envelope. The isolated AI Ops service can classify only into an allowlisted category and playbook ID, while deterministic validation forces `execution_authorized=false` and `provider_write_authorized=false`. `RESULT_UNKNOWN` can only select reconciliation. The OpenAI key is absent, so live provider activation remains fail-closed; mocked-provider E2E proves the classification boundary. Canonical acceptance: `docs/AI_YANDEX_OPS_STAGE17.md`.
 
-## Remaining stages
+### Stage 18 — AI-assisted Automatic Recovery Orchestrator — PASS
+A deterministic safety gate now binds every Stage17 proposal to a fresh sanitized telemetry hash and a persistent recovery fingerprint. Read-only playbooks may execute automatically; dangerous/session/challenge/contract actions remain escalations. The same EXECUTING/SUCCESS/FAILED/REQUESTED/ESCALATED fingerprint is never retried. Live acceptance proved fail-closed automatic readiness recovery and `RESULT_UNKNOWN -> REQUEST_RECONCILIATION -> DEDUPLICATED` with provider writes = 0. The current Stage15 CSRF browser path independently reports `SERVER_CSRF_NAVIGATION_FAILED`, which Stage18 records without inventing a replacement contract or retrying. Canonical acceptance: `docs/AI_OPS_RECOVERY_STAGE18.md`.
 
-### Stage 18 — AI-assisted Automatic Recovery Orchestrator
-Execute only allowlisted recovery playbooks through a deterministic safety gate.
-Examples: restart browser context, rebuild ephemeral profile, rerun read-only health, request reconciliation, or escalate.
-`RESULT_UNKNOWN` is always reconciled and never retried by AI.
+## Remaining stages
 
 ### Stage 19 — Challenge / 2FA / CAPTCHA operator fallback
 Secure human/operator flow for Yandex challenges that cannot be safely automated.

@@ -1,6 +1,6 @@
 # AI Architecture — Review Activator / SLUKH
 
-Status: canonical design decision after Stage 13; Stage17 AI Yandex Ops Agent Foundation accepted fail-closed on 2026-09-22.
+Status: canonical design decision after Stage 13; Stage17 AI Yandex Ops Agent Foundation and Stage18 deterministic recovery execution accepted fail-closed on 2026-09-22.
 
 ## Two separate AI contours
 
@@ -70,7 +70,7 @@ The accepted AI output is limited to a fixed classification, an allowlisted play
 
 The AI Ops service is separately isolated from Yandex/reply/runtime/ops paths. Without its explicit API credential/model it remains fail-closed and performs no external AI provider call.
 
-Automatic execution of any selected playbook remains Stage18 scope.
+Stage18 implements automatic execution only after deterministic telemetry-hash/freshness/write-gate checks and persistent no-retry fingerprinting. Read-only recovery playbooks may execute automatically; session rotation, operator authentication/challenge handling, and contract-drift remediation remain escalated to later stages. RESULT_UNKNOWN creates reconciliation-only state and is never retried as a provider POST.
 
 ## Review intelligence direction
 

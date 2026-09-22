@@ -23,7 +23,7 @@ During technical-account bootstrap, Stage15 is exercised only in `mode=readiness
 Stage16 then runs a network-off lifecycle snapshot plus the explicit `AUTH -> SESSION -> CSRF -> READ` readiness chain. Scheduled lifecycle monitoring remains network-off and stores only safe TTL/count/freshness aggregates.
 Stage17 converts only fixed lifecycle/sync evidence into a strict sanitized AI Ops envelope. AI may return only an allowlisted classification/playbook proposal; execution and provider-write authorization remain false.
 The accepted Stage15/16/17 entrypoints are symlink-safe so `/current` may point to immutable releases without turning a CLI into a silent no-op.
-Canonical acceptances: `docs/YANDEX_SERVER_REPLY_STAGE15.md`, `docs/YANDEX_SESSION_LIFECYCLE_STAGE16.md` and `docs/AI_YANDEX_OPS_STAGE17.md`.
+Canonical acceptances: `docs/YANDEX_SERVER_REPLY_STAGE15.md`, `docs/YANDEX_SESSION_LIFECYCLE_STAGE16.md`, `docs/AI_YANDEX_OPS_STAGE17.md` and `docs/AI_OPS_RECOVERY_STAGE18.md`.
 
 ## Safety
 
