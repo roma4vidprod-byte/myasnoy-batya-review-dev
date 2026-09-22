@@ -8,8 +8,8 @@ Wants=network-online.target
 Type=oneshot
 User=review-yandex-browser
 Group=review-yandex-browser
-WorkingDirectory=/opt/review-activator-yandex
-ExecStart=/opt/node/bin/node /opt/review-activator-yandex/tools/yandex-server-browser/browser-once.mjs
+WorkingDirectory=/opt/review-activator-yandex-browser/current
+ExecStart=/opt/node/bin/node /opt/review-activator-yandex-browser/current/tools/yandex-server-browser/browser-once.mjs
 Environment=RA_RUNTIME_PROFILE=vps-lab
 Environment=RA_YANDEX_MODE=read-only-admin
 Environment=RA_YANDEX_BROWSER_BIN=/usr/bin/google-chrome-stable

@@ -82,6 +82,8 @@ test('Stage13 browser DB role can only call read-only session RPC',()=>{
 test('Stage13 systemd unit is manual, credentialed, ephemeral and hardened',()=>{
   for(const value of [
     'Type=oneshot','User=review-yandex-browser','Group=review-yandex-browser',
+    'WorkingDirectory=/opt/review-activator-yandex-browser/current',
+    'ExecStart=/opt/node/bin/node /opt/review-activator-yandex-browser/current/tools/yandex-server-browser/browser-once.mjs',
     'LoadCredential=yandex-session-key:/etc/review-activator-yandex/session-key.json',
     'RuntimeDirectory=review-yandex-browser','RuntimeDirectoryPreserve=no',
     'NoNewPrivileges=yes','ProtectSystem=strict','ProtectHome=yes',
