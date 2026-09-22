@@ -70,6 +70,14 @@ async function setup(t){
     );
     update public.review_external_reviews set reply_state='DRAFT' where id='${R}';
   `);
+  await db.exec(`
+    create function public.review_admin_prepare_reply_approval_scoped(
+      uuid,uuid,uuid,uuid,text,text,integer
+    ) returns table(
+      action_id uuid,approval_fingerprint text,
+      approval_expires_at timestamptz,reply_length integer
+    ) language sql as 'select null::uuid,null::text,null::timestamptz,null::integer';
+  `);
   const name=(await db.query('select current_database() n')).rows[0].n;
   await db.exec(sql.replaceAll("'review_activator_lab'",`'${name}'`));
   return db;

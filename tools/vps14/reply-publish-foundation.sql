@@ -106,6 +106,8 @@ create trigger review_reply_actions_invalidate_approval
 before update of reply_text on public.review_reply_actions
 for each row execute function vps_lab_private.invalidate_reply_approval_on_draft_edit();
 
+drop function if exists public.review_admin_prepare_reply_approval_scoped(uuid,uuid,uuid,uuid,text,text,integer);
+
 create or replace function public.review_admin_prepare_reply_approval_scoped(
   p_action_id uuid,
   p_external_review_row_id uuid,
