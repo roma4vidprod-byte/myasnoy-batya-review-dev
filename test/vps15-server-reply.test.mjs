@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validatePublicChallenge,validatePreloadResult} from '../tools/yandex-server-browser/browser-csrf-resolver.mjs';
-import {validateOrchestratorRequest,orchestrateServerReply} from '../tools/vps15/server-reply-orchestrator.mjs';
+import {fileURLToPath} from 'node:url';
+import {validatePublicChallenge,validatePreloadResult,isMainEntrypoint as resolverIsMainEntrypoint} from '../tools/yandex-server-browser/browser-csrf-resolver.mjs';
+import {validateOrchestratorRequest,orchestrateServerReply,isMainEntrypoint as orchestratorIsMainEntrypoint} from '../tools/vps15/server-reply-orchestrator.mjs';
 
 const resolver=readFileSync(new URL('../tools/yandex-server-browser/browser-csrf-resolver.mjs',import.meta.url),'utf8');
 const orchestrator=readFileSync(new URL('../tools/vps15/server-reply-orchestrator.mjs',import.meta.url),'utf8');
@@ -111,4 +112,19 @@ test('Stage15 source keeps browser and writer roles separated and contains no cl
   assert.match(orchestrator,/writer-approved-once\.mjs/);
   assert.match(orchestrator,/SERVER_REPLY_RESULT_UNKNOWN/);
   assert.doesNotMatch(orchestrator,/ssh2|NamedPipe|connectNative|C:\\\\Users\\/);
+});
+
+test('Stage15 CLI entry guards resolve current symlinks to immutable release paths',()=>{
+  const resolverUrl=new URL('../tools/yandex-server-browser/browser-csrf-resolver.mjs',import.meta.url);
+  const orchestratorUrl=new URL('../tools/vps15/server-reply-orchestrator.mjs',import.meta.url);
+  assert.equal(resolverIsMainEntrypoint(resolverUrl.href,'/opt/review-activator-yandex-browser/current/tools/yandex-server-browser/browser-csrf-resolver.mjs',
+    {realpath:()=>fileURLToPath(resolverUrl)}),true);
+  assert.equal(orchestratorIsMainEntrypoint(orchestratorUrl.href,'/opt/review-activator-server-reply/current/tools/vps15/server-reply-orchestrator.mjs',
+    {realpath:()=>fileURLToPath(orchestratorUrl)}),true);
+  assert.equal(orchestratorIsMainEntrypoint(orchestratorUrl.href,'/wrong/current',
+    {realpath:()=>fileURLToPath(resolverUrl)}),false);
+  assert.match(resolver,/realpathSync/);
+  assert.match(orchestrator,/realpathSync/);
+  assert.doesNotMatch(resolver,/import\.meta\.url===\x60file:\/\/\$\{process\.argv\[1\]\}\x60/);
+  assert.doesNotMatch(orchestrator,/import\.meta\.url===\x60file:\/\/\$\{process\.argv\[1\]\}\x60/);
 });

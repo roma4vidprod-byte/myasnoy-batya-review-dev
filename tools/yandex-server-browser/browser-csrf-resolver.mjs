@@ -1,8 +1,9 @@
 import {spawn} from 'node:child_process';
 import {createInterface} from 'node:readline';
-import {mkdirSync,rmSync} from 'node:fs';
+import {mkdirSync,realpathSync,rmSync} from 'node:fs';
 import {join} from 'node:path';
 import {userInfo} from 'node:os';
+import {pathToFileURL} from 'node:url';
 import {VPS_SESSION_SCOPE,createVpsSessionContext} from '../../lib/server/yandex-session/profile-context.js';
 import {createBrowserSessionStore} from './browser-session-store.mjs';
 import {createBrowserSessionAdapter} from './browser-session-adapter.mjs';
@@ -13,6 +14,11 @@ const PAGE=`https://yandex.ru/sprav/${ORG}/p/edit/reviews/`;
 const BROWSER='/usr/bin/google-chrome-stable';
 const NONCE=/^[A-Za-z0-9+/]{43}=$/;
 const fail=code=>{throw Object.assign(new Error(code),{code});};
+
+export function isMainEntrypoint(metaUrl,argv1,{realpath=realpathSync}={}){
+  if(typeof metaUrl!=='string'||typeof argv1!=='string'||!argv1)return false;
+  try{return metaUrl===pathToFileURL(realpath(argv1)).href;}catch{return false;}
+}
 
 function browserArgs(profile){return [
   '--headless=new','--remote-debugging-pipe','--disable-gpu','--disable-extensions','--disable-dev-shm-usage',
@@ -152,7 +158,7 @@ export async function resolveServerCsrf({challenge,now=Date.now}={}){
   }
 }
 
-if(import.meta.url===`file://${process.argv[1]}`){
+if(isMainEntrypoint(import.meta.url,process.argv[1])){
   try{
     const challenge=await readOneJsonLine();
     await resolveServerCsrf({challenge});

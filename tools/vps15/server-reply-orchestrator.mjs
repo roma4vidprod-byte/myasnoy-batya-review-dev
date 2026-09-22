@@ -1,12 +1,19 @@
 import {spawn,spawnSync} from 'node:child_process';
+import {realpathSync} from 'node:fs';
 import {createInterface} from 'node:readline';
 import {userInfo} from 'node:os';
+import {pathToFileURL} from 'node:url';
 
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const HEX64=/^[0-9a-f]{64}$/;
 const WRITER_UNIT=`review-yandex-stage15-writer-${process.pid}.service`;
 const BROWSER_UNIT=`review-yandex-stage15-browser-${process.pid}.service`;
 const fail=code=>{throw Object.assign(new Error(code),{code});};
+
+export function isMainEntrypoint(metaUrl,argv1,{realpath=realpathSync}={}){
+  if(typeof metaUrl!=='string'||typeof argv1!=='string'||!argv1)return false;
+  try{return metaUrl===pathToFileURL(realpath(argv1)).href;}catch{return false;}
+}
 
 export function validateOrchestratorRequest(value){
   if(!value||typeof value!=='object'||Array.isArray(value)||value.version!==1)
@@ -220,7 +227,7 @@ const SAFE_ERRORS=new Set([
   'SERVER_REPLY_FINAL_INVALID'
 ]);
 
-if(import.meta.url===`file://${process.argv[1]}`){
+if(isMainEntrypoint(import.meta.url,process.argv[1])){
   try{
     if(process.argv.length!==2||process.platform!=='linux'||userInfo().username!=='root')
       fail('SERVER_REPLY_REQUEST_INVALID');
