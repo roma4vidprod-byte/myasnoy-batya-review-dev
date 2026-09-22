@@ -16,7 +16,11 @@ test('VPS12 gateway allows only admin read/auth/scoped review paths',()=>{
     ['POST','/rest/v1/rpc/review_admin_reviews_scoped'],
     ['POST','/rest/v1/rpc/review_admin_reviews_with_drafts_scoped'],
     ['POST','/rest/v1/rpc/review_admin_save_reply_draft_scoped'],
-    ['POST','/rest/v1/rpc/review_admin_discard_reply_draft_scoped']
+    ['POST','/rest/v1/rpc/review_admin_discard_reply_draft_scoped'],
+    ['POST','/rest/v1/rpc/review_admin_reply_workflow_scoped'],
+    ['POST','/rest/v1/rpc/review_admin_prepare_reply_approval_scoped'],
+    ['POST','/rest/v1/rpc/review_admin_approve_reply_scoped'],
+    ['POST','/rest/v1/rpc/review_admin_cancel_queued_reply_scoped']
   ])assert.equal(isAllowedRequest(method,url),true,method+' '+url);
 });
 

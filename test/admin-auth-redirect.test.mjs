@@ -39,6 +39,6 @@ test('auth callback cleans token-bearing URL state only after session establishm
 test('admin page keeps unauthenticated and non-admin guards', () => {
   assert.ok(admin.includes("if(!session)return showAuth()"));
   assert.ok(admin.includes("client.rpc('review_admin_profile')"));
-  assert.ok(admin.includes("reviewRpc=isLab?'review_admin_reviews_with_drafts_scoped':'review_admin_reviews_scoped'"));
+  assert.ok(admin.includes("reviewRpc=isLab?'review_admin_reply_workflow_scoped':'review_admin_reviews_scoped'"));
   assert.ok(admin.includes('client.rpc(reviewRpc'));
 });

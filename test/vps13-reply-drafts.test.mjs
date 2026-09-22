@@ -21,7 +21,7 @@ function localRequest(server,path,{method='POST',headers={},body='{}'}={}) {
     req.on('error',reject);req.end(['GET','HEAD'].includes(method)?undefined:body);
   });
 }
-test('VPS13 gateway reaches only scoped drafts through the actual internal app',async t=>{
+test('VPS13/12 gateway reaches only scoped reply-workflow RPCs through the actual internal app',async t=>{
   const origin='https://review.example.invalid',calls=[];
   const config={profile:'vps-lab',host:'127.0.0.1',target:{url:DEFAULT_INTERNAL_ORIGIN},
     apiUrl:'http://127.0.0.1:13001',authUrl:'http://127.0.0.1:19999',
@@ -43,13 +43,15 @@ test('VPS13 gateway reaches only scoped drafts through the actual internal app',
   gateway.listen(0,'127.0.0.1');await once(gateway,'listening');
   t.after(()=>new Promise(resolve=>{gateway.close(resolve);gateway.closeAllConnections();}));
   const headers={Origin:origin,Authorization:'Bearer synthetic.operator.jwt'};
-  for(const name of ['review_admin_reviews_with_drafts_scoped','review_admin_save_reply_draft_scoped','review_admin_discard_reply_draft_scoped']) {
+  for(const name of ['review_admin_reviews_with_drafts_scoped','review_admin_save_reply_draft_scoped','review_admin_discard_reply_draft_scoped',
+    'review_admin_reply_workflow_scoped','review_admin_prepare_reply_approval_scoped',
+    'review_admin_approve_reply_scoped','review_admin_cancel_queued_reply_scoped']) {
     const result=await localRequest(gateway,'/rest/v1/rpc/'+name,{headers});
     assert.equal(result.status,200,name);
     assert.equal(calls.at(-1).url,config.apiUrl+'/rpc/'+name);
     assert.equal(calls.at(-1).options.headers.Authorization,headers.Authorization);
   }
-  assert.equal(calls.length,3);
+  assert.equal(calls.length,7);
   for(const name of ['review_admin_save_reply_draft','review_admin_publish_reply','review_admin_queue_reply','review_claim_initial_owner','arbitrary']) {
     const path='/rest/v1/rpc/'+name;
     assert.equal((await localRequest(gateway,path,{headers})).status,404);
@@ -58,7 +60,7 @@ test('VPS13 gateway reaches only scoped drafts through the actual internal app',
   assert.equal((await localRequest(gateway,'/rest/v1/review_external_reviews',{method:'GET',body:undefined})).status,404);
   const wrong=await localRequest(gateway,'/rest/v1/rpc/review_admin_save_reply_draft_scoped',{headers:{...headers,Origin:'https://wrong.invalid'}});
   assert.equal(wrong.status,403);assert.equal(JSON.parse(wrong.text).error,'ORIGIN_NOT_ALLOWED');
-  assert.equal(calls.length,3);
+  assert.equal(calls.length,7);
 });
 
 test('VPS13 draft RPCs are exact-scope and membership gated',()=>{
@@ -87,15 +89,20 @@ test('VPS13 only mutates local draft state and blocks queued/sending regression'
   assert.doesNotMatch(sql,/status='SENDING'/i);
 });
 
-test('VPS13 browser UI exposes draft save/discard but no publish control',()=>{
+test('Stage12 browser UI exposes exact approval workflow without direct provider publish',()=>{
   for(const value of [
-    'review_admin_reviews_with_drafts_scoped',
+    'review_admin_reply_workflow_scoped',
     'review_admin_save_reply_draft_scoped',
     'review_admin_discard_reply_draft_scoped',
-    'Сохранить черновик',
-    'Удалить черновик',
-    'Публикация в Яндекс отключена до следующего этапа.'
+    'review_admin_prepare_reply_approval_scoped',
+    'review_admin_approve_reply_scoped',
+    'review_admin_cancel_queued_reply_scoped',
+    'Сохранить черновик','Удалить черновик',
+    'Подготовить к подтверждению','Подтвердить отправку','Отменить до отправки',
+    'Fingerprint:','Idempotency:','Автоматический повтор запрещён'
   ]) assert.ok(admin.includes(value),value);
   assert.equal(admin.includes('review_admin_publish_reply'),false);
   assert.equal(admin.includes('review_admin_queue_reply'),false);
+  assert.equal(admin.includes('business-answer'),false);
+  assert.doesNotMatch(admin,/https:\/\/yandex\.ru\/sprav\/api\/.*business-answer/i);
 });

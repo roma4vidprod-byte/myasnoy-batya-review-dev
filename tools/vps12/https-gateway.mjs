@@ -9,7 +9,11 @@ const ALLOWED_RPC=new Set([
   '/rest/v1/rpc/review_admin_reviews_scoped',
   '/rest/v1/rpc/review_admin_reviews_with_drafts_scoped',
   '/rest/v1/rpc/review_admin_save_reply_draft_scoped',
-  '/rest/v1/rpc/review_admin_discard_reply_draft_scoped'
+  '/rest/v1/rpc/review_admin_discard_reply_draft_scoped',
+  '/rest/v1/rpc/review_admin_reply_workflow_scoped',
+  '/rest/v1/rpc/review_admin_prepare_reply_approval_scoped',
+  '/rest/v1/rpc/review_admin_approve_reply_scoped',
+  '/rest/v1/rpc/review_admin_cancel_queued_reply_scoped'
 ]);
 
 function json(res,status,value){
