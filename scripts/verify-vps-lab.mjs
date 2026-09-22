@@ -5,8 +5,10 @@ import {fileURLToPath} from 'node:url';
 try {
   const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
   const manifest=JSON.parse(readFileSync(join(root,'VPS04_RELEASE.json'),'utf8'));
-  if(manifest.profile!=='vps-lab'||!Array.isArray(manifest.files)||manifest.files.length!==10)throw new Error();
+  if(manifest.profile!=='vps-lab'||!Array.isArray(manifest.files)||manifest.files.length<10||manifest.files.length>64)throw new Error();
+  const seen=new Set();
   for(const entry of manifest.files){
+    if(seen.has(entry.path))throw new Error();seen.add(entry.path);
     if(!/^[a-zA-Z0-9_./-]+$/.test(entry.path)||entry.path.startsWith('/')||entry.path.split('/').some(p=>p==='..'||p===''))throw new Error();
     let path=root;for(const piece of entry.path.split('/')){path=join(path,piece);if(lstatSync(path).isSymbolicLink())throw new Error();}
     if(createHash('sha256').update(readFileSync(path)).digest('hex')!==entry.sha256)throw new Error();
