@@ -1,0 +1,13 @@
+[Unit]
+Description=Review Activator Stage19 Yandex operator fallback scheduler
+
+[Timer]
+OnBootSec=9min
+OnUnitActiveSec=15min
+RandomizedDelaySec=45s
+AccuracySec=30s
+Persistent=true
+Unit=review-yandex-operator-fallback.service
+
+[Install]
+WantedBy=timers.target

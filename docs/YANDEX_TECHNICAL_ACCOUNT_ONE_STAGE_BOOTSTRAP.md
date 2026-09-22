@@ -53,10 +53,12 @@ Once the profile is provided and representative access is confirmed, the whole t
 15. Verify the Stage17 AI Ops policy boundary with a mocked provider: AI may return only an allowlisted classification + playbook ID; execution_authorized=false and provider_write_authorized=false are mandatory. `RESULT_UNKNOWN` may select only `REQUEST_RECONCILIATION`.
 16. Run the Stage18 deterministic recovery safety gate. Require telemetry-hash binding, freshness checks, provider writes = 0, queue claims = 0 and a fixed recovery idempotency fingerprint.
 17. Prove Stage18 no-retry semantics: once a fingerprint reaches EXECUTING/SUCCESS/FAILED/REQUESTED/ESCALATED, the same decision is deduplicated. `RESULT_UNKNOWN` may create only a reconciliation request and never retry a provider POST.
-18. Deploy the admin workflow and prove exact-scope prepare/approve/cancel/read behavior.
-19. Verify the complete AI policy boundary: no raw secrets, no direct provider write, no tenant/scope changes, and only allowlisted Ops/recovery actions.
-20. Verify hourly sync, Stage16 network-off lifecycle monitoring, Stage17 safe telemetry collection, Stage18 recovery scheduler, session revision binding, backup/monitoring and reboot safety.
-21. Freeze the account bootstrap evidence and stop with a report.
+18. Verify the Stage19 operator fallback contract for auth/challenge cases. Ticket input/output must contain no password, OTP/2FA code, CAPTCHA response, cookie, CSRF or token material.
+19. Prove Stage19 revision binding: operator acknowledgement carries only ticket ID; approved interactive session import must advance the expected session revision by exactly one; `NOT_CONFIGURED` remains VERIFYING and only a later READY state resolves the ticket.
+20. Deploy the admin workflow and prove exact-scope prepare/approve/cancel/read behavior.
+21. Verify the complete AI/operator policy boundary: no raw secrets, no direct provider write, no tenant/scope changes, no challenge bypass, and only allowlisted Ops/recovery actions.
+22. Verify hourly sync, Stage16 network-off lifecycle monitoring, Stage17 safe telemetry collection, Stage18 recovery scheduler, Stage19 fallback scheduler, session revision binding, backup/monitoring and reboot safety.
+23. Freeze the account bootstrap evidence and stop with a report.
 
 Any failed gate stops the stage. Roll back server/runtime changes before retrying.
 
