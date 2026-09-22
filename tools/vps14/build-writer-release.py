@@ -19,6 +19,7 @@ FILES = [
  'tools/vps14/reply-worker-store.mjs', 'tools/vps14/writer-session-adapter.mjs',
  'tools/vps14/writer-readiness.mjs',
  'tools/vps14/writer-runtime.mjs', 'tools/vps14/writer-once.mjs',
+ 'tools/vps14/writer-approved-once.mjs',
  'tools/vps14/review-activator-reply.service', 'tools/vps14/writer-disabled.env',
  'tools/vps14/verify-writer-release.mjs'
 ]
