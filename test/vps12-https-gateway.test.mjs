@@ -20,7 +20,8 @@ test('VPS12 gateway allows only admin read/auth/scoped review paths',()=>{
     ['POST','/rest/v1/rpc/review_admin_reply_workflow_scoped'],
     ['POST','/rest/v1/rpc/review_admin_prepare_reply_approval_scoped'],
     ['POST','/rest/v1/rpc/review_admin_approve_reply_scoped'],
-    ['POST','/rest/v1/rpc/review_admin_cancel_queued_reply_scoped']
+    ['POST','/rest/v1/rpc/review_admin_cancel_queued_reply_scoped'],
+    ['POST','/api/admin-review-reply-draft']
   ])assert.equal(isAllowedRequest(method,url),true,method+' '+url);
 });
 
@@ -29,7 +30,6 @@ test('VPS12 gateway denies mutation and arbitrary paths',()=>{
     ['POST','/rest/v1/rpc/review_admin_save_reply_draft'],
     ['POST','/rest/v1/rpc/review_admin_publish_reply'],
     ['POST','/rest/v1/rpc/review_admin_queue_reply'],
-    ['POST','/api/admin-review-reply-draft'],
     ['POST','/rest/v1/rpc/review_claim_initial_owner'],
     ['GET','/rest/v1/review_external_reviews'],
     ['POST','/auth/v1/token?grant_type=signup'],

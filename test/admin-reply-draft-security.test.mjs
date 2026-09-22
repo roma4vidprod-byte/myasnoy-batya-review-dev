@@ -17,6 +17,7 @@ test('AI draft error mapping is an allowlisted server boundary', () => {
   for (const code of ['AUTH_REQUIRED', 'ADMIN_REQUIRED', 'REVIEW_NOT_FOUND', 'AI_NOT_CONFIGURED', 'AI_PROVIDER_FAILED', 'AI_DRAFT_FAILED']) {
     assert.match(source, new RegExp(code));
   }
-  assert.match(source, /reviewId=clean\(req\.body\?\.reviewId,100\)/);
+  assert.match(source, /Object\.keys\(req\.body\)\.sort\(\)\.join\(\)!=='reviewId'/);
+  assert.match(source, /!UUID\.test\(req\.body\.reviewId\)/);
   assert.doesNotMatch(source, /reviewRowId/);
 });

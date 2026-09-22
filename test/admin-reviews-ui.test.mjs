@@ -28,8 +28,11 @@ test('admin reviews UI uses the Asbest DEV scoped read path', () => {
   assert.equal(admin.includes('csrf'), false);
   assert.equal(admin.includes('sessionMaterial'), false);
   assert.equal(admin.includes("client.rpc('review_admin_save_reply_draft',"), false);
-  assert.equal(admin.includes('admin-review-reply-draft'), false);
+  assert.equal(admin.includes('/api/admin-review-reply-draft'), true);
   assert.equal(admin.includes('function aiDraft'), false);
+  assert.equal(admin.includes('OPENAI_API_KEY'), false);
+  assert.equal(admin.includes('api.openai.com'), false);
+  assert.equal(admin.includes('business-answer'), false);
 });
 
 test('scoped admin RPC is admin-gated, read-only, paginated and projection-safe', () => {

@@ -34,6 +34,7 @@ export function isAllowedRequest(method,url){
   if(method==='GET'&&u.pathname==='/auth/v1/user')return true;
   if(method==='PUT'&&u.pathname==='/auth/v1/user')return true;
   if(method==='POST'&&ALLOWED_RPC.has(u.pathname))return true;
+  if(method==='POST'&&u.pathname==='/api/admin-review-reply-draft')return true;
   if(method==='POST'&&u.pathname==='/auth/v1/token'){
     const keys=[...u.searchParams.keys()];
     return keys.length===1&&keys[0]==='grant_type'&&

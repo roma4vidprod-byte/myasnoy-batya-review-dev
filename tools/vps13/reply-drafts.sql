@@ -128,12 +128,13 @@ begin
   if v_review.owner_reply_text is not null then raise exception 'REVIEW_ALREADY_ANSWERED'; end if;
   insert into public.review_reply_actions(
     external_review_row_id,company_id,provider,external_review_id,
-    reply_text,status,created_by,draft_source,ai_model,ai_generated_at
+    reply_text,status,created_by,draft_source,ai_model,ai_generated_at,edited_after_ai
   )
   values(
     v_review.id,v_review.company_id,v_review.provider,v_review.external_review_id,
     v_text,'DRAFT',auth.uid()::text,p_draft_source,p_ai_model,
-    case when p_draft_source='ai' then now() else null end
+    case when p_ai_model is not null then now() else null end,
+    (p_ai_model is not null and p_draft_source='human')
   )
   on conflict (external_review_row_id) where status in ('DRAFT','QUEUED','SENDING')
   do update set
@@ -142,7 +143,8 @@ begin
     draft_source=excluded.draft_source,
     ai_model=excluded.ai_model,
     ai_generated_at=excluded.ai_generated_at,
-    edited_after_ai=(public.review_reply_actions.draft_source='ai' and excluded.draft_source='human'),
+    edited_after_ai=case when excluded.draft_source='ai' then false else
+      (public.review_reply_actions.edited_after_ai or public.review_reply_actions.draft_source='ai' or excluded.edited_after_ai) end,
     updated_at=now()
   where public.review_reply_actions.status='DRAFT'
   returning id into v_id;

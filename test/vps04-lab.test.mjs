@@ -64,7 +64,7 @@ async function request(app,path,body={},headers={}){return new Promise((resolve,
 });}
 test('VPS04 adapter denies all external action routes before dependency calls',async t=>{
   let calls=0;const app=createLabServer({config:readLabConfig(env()),fetchImpl:async()=>{calls++;throw Error();}});app.server.listen(0,'127.0.0.1');await once(app.server,'listening');t.after(()=>app.stop());
-  for(const path of ['/api/internal/review-sync-worker','/api/cron/review-sync','/api/feedback','/api/reward-request','/api/promo-import','/api/admin-review-reply-draft','/auth/v1/otp','/auth/v1/recover','/auth/v1/admin/users'])assert.ok([404,503].includes((await request(app,path)).status));
+  for(const path of ['/api/internal/review-sync-worker','/api/cron/review-sync','/api/feedback','/api/reward-request','/api/promo-import','/auth/v1/otp','/auth/v1/recover','/auth/v1/admin/users'])assert.ok([404,503].includes((await request(app,path)).status));
   assert.equal(calls,0);
 });
 test('VPS04 proxy forwards JWT only; rejects identity headers/Origin and limits paths',async t=>{

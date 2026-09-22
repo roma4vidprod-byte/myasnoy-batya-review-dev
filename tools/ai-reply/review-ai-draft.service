@@ -1,0 +1,44 @@
+[Unit]
+Description=Review Activator AI reply draft service
+ConditionHost=v3248121.hosted-by-vdsina.ru
+ConditionPathExists=/etc/review-activator-ai/openai-api-key
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=review-ai-draft
+Group=review-ai-client
+WorkingDirectory=/opt/review-activator-ai/current
+ExecStart=/opt/node/bin/node /opt/review-activator-ai/current/tools/ai-reply/ai-draft-service.mjs
+EnvironmentFile=-/etc/review-activator-ai/model.env
+LoadCredential=openai-api-key:/etc/review-activator-ai/openai-api-key
+RuntimeDirectory=review-ai-draft
+RuntimeDirectoryMode=0770
+RuntimeDirectoryPreserve=no
+Restart=on-failure
+RestartSec=3
+UMask=0007
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryHigh=192M
+MemoryMax=256M
+TasksMax=64
+LimitCORE=0
+InaccessiblePaths=-/etc/review-activator-yandex -/opt/review-activator-yandex -/opt/review-activator-yandex-browser -/opt/review-activator-reply -/var/backups/review-activator
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
