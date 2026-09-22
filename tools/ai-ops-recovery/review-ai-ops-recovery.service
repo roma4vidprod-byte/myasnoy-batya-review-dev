@@ -1,0 +1,38 @@
+[Unit]
+Description=Review Activator Stage18 AI-assisted deterministic recovery cycle
+ConditionHost=v3248121.hosted-by-vdsina.ru
+After=review-ai-ops-collect.service review-yandex-lifecycle.service
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/review-activator-ai-ops-recovery/current
+ExecStart=/opt/node/bin/node /opt/review-activator-ai-ops-recovery/current/tools/ai-ops-recovery/recovery-cycle.mjs
+StateDirectory=review-activator-ops
+StateDirectoryMode=0700
+UMask=0077
+TimeoutStartSec=120
+Restart=no
+NoNewPrivileges=yes
+PrivateNetwork=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictAddressFamilies=AF_UNIX
+CapabilityBoundingSet=
+AmbientCapabilities=
+ReadWritePaths=/var/lib/review-activator-ops
+InaccessiblePaths=-/etc/review-activator-yandex -/opt/review-activator-yandex -/opt/review-activator-yandex-browser -/opt/review-activator-reply -/var/backups/review-activator
+LimitCORE=0
+StandardInput=null
+StandardOutput=journal
+StandardError=journal

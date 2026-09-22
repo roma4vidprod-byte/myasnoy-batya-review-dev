@@ -1,0 +1,13 @@
+[Unit]
+Description=Review Activator Stage18 AI-assisted recovery scheduler
+
+[Timer]
+OnBootSec=7min
+OnUnitActiveSec=15min
+RandomizedDelaySec=45s
+AccuracySec=30s
+Persistent=true
+Unit=review-ai-ops-recovery.service
+
+[Install]
+WantedBy=timers.target
