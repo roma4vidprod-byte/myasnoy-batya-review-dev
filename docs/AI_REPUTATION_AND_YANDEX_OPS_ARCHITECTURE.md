@@ -1,6 +1,6 @@
 # AI Architecture — Review Activator / SLUKH
 
-Status: canonical design decision after Stage 13.
+Status: canonical design decision after Stage 13; Stage17 AI Yandex Ops Agent Foundation accepted fail-closed on 2026-09-22.
 
 ## Two separate AI contours
 
@@ -55,6 +55,22 @@ The model may recommend/choose only a predefined action such as:
 - escalate to operator for 2FA/CAPTCHA/contract drift.
 
 Every action has strict input schema, tenant binding, idempotency/audit metadata, timeout and post-condition verification.
+
+## Stage17 accepted AI Ops boundary
+
+Stage17 implements only the classification/proposal part of this model:
+
+`fixed safe sources -> sanitized telemetry -> AI classification -> allowlisted playbook ID -> deterministic validator`
+
+The collector is network-off and does not pass tenant IDs, exact timestamps, raw cookie names/values, CSRF values, session keys, credential identifiers or database rows to AI.
+
+The accepted AI output is limited to a fixed classification, an allowlisted playbook ID, a bounded reason code and confidence. Every Stage17 decision has `execution_authorized=false` and `provider_write_authorized=false`.
+
+`RESULT_UNKNOWN` maps only to `REQUEST_RECONCILIATION`; retrying a provider POST is not an allowlisted playbook.
+
+The AI Ops service is separately isolated from Yandex/reply/runtime/ops paths. Without its explicit API credential/model it remains fail-closed and performs no external AI provider call.
+
+Automatic execution of any selected playbook remains Stage18 scope.
 
 ## Review intelligence direction
 

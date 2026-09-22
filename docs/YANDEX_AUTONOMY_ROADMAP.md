@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 16
+# Yandex + AI Autonomy Roadmap — after Stage 17
 
-Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS with network-off monitoring and live read-only AUTH -> SESSION -> CSRF -> READ acceptance. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS with sanitized telemetry, allowlisted playbook proposals and fail-closed provider isolation. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -36,11 +36,10 @@ Root-only VPS orchestration now performs a transient Server Browser CSRF handoff
 ### Stage 16 — Yandex Session Lifecycle Manager — PASS
 Deterministic `AUTH -> SESSION -> CSRF -> READ` safe telemetry is deployed. A 15-minute network-off monitor records only TTL/count/freshness aggregates, while explicit deep readiness reuses Stage15 CSRF readiness plus Server Browser read and requires one session revision across the chain. Live acceptance proved two GETs, zero provider writes, zero queue claims, unchanged DB hashes and secret-safe telemetry. Successful deep readiness is retained as sanitized `last_readiness_at`, so scheduled snapshots stay network-off instead of repeatedly contacting Yandex. Rotation/recovery action IDs are advisory only; no automatic recovery is executed at Stage16. Canonical acceptance: `docs/YANDEX_SESSION_LIFECYCLE_STAGE16.md`.
 
-## Remaining stages
+### Stage 17 — AI Yandex Ops Agent Foundation — PASS
+A root-only network-off collector now converts fixed Stage16 lifecycle and sync evidence into a strict sanitized telemetry envelope. The isolated AI Ops service can classify only into an allowlisted category and playbook ID, while deterministic validation forces `execution_authorized=false` and `provider_write_authorized=false`. `RESULT_UNKNOWN` can only select reconciliation. The OpenAI key is absent, so live provider activation remains fail-closed; mocked-provider E2E proves the classification boundary. Canonical acceptance: `docs/AI_YANDEX_OPS_STAGE17.md`.
 
-### Stage 17 — AI Yandex Ops Agent Foundation
-Feed only sanitized lifecycle/browser/sync telemetry to AI.
-AI classifies failures and selects a predefined recovery playbook ID; it never sees raw cookies, passwords, session keys, CSRF values, OTP/2FA or CAPTCHA data.
+## Remaining stages
 
 ### Stage 18 — AI-assisted Automatic Recovery Orchestrator
 Execute only allowlisted recovery playbooks through a deterministic safety gate.

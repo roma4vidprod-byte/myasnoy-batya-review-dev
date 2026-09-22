@@ -71,6 +71,8 @@ A real reply still requires a later stage with exact review + exact text + separ
 - `scripts/build-yandex-account-bootstrap.mjs` — offline validator/builder; no network and no credentials.
 - `docs/YANDEX_TECHNICAL_ACCOUNT_ONE_STAGE_BOOTSTRAP.md` — this ordered runbook.
 - `docs/YANDEX_SERVER_REPLY_STAGE15.md` — accepted Server Browser CSRF/orchestrator boundary and no-write live evidence.
+- `docs/YANDEX_SESSION_LIFECYCLE_STAGE16.md` — accepted deterministic lifecycle/readiness telemetry boundary.
+- `docs/AI_YANDEX_OPS_STAGE17.md` — accepted sanitized AI Ops classification/playbook boundary.
 
 The builder produces:
 
@@ -92,10 +94,12 @@ Historical evidence and old live-result files are deliberately excluded from the
 - full review persistence is scoped and duplicate-free;
 - admin workflow reads the correct tenant only;
 - Stage15 server reply readiness is PASS with `SERVER_CSRF_READY`, provider writes = 0, queue claims = 0, exact bindings and no persistent browser profile;
+- Stage16 lifecycle snapshot/readiness is PASS with network-off monitoring and one revision across `AUTH -> SESSION -> CSRF -> READ`;
+- Stage17 AI Ops sanitized telemetry is PASS; only allowlisted classification/playbook proposals are accepted and execution/provider-write authorization remain false;
 - AI policy boundary is PASS: AI cannot access secrets, enable writes, alter scope, bypass challenges or retry uncertain POSTs;
 - no secret exists in Git/bootstrap profile/evidence;
 - a backup and rollback point exist;
 - all account-specific tests pass;
 - the stage ends before any real reply POST.
 
-After this acceptance, the account is ready to reuse the proven Server Browser + Stage15 server-CSRF boundary and proceed to Session Lifecycle and automatic recovery work.
+After this acceptance, the account is ready to reuse the proven Server Browser + Stage15 server-CSRF + Stage16 lifecycle + Stage17 AI Ops classification boundaries and proceed to allowlisted automatic recovery work.
