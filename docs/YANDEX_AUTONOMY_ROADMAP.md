@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 15
+# Yandex + AI Autonomy Roadmap — after Stage 16
 
-Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS on readiness-only live acceptance; live execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS with network-off monitoring and live read-only AUTH -> SESSION -> CSRF -> READ acceptance. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -33,11 +33,10 @@ Pointer-style AI draft composer, exact-scope safe review context, deterministic 
 ### Stage 15 — Autonomous CSRF + server-side one-shot writer — PASS
 Root-only VPS orchestration now performs a transient Server Browser CSRF handoff into the existing isolated writer boundary without the customer laptop. Live readiness proved `SERVER_CSRF_READY`, one browser GET, zero writer provider requests, zero provider writes, zero queue claims, exact session/action binding, ephemeral browser cleanup and unchanged DB hashes. The execute path remains exact action/review/text/fingerprint/idempotency bound; no live Stage15 reply POST was performed. Canonical acceptance: `docs/YANDEX_SERVER_REPLY_STAGE15.md`.
 
-## Remaining stages
+### Stage 16 — Yandex Session Lifecycle Manager — PASS
+Deterministic `AUTH -> SESSION -> CSRF -> READ` safe telemetry is deployed. A 15-minute network-off monitor records only TTL/count/freshness aggregates, while explicit deep readiness reuses Stage15 CSRF readiness plus Server Browser read and requires one session revision across the chain. Live acceptance proved two GETs, zero provider writes, zero queue claims, unchanged DB hashes and secret-safe telemetry. Successful deep readiness is retained as sanitized `last_readiness_at`, so scheduled snapshots stay network-off instead of repeatedly contacting Yandex. Rotation/recovery action IDs are advisory only; no automatic recovery is executed at Stage16. Canonical acceptance: `docs/YANDEX_SESSION_LIFECYCLE_STAGE16.md`.
 
-### Stage 16 — Yandex Session Lifecycle Manager
-Create deterministic AUTH → SESSION → CSRF → READ telemetry, cookie/session expiry monitoring, rotation and readiness state.
-This stage creates the safe telemetry/actions that the later AI Ops Agent is allowed to reason over.
+## Remaining stages
 
 ### Stage 17 — AI Yandex Ops Agent Foundation
 Feed only sanitized lifecycle/browser/sync telemetry to AI.

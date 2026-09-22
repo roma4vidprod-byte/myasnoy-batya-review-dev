@@ -18,10 +18,11 @@ If it is CONFIRMED and validation passes, the plan reports READY_FOR_ONE_STAGE_A
 
 ## Current portability baseline
 
-The pack includes the accepted Stage13 Server Browser and Stage15 server-CSRF/root-orchestrator runtime.
+The pack includes the accepted Stage13 Server Browser, Stage15 server-CSRF/root-orchestrator runtime and Stage16 Session Lifecycle Manager.
 During technical-account bootstrap, Stage15 is exercised only in `mode=readiness`: one exact browser GET may obtain CSRF, while writer provider requests, provider writes and queue claims must remain zero.
-The accepted Stage15 entrypoints are symlink-safe so `/current` may point to an immutable release without turning the CLI into a silent no-op.
-Canonical Stage15 acceptance: `docs/YANDEX_SERVER_REPLY_STAGE15.md`.
+Stage16 then runs a network-off lifecycle snapshot plus the explicit `AUTH -> SESSION -> CSRF -> READ` readiness chain. Scheduled lifecycle monitoring remains network-off and stores only safe TTL/count/freshness aggregates.
+The accepted Stage15/16 entrypoints are symlink-safe so `/current` may point to immutable releases without turning a CLI into a silent no-op.
+Canonical acceptances: `docs/YANDEX_SERVER_REPLY_STAGE15.md` and `docs/YANDEX_SESSION_LIFECYCLE_STAGE16.md`.
 
 ## Safety
 
