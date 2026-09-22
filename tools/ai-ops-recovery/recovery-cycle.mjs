@@ -37,28 +37,33 @@ function decisionFresh(hash){
 
 export async function runRecoveryCycle({startUnit=systemctl,recover=executeRecovery,
   getHash=telemetryHash,hasKey=()=>existsSync(KEY),hasFreshDecision=decisionFresh}={}){
-  const collected=startUnit(['start','review-ai-ops-collect.service']);
-  if(!collected.ok)fail('RECOVERY_CYCLE_COLLECT_FAILED');
-  const hash=getHash();
-  let reused=hasFreshDecision(hash);
+  let hash=null,reused=false,classificationRun=false;
+  try{hash=getHash();reused=hasFreshDecision(hash);}catch{}
   if(!reused){
-    if(!hasKey()){
-      return Object.freeze({ok:true,operation:'ai_ops_recovery_cycle',state:'WAITING_AI_CONFIGURATION',
-        telemetry_hash:hash,classification_run:false,recovery_run:false,provider_writes:0,no_retry:true});
+    const collected=startUnit(['start','review-ai-ops-collect.service']);
+    if(!collected.ok)fail('RECOVERY_CYCLE_COLLECT_FAILED');
+    hash=getHash();
+    reused=hasFreshDecision(hash);
+    if(!reused){
+      if(!hasKey()){
+        return Object.freeze({ok:true,operation:'ai_ops_recovery_cycle',state:'WAITING_AI_CONFIGURATION',
+          telemetry_hash:hash,classification_run:false,recovery_run:false,provider_writes:0,no_retry:true});
+      }
+      const ai=startUnit(['start','review-ai-ops.service']);
+      if(!ai.ok){
+        return Object.freeze({ok:true,operation:'ai_ops_recovery_cycle',state:'WAITING_AI_SERVICE',
+          telemetry_hash:hash,classification_run:false,recovery_run:false,provider_writes:0,no_retry:true});
+      }
+      const classified=startUnit(['start','review-ai-ops-once.service']);
+      if(!classified.ok)fail('RECOVERY_CYCLE_CLASSIFICATION_FAILED');
+      if(!hasFreshDecision(hash))fail('RECOVERY_CYCLE_DECISION_INVALID');
+      classificationRun=true;
     }
-    const ai=startUnit(['start','review-ai-ops.service']);
-    if(!ai.ok){
-      return Object.freeze({ok:true,operation:'ai_ops_recovery_cycle',state:'WAITING_AI_SERVICE',
-        telemetry_hash:hash,classification_run:false,recovery_run:false,provider_writes:0,no_retry:true});
-    }
-    const classified=startUnit(['start','review-ai-ops-once.service']);
-    if(!classified.ok)fail('RECOVERY_CYCLE_CLASSIFICATION_FAILED');
-    if(!hasFreshDecision(hash))fail('RECOVERY_CYCLE_DECISION_INVALID');
   }
   const result=await recover();
   return Object.freeze({ok:result?.ok===true,operation:'ai_ops_recovery_cycle',
     state:result?.status??result?.state??'UNKNOWN',telemetry_hash:hash,
-    classification_run:!reused,recovery_run:true,provider_writes:0,no_retry:true,
+    classification_run:classificationRun,recovery_run:true,provider_writes:0,no_retry:true,
     playbook_id:result?.playbook_id??null,recovery_id:result?.recovery_id??null});
 }
 

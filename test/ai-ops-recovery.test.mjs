@@ -106,7 +106,7 @@ test('Stage18 cycle reuses fresh decision without a new AI provider call',async(
   assert.equal(result.classification_run,false);
   assert.equal(result.recovery_run,true);
   assert.equal(result.provider_writes,0);
-  assert.deepEqual(calls,['start review-ai-ops-collect.service']);
+  assert.deepEqual(calls,[]);
 });
 
 test('Stage18 cycle starts isolated AI classification only when telemetry has no fresh decision',async()=>{
@@ -114,7 +114,7 @@ test('Stage18 cycle starts isolated AI classification only when telemetry has no
   const result=await runRecoveryCycle({
     startUnit:args=>{calls.push(args.join(' '));return {ok:true};},
     getHash:()=>telemetryHash(),hasKey:()=>true,
-    hasFreshDecision:()=>++checks>1,
+    hasFreshDecision:()=>++checks>2,
     recover:async()=>({ok:true,status:'REQUESTED',playbook_id:'REQUEST_RECONCILIATION',recovery_id:'b'.repeat(64)})
   });
   assert.equal(result.classification_run,true);
