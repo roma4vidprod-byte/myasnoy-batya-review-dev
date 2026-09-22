@@ -33,6 +33,8 @@ test('account bootstrap example builds immutable evidence and account overlay',(
     assert.ok(files.bootstrap.length>=7);
     assert.ok(files.verification.length>=10);
     assert.ok(files.references.length>=5);
+    assert.ok(files.bootstrap.some(x=>x.path==='docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md'));
+    assert.ok(files.references.some(x=>x.path==='docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md'));
     const overlay=readFileSync(join(out,'overlay/lib/server/yandex-session/crypto.js'),'utf8');
     assert.match(overlay,/slukh-example-client-01/);
     assert.doesNotMatch(overlay,/myasnoibatya-zakaz/);
@@ -41,6 +43,7 @@ test('account bootstrap example builds immutable evidence and account overlay',(
     const plan=JSON.parse(readFileSync(join(out,'BOOTSTRAP_PLAN.json'),'utf8'));
     assert.equal(plan.write_enabled,false);
     assert.equal(plan.next_action,'WAIT_FOR_REPRESENTATIVE_ACCESS_CONFIRMATION');
+    assert.ok(plan.gates.some(g=>g.name==='AI_POLICY_BOUNDARY_PASS'));
   }finally{rmSync(base,{recursive:true,force:true});}
 });
 

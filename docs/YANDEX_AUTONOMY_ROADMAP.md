@@ -1,63 +1,91 @@
-# Yandex Autonomy Roadmap — after Stage 12
+# Yandex + AI Autonomy Roadmap — after Stage 13
 
-Status: Stage 12 PASS. Account Portability / Bootstrap Pack prepared.
+Status: Stage 13 PASS. Server Browser Foundation works on VPS. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
-1. Continue finishing Yandex reviews on the current Meat Father reference account.
-2. The user creates a separate technical Yandex ID intended for customer integrations.
-3. When that account is supplied, prepare it in one controlled bootstrap stage using the canonical Bootstrap Pack.
-4. Then grant/connect the Meat Father Yandex Business organization to that technical ID and switch the integration without review duplication.
-5. The customer laptop must not be part of the final infrastructure.
+1. Finish and harden the full Yandex lifecycle on the current Meat Father reference account.
+2. Add AI as two isolated capabilities: AI Reply Engine and AI Yandex Ops Agent.
+3. AI never owns secrets or bypasses deterministic security gates.
+4. The user later creates a separate technical Yandex ID for customer integrations.
+5. When that account is supplied, prepare it in one controlled bootstrap stage using the latest Bootstrap Pack.
+6. Transfer Meat Father to that technical ID only after no-write acceptance.
+7. The customer laptop must not be part of final infrastructure.
 
-## Mandatory portability rule
+## Mandatory portability + AI rule
 
-Every future Yandex stage that adds or changes runtime, DB, browser, session, CSRF, reply, monitoring or recovery files MUST:
-- update `tools/yandex-account-bootstrap/bootstrap-manifest.json` if the file belongs in onboarding;
-- update the one-stage runbook if gate/order changes;
+Every future Yandex/AI stage that adds or changes runtime, DB, browser, session, CSRF, reply, AI policy, safe telemetry, monitoring or recovery files MUST:
+- update `tools/yandex-account-bootstrap/bootstrap-manifest.json` when the file belongs in onboarding;
+- update the one-stage runbook if gates/order change;
 - run `test/yandex-account-bootstrap.test.mjs`;
-- preserve the no-secret profile rule;
-- preserve Yandex WRITE = 0 during bootstrap until a separate exact reply approval.
+- preserve the no-secret bootstrap profile;
+- preserve Yandex WRITE = 0 during account bootstrap;
+- preserve the AI boundaries in `docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md`.
+
+## Completed
+
+### Stage 13 — Server Browser Foundation — PASS
+Isolated VPS Chrome, ephemeral profile, pipe-only CDP, exact GET-only Yandex read, separate DB/OS role and provider writes = 0.
 
 ## Remaining stages
 
-### Stage 13 — Server Browser Foundation on current reference account
-Build the isolated VPS browser/profile foundation and prove safe read/session evidence with no provider write.
+### Stage 14 — AI Reply Engine Foundation
+Add AI-generated reply drafts inside the existing Stage12 workflow.
+AI receives only safe review/business context and produces a draft; deterministic policy validation + human approval remain mandatory.
+No direct Yandex publish capability is given to the model.
 
-### Stage 14 — Autonomous CSRF + server-side one-shot writer
-Move CSRF acquisition and exact one-shot reply execution off the customer laptop while preserving exact action/review/text/fingerprint/idempotency binding.
+### Stage 15 — Autonomous CSRF + server-side one-shot writer
+Use the VPS server browser to obtain fresh CSRF and execute an exact approved reply without the customer laptop.
+Preserve exact action/review/text/fingerprint/idempotency binding and never auto-retry an uncertain POST.
 
-### Stage 15 — Yandex Session Lifecycle Manager
-Continuously maintain AUTH → SESSION → CSRF → READ health, cookie/session rotation and readiness.
+### Stage 16 — Yandex Session Lifecycle Manager
+Create deterministic AUTH → SESSION → CSRF → READ telemetry, cookie/session expiry monitoring, rotation and readiness state.
+This stage creates the safe telemetry/actions that the later AI Ops Agent is allowed to reason over.
 
-### Stage 16 — Automatic Recovery
-Recover ordinary browser/session/network failures automatically without repeating an uncertain provider POST.
+### Stage 17 — AI Yandex Ops Agent Foundation
+Feed only sanitized lifecycle/browser/sync telemetry to AI.
+AI classifies failures and selects a predefined recovery playbook ID; it never sees raw cookies, passwords, session keys, CSRF values, OTP/2FA or CAPTCHA data.
 
-### Stage 17 — Challenge / 2FA / CAPTCHA operator fallback
-Handle non-automatable Yandex challenges through a secure operator path; do not bypass CAPTCHA/2FA.
+### Stage 18 — AI-assisted Automatic Recovery Orchestrator
+Execute only allowlisted recovery playbooks through a deterministic safety gate.
+Examples: restart browser context, rebuild ephemeral profile, rerun read-only health, request reconciliation, or escalate.
+`RESULT_UNKNOWN` is always reconciled and never retried by AI.
 
-### Stage 18 — Contract Drift Protection
-Detect endpoint/JSON/DOM/auth/CSRF changes, fail closed, keep safe subsystems alive and emit sanitized diagnostics.
+### Stage 19 — Challenge / 2FA / CAPTCHA operator fallback
+Secure human/operator flow for Yandex challenges that cannot be safely automated.
+No CAPTCHA/2FA bypass and no secret exposure to AI.
 
-### Stage 19 — Autonomous E2E on the current reference account
+### Stage 20 — Contract Drift Protection + AI diagnosis
+Detect endpoint/JSON/DOM/auth/CSRF changes and fail closed.
+AI may summarize/classify sanitized drift evidence, but cannot invent or deploy a replacement endpoint/contract.
+
+### Stage 21 — Autonomous E2E on the current reference account
 Prove: admin approval → server browser/session → exactly one POST → fresh verification → SYNCED_EXTERNAL with the customer laptop off.
+Include an AI-generated draft in the E2E, but the final exact text still requires human approval.
 
-### Stage 20 — Operations + reboot/disaster recovery
-Monitoring, alerts, reconciliation, backup/restore and full VPS reboot recovery for browser/session/sync/reply services.
+### Stage 22 — AI Reputation Manager
+Add sentiment/themes, repeated complaint detection, praise/product/location patterns, unanswered-review prioritization and owner summaries.
+Analytics stay separate from provider-write authorization.
 
-### Stage 21 — NEW TECHNICAL ACCOUNT ONE-STAGE BOOTSTRAP
-When the user supplies the new technical Yandex ID and confirms representative access, execute the entire canonical bootstrap runbook as one stage.
-Internal gates include backup, account scope, isolated keyring/browser/session, read health, full sync, no-duplicate persistence, reply readiness with zero writes, admin workflow and evidence freeze.
+### Stage 23 — Operations + reboot/disaster recovery
+Monitoring, alerts, reconciliation, backup/restore and full VPS reboot recovery for browser/session/sync/reply/AI telemetry services.
 
-### Stage 22 — Transfer Meat Father to the new technical account
+### Stage 24 — NEW TECHNICAL ACCOUNT ONE-STAGE BOOTSTRAP
+When the user supplies the new technical Yandex ID and confirms representative access, execute the latest canonical bootstrap runbook as one stage.
+Internal gates include isolated keyring/browser/session, server-browser read, full sync, no duplicates, reply readiness with zero writes, admin workflow and AI policy boundary.
+
+### Stage 25 — Transfer Meat Father to the new technical account
 Switch the Meat Father organization/session ownership to the new technical Yandex ID without changing review identity, history or reply state.
-Run a no-write acceptance before enabling any reply execution.
+Run a no-write acceptance before enabling reply execution.
 
-### Stage 23 — Real E2E under the new technical account
-One exact review + exact text, separate approval, one POST, fresh verification and SYNCED_EXTERNAL.
+### Stage 26 — Real E2E under the new technical account
+One exact review + AI/human-approved exact text + one POST + fresh verification → SYNCED_EXTERNAL.
 
-### Stage 24 — Multi-tenant customer template
-Turn the proven technical-account bootstrap into repeatable isolated onboarding for future customers: one tenant/account/browser/keyring/audit scope per customer.
+### Stage 27 — Multi-tenant customer template
+Turn the proven technical-account bootstrap into repeatable isolated onboarding: one tenant/account/browser/keyring/audit/AI-policy scope per customer.
 
-### Stage 25 — Production cutover + Final Autonomous Acceptance
-Final auth/RLS/security/domain/HTTPS cleanup and proof that reviews + approved replies work with no customer laptop dependency.
+### Stage 28 — Multi-tenant AI isolation and policy packs
+Per-customer tone of voice, knowledge context, escalation rules and safe Ops telemetry; prove that AI context/actions cannot cross tenant boundaries.
+
+### Stage 29 — Production cutover + Final Autonomous Acceptance
+Final auth/RLS/security/domain/HTTPS cleanup and proof that reviews, AI drafts, approved replies, session recovery and monitoring work with no customer laptop dependency.

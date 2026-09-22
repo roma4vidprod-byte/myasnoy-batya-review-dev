@@ -48,8 +48,9 @@ Once the profile is provided and representative access is confirmed, the whole t
 10. Run full review read + scoped persistence and prove zero duplicates.
 11. Run reply-readiness with provider write disabled and provider writes = 0.
 12. Deploy the admin workflow and prove exact-scope prepare/approve/cancel/read behavior.
-13. Verify hourly sync, session revision binding, backup/monitoring and reboot safety.
-14. Freeze the account bootstrap evidence and stop with a report.
+13. Verify the AI policy boundary: no raw secrets, no direct provider write, no tenant/scope changes, and only allowlisted Ops actions.
+14. Verify hourly sync, session revision binding, backup/monitoring and reboot safety.
+15. Freeze the account bootstrap evidence and stop with a report.
 
 Any failed gate stops the stage. Roll back server/runtime changes before retrying.
 
@@ -86,6 +87,7 @@ Historical evidence and old live-result files are deliberately excluded from the
 - full review persistence is scoped and duplicate-free;
 - admin workflow reads the correct tenant only;
 - reply readiness is PASS with provider writes = 0;
+- AI policy boundary is PASS: AI cannot access secrets, enable writes, alter scope, bypass challenges or retry uncertain POSTs;
 - no secret exists in Git/bootstrap profile/evidence;
 - a backup and rollback point exist;
 - all account-specific tests pass;

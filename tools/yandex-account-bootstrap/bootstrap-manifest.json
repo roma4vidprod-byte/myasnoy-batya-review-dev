@@ -94,7 +94,8 @@
     "tools/yandex-account-bootstrap/meatfather-profile.template.json",
     "tools/yandex-account-bootstrap/README.md",
     "docs/YANDEX_TECHNICAL_ACCOUNT_ONE_STAGE_BOOTSTRAP.md",
-    "docs/YANDEX_AUTONOMY_ROADMAP.md"
+    "docs/YANDEX_AUTONOMY_ROADMAP.md",
+    "docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md"
   ],
   "verification_files": [
     "test/support/no-network.mjs",
@@ -121,7 +122,8 @@
     "docs/VPS13_REPLY_DRAFTS.md",
     "docs/VPS14_YANDEX_REPLY_CONTRACT.md",
     "docs/VPS14_STAGE6_FINAL_QA.md",
-    "docs/YANDEX_SERVER_BROWSER_STAGE13.md"
+    "docs/YANDEX_SERVER_BROWSER_STAGE13.md",
+    "docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md"
   ],
   "one_stage_gates": [
     "INPUT_PROFILE_VALID",
@@ -138,6 +140,7 @@
     "FULL_SYNC_PASS",
     "REPLY_READINESS_NO_WRITE_PASS",
     "ADMIN_WORKFLOW_PASS",
+    "AI_POLICY_BOUNDARY_PASS",
     "NO_DUPLICATES",
     "Yandex_WRITE_0_UNTIL_SEPARATE_APPROVAL"
   ],
