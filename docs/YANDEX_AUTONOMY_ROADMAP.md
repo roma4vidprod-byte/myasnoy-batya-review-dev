@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 18
+# Yandex + AI Autonomy Roadmap — after Stage 19
 
-Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS. Stage 18 deterministic AI-assisted Automatic Recovery Orchestrator PASS with hash/freshness binding, allowlisted execution, persistent no-retry fingerprints and reconciliation-only RESULT_UNKNOWN handling. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS. Stage 18 deterministic Automatic Recovery Orchestrator PASS. Stage 19 no-secret Challenge/2FA/CAPTCHA Operator Fallback PASS with explicit human acknowledgement and exact session-revision verification. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -42,11 +42,10 @@ A root-only network-off collector now converts fixed Stage16 lifecycle and sync 
 ### Stage 18 — AI-assisted Automatic Recovery Orchestrator — PASS
 A deterministic safety gate now binds every Stage17 proposal to a fresh sanitized telemetry hash and a persistent recovery fingerprint. Read-only playbooks may execute automatically; dangerous/session/challenge/contract actions remain escalations. The same EXECUTING/SUCCESS/FAILED/REQUESTED/ESCALATED fingerprint is never retried. Live acceptance proved fail-closed automatic readiness recovery and `RESULT_UNKNOWN -> REQUEST_RECONCILIATION -> DEDUPLICATED` with provider writes = 0. The current Stage15 CSRF browser path independently reports `SERVER_CSRF_NAVIGATION_FAILED`, which Stage18 records without inventing a replacement contract or retrying. Canonical acceptance: `docs/AI_OPS_RECOVERY_STAGE18.md`.
 
-## Remaining stages
+### Stage 19 — Challenge / 2FA / CAPTCHA Operator Fallback — PASS
+Stage18 auth/challenge escalations now become root-only no-secret operator tickets. Human acknowledgement accepts only ticket ID; passwords, OTP/2FA codes, CAPTCHA responses, cookies, CSRF values and tokens are not accepted by the fallback contract. Resolution is bound to exactly one session revision increment and a later READY state. The fallback manager is network-off and reuses the already-approved native session import instead of creating a second credential channel. Live acceptance used synthetic challenge/ticket evidence only; the real Yandex session remained unchanged. Canonical acceptance: `docs/YANDEX_OPERATOR_FALLBACK_STAGE19.md`.
 
-### Stage 19 — Challenge / 2FA / CAPTCHA operator fallback
-Secure human/operator flow for Yandex challenges that cannot be safely automated.
-No CAPTCHA/2FA bypass and no secret exposure to AI.
+## Remaining stages
 
 ### Stage 20 — Contract Drift Protection + AI diagnosis
 Detect endpoint/JSON/DOM/auth/CSRF changes and fail closed.
