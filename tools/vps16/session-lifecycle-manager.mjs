@@ -1,12 +1,13 @@
 import {spawn,spawnSync} from 'node:child_process';
 import {createInterface} from 'node:readline';
-import {mkdirSync,realpathSync,renameSync,writeFileSync} from 'node:fs';
+import {mkdirSync,readFileSync,realpathSync,renameSync,writeFileSync} from 'node:fs';
 import {dirname} from 'node:path';
 import {userInfo} from 'node:os';
 import {pathToFileURL} from 'node:url';
 
 const ORG='54309413522';
 const STATE_PATH='/var/lib/review-activator-ops/YANDEX_LIFECYCLE_STAGE16.json';
+const READINESS_TTL_SECONDS=24*60*60;
 const SNAPSHOT_UNIT=`review-yandex-stage16-snapshot-${process.pid}.service`;
 const READ_UNIT=`review-yandex-stage16-read-${process.pid}.service`;
 const fail=code=>{throw Object.assign(new Error(code),{code});};
@@ -124,20 +125,31 @@ function freshness(snapshot){
   return 'FRESH';
 }
 
-export function classifyLifecycle({mode,snapshot,csrf=null,read=null}){
+function previousReadiness(previous,nowMs){
+  const value=previous?.last_readiness_at;
+  if(typeof value!=='string'||!value)return {at:null,age:null,fresh:false};
+  const at=Date.parse(value);
+  if(!Number.isFinite(at)||at>nowMs+60000)return {at:null,age:null,fresh:false};
+  const age=Math.max(0,Math.floor((nowMs-at)/1000));
+  return {at:new Date(at).toISOString(),age,fresh:age<=READINESS_TTL_SECONDS};
+}
+
+export function classifyLifecycle({mode,snapshot,csrf=null,read=null,previous=null,nowMs=Date.now()}){
   const s=validateSnapshot(snapshot);
   const fresh=freshness(s);
+  const prior=previousReadiness(previous,nowMs);
   const actions=[];
   if(s.rotation_state==='DUE')actions.push('ROTATE_SESSION');
   if(mode==='snapshot'){
-    if(fresh!=='FRESH')actions.push('RUN_READINESS');
+    if(!prior.fresh)actions.push('RUN_READINESS');
     const unique=[...new Set(actions)];
     return Object.freeze({
       ok:true,operation:'yandex_session_lifecycle',telemetry_version:1,mode:'snapshot',
-      state:s.rotation_state==='DUE'?'ROTATION_DUE':fresh==='FRESH'?'MONITORING':'READINESS_DUE',
+      state:s.rotation_state==='DUE'?'ROTATION_DUE':prior.fresh?'MONITORING':'READINESS_DUE',
       ready:null,organization_id:ORG,session_revision:Number(s.session_revision),
       chain:Object.freeze({auth:'NOT_CHECKED',session:'SESSION_READY',csrf:'NOT_CHECKED',read:'NOT_CHECKED'}),
       rotation_state:s.rotation_state,freshness_state:fresh,
+      last_readiness_at:prior.at,last_readiness_age_seconds:prior.age,
       cookie_count:s.cookie_count,persistent_cookie_count:s.persistent_cookie_count,
       session_cookie_count:s.session_cookie_count,min_cookie_ttl_seconds:s.min_cookie_ttl_seconds,
       max_cookie_ttl_seconds:s.max_cookie_ttl_seconds,expiring_within_6h:s.expiring_within_6h,
@@ -156,6 +168,7 @@ export function classifyLifecycle({mode,snapshot,csrf=null,read=null}){
     state:'READY',ready:true,organization_id:ORG,session_revision:Number(s.session_revision),
     chain:Object.freeze({auth:'AUTH_OK',session:'SESSION_READY',csrf:'CSRF_READY',read:'READ_OK'}),
     rotation_state:s.rotation_state,freshness_state:fresh,
+    last_readiness_at:new Date(nowMs).toISOString(),last_readiness_age_seconds:0,
     cookie_count:s.cookie_count,persistent_cookie_count:s.persistent_cookie_count,
     session_cookie_count:s.session_cookie_count,min_cookie_ttl_seconds:s.min_cookie_ttl_seconds,
     max_cookie_ttl_seconds:s.max_cookie_ttl_seconds,expiring_within_6h:s.expiring_within_6h,
@@ -180,6 +193,14 @@ export function assertSafeTelemetry(value){
   visit(value);return value;
 }
 
+export function loadLifecycleTelemetry({path=STATE_PATH}={}){
+  try{
+    const value=JSON.parse(readFileSync(path,'utf8'));
+    assertSafeTelemetry(value);
+    return value&&typeof value==='object'&&!Array.isArray(value)?value:null;
+  }catch{return null;}
+}
+
 export function persistLifecycleTelemetry(value,{path=STATE_PATH}={}){
   assertSafeTelemetry(value);
   mkdirSync(dirname(path),{recursive:true,mode:0o700});
@@ -201,13 +222,15 @@ async function defaultRead(){
 }
 
 export async function runLifecycle(mode,{snapshot=defaultSnapshot,csrf=defaultCsrf,read=defaultRead,
-  persist=persistLifecycleTelemetry}={}){
+  persist=persistLifecycleTelemetry,loadPrevious=loadLifecycleTelemetry,now=Date.now}={}){
   if(!['snapshot','readiness'].includes(mode))fail('LIFECYCLE_REQUEST_INVALID');
   if(snapshot===defaultSnapshot)cleanupUnits();
   try{
+    const previous=loadPrevious();
     const s=await snapshot();
-    const result=mode==='snapshot'?classifyLifecycle({mode,snapshot:s}):
-      classifyLifecycle({mode,snapshot:s,csrf:await csrf(),read:await read()});
+    const nowMs=now();
+    const result=mode==='snapshot'?classifyLifecycle({mode,snapshot:s,previous,nowMs}):
+      classifyLifecycle({mode,snapshot:s,csrf:await csrf(),read:await read(),previous,nowMs});
     assertSafeTelemetry(result);persist(result);return result;
   }finally{if(snapshot===defaultSnapshot)cleanupUnits();}
 }

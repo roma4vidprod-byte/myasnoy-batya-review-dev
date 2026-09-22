@@ -49,24 +49,32 @@ test('Stage16 session snapshot emits TTL aggregates only and no cookie secrets',
   assert.doesNotMatch(json,/Session_id|yandexuid|secret-a|secret-b|secret-version/);
 });
 
-test('Stage16 snapshot classification is deterministic and network-off',()=>{
-  const value=classifyLifecycle({mode:'snapshot',snapshot:snapshot()});
+test('Stage16 snapshot classification is deterministic and network-off after fresh deep readiness',()=>{
+  const value=classifyLifecycle({mode:'snapshot',snapshot:snapshot(),
+    previous:{last_readiness_at:new Date(now-60_000).toISOString()},nowMs:now});
   assert.equal(value.state,'MONITORING');
   assert.equal(value.ready,null);
+  assert.equal(value.last_readiness_age_seconds,60);
   assert.deepEqual(value.chain,{auth:'NOT_CHECKED',session:'SESSION_READY',csrf:'NOT_CHECKED',read:'NOT_CHECKED'});
   assert.equal(value.provider_requests,0);
   assert.equal(value.provider_writes,0);
   assert.deepEqual(value.allowed_action_ids,[]);
 });
 
-test('Stage16 stale snapshot requests readiness without executing recovery',()=>{
-  const value=classifyLifecycle({mode:'snapshot',snapshot:snapshot({last_successful_sync_age_seconds:20000})});
-  assert.equal(value.state,'READINESS_DUE');
-  assert.deepEqual(value.allowed_action_ids,['RUN_READINESS']);
+test('Stage16 missing or expired deep readiness requests a read-only readiness check',()=>{
+  const missing=classifyLifecycle({mode:'snapshot',snapshot:snapshot(),previous:null,nowMs:now});
+  assert.equal(missing.state,'READINESS_DUE');
+  assert.deepEqual(missing.allowed_action_ids,['RUN_READINESS']);
+  const expired=classifyLifecycle({mode:'snapshot',snapshot:snapshot(),
+    previous:{last_readiness_at:new Date(now-25*60*60*1000).toISOString()},nowMs:now});
+  assert.equal(expired.state,'READINESS_DUE');
+  assert.deepEqual(expired.allowed_action_ids,['RUN_READINESS']);
 });
 
 test('Stage16 expiry marks rotation due but never auto-rotates',()=>{
-  const value=classifyLifecycle({mode:'snapshot',snapshot:snapshot({rotation_state:'DUE',min_cookie_ttl_seconds:100})});
+  const value=classifyLifecycle({mode:'snapshot',
+    snapshot:snapshot({rotation_state:'DUE',min_cookie_ttl_seconds:100}),
+    previous:{last_readiness_at:new Date(now-60_000).toISOString()},nowMs:now});
   assert.equal(value.state,'ROTATION_DUE');
   assert.deepEqual(value.allowed_action_ids,['ROTATE_SESSION']);
   assert.equal(LIFECYCLE_ACTIONS.ROTATE_SESSION.automatic,false);
@@ -100,12 +108,30 @@ test('Stage16 injected lifecycle runner persists only the safe final telemetry',
     snapshot:async()=>{calls++;return snapshot();},
     csrf:async()=>{calls++;return csrf();},
     read:async()=>{calls++;return read();},
+    loadPrevious:()=>null,now:()=>now,
     persist:v=>{persisted=v;}
   });
   assert.equal(calls,3);
   assert.equal(value.state,'READY');
+  assert.equal(value.last_readiness_at,new Date(now).toISOString());
+  assert.equal(value.last_readiness_age_seconds,0);
   assert.equal(persisted,value);
   assert.equal(JSON.stringify(value).includes('secret'),false);
+});
+
+test('Stage16 network-off snapshot carries forward successful readiness timestamp',async()=>{
+  const previous={last_readiness_at:new Date(now-300_000).toISOString()};
+  let persisted;
+  const value=await runLifecycle('snapshot',{
+    snapshot:async()=>snapshot(),
+    loadPrevious:()=>previous,now:()=>now,
+    persist:v=>{persisted=v;}
+  });
+  assert.equal(value.state,'MONITORING');
+  assert.equal(value.last_readiness_at,previous.last_readiness_at);
+  assert.equal(value.last_readiness_age_seconds,300);
+  assert.deepEqual(value.allowed_action_ids,[]);
+  assert.equal(persisted,value);
 });
 
 test('Stage16 action catalog contains no provider-write or automatic executor',()=>{
