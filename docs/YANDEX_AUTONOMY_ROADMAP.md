@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 19
+# Yandex + AI Autonomy Roadmap — after Stage 20
 
-Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS. Stage 18 deterministic Automatic Recovery Orchestrator PASS. Stage 19 no-secret Challenge/2FA/CAPTCHA Operator Fallback PASS with explicit human acknowledgement and exact session-revision verification. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS. Stage 16 Yandex Session Lifecycle Manager PASS. Stage 17 AI Yandex Ops Agent Foundation PASS. Stage 18 deterministic Automatic Recovery Orchestrator PASS. Stage 19 no-secret Challenge/2FA/CAPTCHA Operator Fallback PASS. Stage 20 Contract Drift Protection + AI diagnosis PASS with safe page/API evidence and contract-change authorization fixed false. Live reply execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -45,13 +45,14 @@ A deterministic safety gate now binds every Stage17 proposal to a fresh sanitize
 ### Stage 19 — Challenge / 2FA / CAPTCHA Operator Fallback — PASS
 Stage18 auth/challenge escalations now become root-only no-secret operator tickets. Human acknowledgement accepts only ticket ID; passwords, OTP/2FA codes, CAPTCHA responses, cookies, CSRF values and tokens are not accepted by the fallback contract. Resolution is bound to exactly one session revision increment and a later READY state. The fallback manager is network-off and reuses the already-approved native session import instead of creating a second credential channel. Live acceptance used synthetic challenge/ticket evidence only; the real Yandex session remained unchanged. Canonical acceptance: `docs/YANDEX_OPERATOR_FALLBACK_STAGE19.md`.
 
+### Stage 20 — Contract Drift Protection + AI diagnosis — PASS
+A separate GET/HEAD-only browser contract probe plus the accepted API browser probe now produce strict sanitized drift evidence. Deterministic and AI classifiers cannot authorize endpoint/selector/contract changes. Live evidence shows the current HTML/CSRF page itself is healthy but the navigation chain now requires 3 document requests instead of the canonical Stage15 single-document assumption; the accepted classification is `PAGE_NAVIGATION_CHAIN_DRIFT -> CONTRACT_REVIEW`. The API browser read independently remains `BROWSER_NAVIGATION_FAILED`. No replacement contract was invented or deployed. Canonical acceptance: `docs/YANDEX_CONTRACT_DRIFT_STAGE20.md`.
+
 ## Remaining stages
 
-### Stage 20 — Contract Drift Protection + AI diagnosis
-Detect endpoint/JSON/DOM/auth/CSRF changes and fail closed.
-AI may summarize/classify sanitized drift evidence, but cannot invent or deploy a replacement endpoint/contract.
-
 ### Stage 21 — Autonomous E2E on the current reference account
+Prerequisite: before any real provider POST, a separately reviewed developer remediation must restore Stage15 zero-write readiness for the Stage20 navigation-chain drift.
+
 Prove: admin approval → server browser/session → exactly one POST → fresh verification → SYNCED_EXTERNAL with the customer laptop off.
 Include an AI-generated draft in the E2E, but the final exact text still requires human approval.
 

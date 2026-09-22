@@ -81,6 +81,7 @@ A real reply still requires a later stage with exact review + exact text + separ
 - `docs/AI_YANDEX_OPS_STAGE17.md` — accepted sanitized AI Ops classification/playbook boundary.
 - `docs/AI_OPS_RECOVERY_STAGE18.md` — accepted deterministic recovery safety gate, no-retry and reconciliation boundary.
 - `docs/YANDEX_OPERATOR_FALLBACK_STAGE19.md` — accepted no-secret challenge/2FA/CAPTCHA operator fallback and session-revision verification boundary.
+- `docs/YANDEX_CONTRACT_DRIFT_STAGE20.md` — accepted safe contract-drift evidence, deterministic/AI diagnosis and zero contract-change authorization boundary.
 
 The builder produces:
 
@@ -106,7 +107,8 @@ Historical evidence and old live-result files are deliberately excluded from the
 - Stage17 AI Ops sanitized telemetry is PASS; only allowlisted classification/playbook proposals are accepted and execution/provider-write authorization remain false;
 - Stage18 deterministic recovery gate is PASS: telemetry hash/freshness binding, fixed playbooks, persistent no-retry fingerprints and reconciliation-only RESULT_UNKNOWN are proven with provider writes = 0;
 - Stage19 operator fallback is PASS: human challenge handling accepts only ticket acknowledgement and resolves only after exactly one session revision increment plus READY verification; no challenge secrets enter SLUKH or AI;
-- AI policy boundary is PASS: AI cannot access secrets, enable writes, alter scope, bypass challenges or retry uncertain POSTs;
+- Stage20 contract drift protection is PASS: safe GET/HEAD-only page/API evidence is sanitized, deterministic/AI diagnosis is allowlisted, and contract/endpoint/selector changes remain unauthorized;
+- AI policy boundary is PASS: AI cannot access secrets, enable writes, alter scope, bypass challenges, invent/deploy provider contracts or retry uncertain POSTs;
 - no secret exists in Git/bootstrap profile/evidence;
 - a backup and rollback point exist;
 - all account-specific tests pass;
