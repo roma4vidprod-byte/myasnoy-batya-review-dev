@@ -80,24 +80,28 @@ test('CSRF handoff rejects wrong org, nonce and expiry before token acceptance',
     organizationId:'54309413522',token:'SYNTHETIC_CSRF_TOKEN'};
   assert.throws(()=>acceptCsrfHandoff(c.private,m,{now:now+60000}),/CSRF_HANDOFF_DENIED/);
 });
-test('extension CSRF readiness performs one hello + one handoff and clears local token reference',async()=>{
-  const extracted={version:1,ok:true,organizationId:'54309413522',token:'SYNTHETIC_CSRF_TOKEN'};
+test('extension CSRF readiness performs one hello + one challenge-bound handoff and clears token',async()=>{
+  const extracted={version:1,ok:true,code:'CSRF_VALUE_READY',token:'SYNTHETIC_CSRF_TOKEN'};
   const calls=[];
+  const nonce=Buffer.alloc(32,5).toString('base64'),expiresAt=now+30000;
   const api={
     queryTabs:async()=>[{id:7,url:'https://yandex.ru/sprav/54309413522/edit/reviews',incognito:false}],
-    extractCsrf:async id=>{assert.equal(id,7);return extracted;}
+    sendTabMessage:async(id,message)=>{
+      assert.equal(id,7);
+      assert.deepEqual(message,{version:1,op:'csrf_handoff_read',nonce,expiresAt});
+      return extracted;
+    }
   };
-  const nonce=Buffer.alloc(32,5).toString('base64');
   const channel={async exchange(message){
     calls.push(structuredClone(message));
-    if(message.op==='hello')return {version:1,nonce,expiresAt:now+30000};
+    if(message.op==='hello')return {version:1,nonce,expiresAt};
     assert.deepEqual(Object.keys(message).sort(),['nonce','op','organizationId','token','version']);
     assert.equal(message.nonce,nonce);assert.equal(message.organizationId,'54309413522');
     assert.equal(message.token,'SYNTHETIC_CSRF_TOKEN');
     return {ok:true,state:'CSRF_READY'};
   },close(){}};
   assert.deepEqual(await connectCsrfReadiness(api,channel,{now:()=>now}),{ok:true,state:'CSRF_READY'});
-  assert.equal(calls.length,2);assert.equal(extracted.token,'');
+  assert.equal(calls.length,2);assert.equal(extracted.token,null);
 });
 test('readiness sources are network-off, no-claim and systemd-credential bounded',()=>{
   const read=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');

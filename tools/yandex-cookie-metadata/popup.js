@@ -10,7 +10,7 @@ const api={
   queryTabs:details=>chrome.tabs.query(details),
   getStores:()=>chrome.cookies.getAllCookieStores(),
   getCookies:details=>chrome.cookies.getAll(details),
-  extractCsrf:tabId=>chrome.tabs.sendMessage(tabId,{version:1,op:'csrf_handoff_extract'})
+  sendTabMessage:(tabId,message)=>chrome.tabs.sendMessage(tabId,message)
 };
 function disableAll(){button.disabled=true;csrfButton.disabled=true;diagnosticButton.disabled=true;}
 function cancel(){

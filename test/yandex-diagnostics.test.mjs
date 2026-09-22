@@ -171,8 +171,8 @@ test('diagnostic source has no credential property access, collectSession or imp
   const source=readFileSync(new URL('../tools/yandex-cookie-metadata/diagnostics.js',import.meta.url),'utf8');
   assert.doesNotMatch(source,/\.value\b|\[['"]value['"]\]|collectSession|connectBusiness|op:\s*['"](?:hello|import)['"]|JSON\.stringify|fetch\s*\(|console\./);
 });
-test('actual diagnostic button sends only diagnose and disables import for that popup',async()=>{
-  const elements=new Map(['copy','diagnose','cancel','status'].map(id=>[id,{disabled:false,textContent:'',events:{},addEventListener(n,f){this.events[n]=f;}}]));
+test('actual diagnostic button sends only diagnose and disables import/CSRF for that popup',async()=>{
+  const elements=new Map(['copy','csrf-ready','diagnose','cancel','status'].map(id=>[id,{disabled:false,textContent:'',events:{},addEventListener(n,f){this.events[n]=f;}}]));
   const held={document:globalThis.document,window:globalThis.window,chrome:globalThis.chrome};const f=fixture();
   let receiver;const sent=[];
   try{
@@ -181,8 +181,10 @@ test('actual diagnostic button sends only diagnose and disables import for that 
       onMessage:{addListener(fn){receiver=fn;}},onDisconnect:{addListener(){}},disconnect(){},postMessage(m){sent.push(m);queueMicrotask(()=>receiver(nativePass));}
     };}}};
     await import('../tools/yandex-cookie-metadata/popup.js');
-    assert.equal(sent.length,0);await elements.get('diagnose').events.click();await elements.get('copy').events.click();
-    assert.deepEqual(sent,[{version:1,op:'diagnose'}]);assert.ok(elements.get('copy').disabled);
+    assert.equal(sent.length,0);await elements.get('diagnose').events.click();
+    await elements.get('copy').events.click();await elements.get('csrf-ready').events.click();
+    assert.deepEqual(sent,[{version:1,op:'diagnose'}]);
+    assert.ok(elements.get('copy').disabled);assert.ok(elements.get('csrf-ready').disabled);
     assert.equal(elements.get('status').textContent,'diagnostic stage = METADATA_ONLY\ndiagnostic code = PASS_VALUES_NOT_CHECKED\nimport calls = 0');
   }finally{for(const n of Object.keys(held)){if(held[n]===undefined)delete globalThis[n];else globalThis[n]=held[n];}}
 });

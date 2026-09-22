@@ -87,7 +87,7 @@ test('stage5 service is manual one-shot with OS network isolation and least priv
   for(const line of ['Type=oneshot','User=review-yandex-writer','Group=review-yandex-writer',
     'Restart=no','PrivateNetwork=yes','RestrictAddressFamilies=AF_UNIX','ProtectSystem=strict',
     'NoNewPrivileges=yes','CapabilityBoundingSet=','ProtectHome=yes','LimitCORE=0'])
-    assert.ok(unit.split('\n').includes(line),line);
+    assert.ok(unit.split(/\r?\n/).includes(line),line);
   assert.doesNotMatch(unit,/^\[Install\]|^WantedBy=|^Wants=|^OnCalendar=/m);
   assert.match(unit,/^EnvironmentFile=\/etc\/review-activator-reply\/writer.env$/m);
   assert.match(unit,/^InaccessiblePaths=.*\/etc\/review-activator-yandex/m);

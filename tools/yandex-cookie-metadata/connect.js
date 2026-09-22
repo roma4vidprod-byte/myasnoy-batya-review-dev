@@ -98,7 +98,7 @@ export async function connectBusiness(api,channel,{now=Date.now,cancelled=()=>fa
   finally { if(session){session.cookies.length=0;} session=null;hello=null;channel.close(); }
 }
 export async function connectCsrfReadiness(api,channel,{now=Date.now,cancelled=()=>false}={}){
-  let hello,extracted;
+  let hello,preload,token='';
   try{
     if(cancelled())stop();
     hello=await channel.exchange({version:1,op:'hello'});
@@ -113,18 +113,25 @@ export async function connectCsrfReadiness(api,channel,{now=Date.now,cancelled=(
     const url=new URL(tabs[0].url);
     if(url.origin!=='https://yandex.ru'||!url.pathname.startsWith('/sprav/')||
        !url.pathname.split('/').includes('54309413522'))stop();
-    extracted=await api.extractCsrf(tabs[0].id);
-    if(cancelled()||now()>=hello.expiresAt||!extracted||extracted.version!==1||
-       extracted.ok!==true||extracted.organizationId!=='54309413522'||
-       typeof extracted.token!=='string'||extracted.token.length<8||
-       extracted.token.length>1024||!/^[\x21-\x7e]+$/.test(extracted.token))stop();
+    preload=await api.sendTabMessage(tabs[0].id,{
+      version:1,op:'csrf_handoff_read',nonce:hello.nonce,expiresAt:hello.expiresAt
+    });
+    if(cancelled()||now()>=hello.expiresAt||!preload||preload.version!==1||
+       preload.ok!==true||preload.code!=='CSRF_VALUE_READY'||
+       typeof preload.token!=='string'||preload.token.length<8||
+       preload.token.length>1024||!/^[\x21-\x7e]+$/.test(preload.token))stop();
+    token=preload.token;preload.token=null;
     const result=await channel.exchange({
       version:1,op:'csrf_handoff',nonce:hello.nonce,
-      organizationId:'54309413522',token:extracted.token
+      organizationId:'54309413522',token
     });
+    token='';
     if(!result||Object.keys(result).sort().join()!=='ok,state'||
        result.ok!==true||result.state!=='CSRF_READY')stop();
     return {ok:true,state:'CSRF_READY'};
   }catch{stop();}
-  finally{if(extracted)extracted.token='';extracted=null;hello=null;channel.close();}
+  finally{
+    token='';if(preload&&typeof preload==='object')preload.token=null;
+    preload=null;hello=null;channel.close();
+  }
 }

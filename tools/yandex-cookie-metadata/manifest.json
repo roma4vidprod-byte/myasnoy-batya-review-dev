@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Review Activator DEV — Cookie Metadata",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "minimum_chrome_version": "132",
-  "description": "Operator-initiated local native import and CSRF readiness for Asbest DEV. No Yandex writes.",
+  "description": "Operator-initiated local Yandex session/CSRF handoff for Asbest DEV. No provider write.",
   "permissions": ["cookies", "nativeMessaging"],
   "host_permissions": ["https://yandex.ru/*"],
   "incognito": "not_allowed",
