@@ -37,10 +37,18 @@ function atomicWrite(path,value){
     chmodSync(tmp,0o600);renameSync(tmp,path);
   }finally{try{rmSync(tmp,{force:true});}catch{}}
 }
+export function validateWriterGateEnv(raw){
+  if(typeof raw!=='string')fail('RECOVERY_RUNTIME_UNSAFE');
+  const lines=raw.split(/\r?\n/).map(v=>v.trim()).filter(v=>v&&!v.startsWith('#'));
+  const gates=lines.filter(v=>v.startsWith('RA_YANDEX_REPLY_WRITE_ENABLED='));
+  if(gates.length!==1||gates[0]!=='RA_YANDEX_REPLY_WRITE_ENABLED=false')
+    fail('RECOVERY_RUNTIME_UNSAFE');
+  return true;
+}
 function assertRuntimeGuards(){
   let env;
-  try{env=readFileSync(WRITER_ENV,'utf8').trim();}catch{fail('RECOVERY_RUNTIME_UNSAFE');}
-  if(env!=='RA_YANDEX_REPLY_WRITE_ENABLED=false')fail('RECOVERY_RUNTIME_UNSAFE');
+  try{env=readFileSync(WRITER_ENV,'utf8');}catch{fail('RECOVERY_RUNTIME_UNSAFE');}
+  validateWriterGateEnv(env);
   const active=spawnSync('/usr/bin/systemctl',['show','review-activator-reply.service','-p','ActiveState','--value'],
     {encoding:'utf8',timeout:5000});
   if(active.status!==0||String(active.stdout).trim()==='active')fail('RECOVERY_RUNTIME_UNSAFE');

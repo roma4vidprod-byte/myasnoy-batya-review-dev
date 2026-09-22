@@ -5,6 +5,7 @@ import {readFileSync} from 'node:fs';
 import {sanitizeOpsTelemetry} from '../lib/ai/yandex-ops.js';
 import {buildRecoveryPlan,safeRecoveryResult,RECOVERY_POLICY_VERSION} from '../lib/server/ai-ops-recovery.js';
 import {runRecoveryCycle} from '../tools/ai-ops-recovery/recovery-cycle.mjs';
+import {validateWriterGateEnv} from '../tools/ai-ops-recovery/recovery-orchestrator.mjs';
 
 const telemetry=sanitizeOpsTelemetry({
   telemetry_version:1,
@@ -140,4 +141,11 @@ test('Stage18 source and systemd boundaries contain no reply write path',()=>{
 
 test('Stage18 recovery policy version is fixed and separate from AI policy',()=>{
   assert.equal(RECOVERY_POLICY_VERSION,'ai-ops-recovery-v1');
+});
+
+test('Stage18 writer gate parser allows other safe env lines but requires one exact false gate',()=>{
+  assert.equal(validateWriterGateEnv('OTHER=1\nRA_YANDEX_REPLY_WRITE_ENABLED=false\nANOTHER=x\n'),true);
+  assert.throws(()=>validateWriterGateEnv('OTHER=1\nRA_YANDEX_REPLY_WRITE_ENABLED=true\n'),/RECOVERY_RUNTIME_UNSAFE/);
+  assert.throws(()=>validateWriterGateEnv('RA_YANDEX_REPLY_WRITE_ENABLED=false\nRA_YANDEX_REPLY_WRITE_ENABLED=false\n'),/RECOVERY_RUNTIME_UNSAFE/);
+  assert.throws(()=>validateWriterGateEnv('OTHER=1\n'),/RECOVERY_RUNTIME_UNSAFE/);
 });
