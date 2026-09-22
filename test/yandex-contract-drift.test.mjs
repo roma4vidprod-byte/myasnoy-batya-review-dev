@@ -41,6 +41,7 @@ test('Stage20 browser path classification never exports an arbitrary replacement
 test('Stage20 deterministic classifier distinguishes auth/challenge/path/preload/csrf/api drift',()=>{
   const cases=[
     [evidence({challenge_marker:true}),'CHALLENGE_SURFACE','OPERATOR_CHALLENGE'],
+    [evidence({document_requests:3}),'PAGE_NAVIGATION_CHAIN_DRIFT','CONTRACT_REVIEW'],
     [evidence({final_path_kind:'PASSPORT',same_org_segment:false}),'AUTH_CONTRACT_DRIFT','OPERATOR_REAUTH'],
     [evidence({result:'TIMEOUT',error_code:'SERVER_CSRF_NAVIGATION_FAILED',http_status:null,content_type:'UNKNOWN',final_path_kind:'UNKNOWN',same_org_segment:false,preload_marker:false,csrf_key_occurrences:0,csrf_candidate_count:0,body_bytes:null}),'BROWSER_NAVIGATION_DRIFT','CONTRACT_REVIEW'],
     [evidence({result:'FAIL',error_code:'CONTRACT_DRIFT_HTTP_STATUS',final_path_kind:'SAME_ORG_OTHER'}),'PAGE_PATH_DRIFT','CONTRACT_REVIEW'],
