@@ -43,6 +43,13 @@
     "tools/yandex-cookie-metadata/csrf-handoff-content.js",
     "tools/yandex-cookie-metadata/csrf-handoff-page.js",
     "tools/yandex-cookie-metadata/manifest.json",
+    "tools/yandex-server-browser/browser-access.sql",
+    "tools/yandex-server-browser/browser-session-store.mjs",
+    "tools/yandex-server-browser/browser-session-adapter.mjs",
+    "tools/yandex-server-browser/chrome-pipe.mjs",
+    "tools/yandex-server-browser/browser-read.mjs",
+    "tools/yandex-server-browser/browser-once.mjs",
+    "tools/yandex-server-browser/review-yandex-browser.service",
     "admin.html",
     "lib/server/vps/lab-config.js",
     "lib/server/vps/lab.js",
@@ -54,6 +61,9 @@
     "yandex_organization_id": "54309413522",
     "session_account_label": "myasnoibatya-zakaz"
   },
+  "system_dependencies": [
+    {"name":"google-chrome-stable","binary":"/usr/bin/google-chrome-stable","reference_version":"153.0.8010.52","sandbox_required":true,"remote_debugging":"pipe_only"}
+  ],
   "parameterization_targets": [
     "lib/server/yandex-session/profile-context.js",
     "lib/server/yandex-session/crypto.js",
@@ -69,6 +79,7 @@
     "tools/vps14/reply-send-state.sql",
     "tools/vps14/reply-worker-access.sql",
     "tools/vps14/reply-workflow-read.sql",
+    "tools/yandex-server-browser/browser-access.sql",
     "tools/yandex-cookie-metadata/connect.js",
     "tools/yandex-cookie-metadata/csrf-handoff-content.js",
     "tools/yandex-cookie-metadata/csrf-handoff-page.js",
@@ -100,6 +111,7 @@
     "test/vps14-reply-workflow-read.test.mjs",
     "test/vps14-approved-write-orchestration.test.mjs",
     "test/vps14-writer-runtime.test.mjs",
+    "test/yandex-server-browser.test.mjs",
     "tools/vps10/test_provider_once.py"
   ],
   "reference_docs": [
@@ -108,7 +120,8 @@
     "docs/YANDEX_NATIVE_IMPORT_V4.md",
     "docs/VPS13_REPLY_DRAFTS.md",
     "docs/VPS14_YANDEX_REPLY_CONTRACT.md",
-    "docs/VPS14_STAGE6_FINAL_QA.md"
+    "docs/VPS14_STAGE6_FINAL_QA.md",
+    "docs/YANDEX_SERVER_BROWSER_STAGE13.md"
   ],
   "one_stage_gates": [
     "INPUT_PROFILE_VALID",
@@ -120,6 +133,7 @@
     "ACCOUNT_SCOPE_MATERIALIZED",
     "SESSION_KEYRING_ISOLATED",
     "TECHNICAL_SESSION_IMPORTED",
+    "SERVER_BROWSER_READ_PASS",
     "READ_ONLY_HEALTH_PASS",
     "FULL_SYNC_PASS",
     "REPLY_READINESS_NO_WRITE_PASS",

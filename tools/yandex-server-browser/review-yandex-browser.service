@@ -1,0 +1,46 @@
+[Unit]
+Description=Review Activator Stage13 isolated Yandex server browser (read-only one-shot)
+ConditionHost=v3248121.hosted-by-vdsina.ru
+After=network-online.target postgresql@17-main.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=review-yandex-browser
+Group=review-yandex-browser
+WorkingDirectory=/opt/review-activator-yandex
+ExecStart=/opt/node/bin/node /opt/review-activator-yandex/tools/yandex-server-browser/browser-once.mjs
+Environment=RA_RUNTIME_PROFILE=vps-lab
+Environment=RA_YANDEX_MODE=read-only-admin
+Environment=RA_YANDEX_BROWSER_BIN=/usr/bin/google-chrome-stable
+LoadCredential=yandex-session-key:/etc/review-activator-yandex/session-key.json
+RuntimeDirectory=review-yandex-browser
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=no
+UMask=0077
+TimeoutStartSec=35
+TimeoutStopSec=5
+Restart=no
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryHigh=384M
+MemoryMax=512M
+TasksMax=256
+LimitCORE=0
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
+# Deliberately no install section, timer, socket or automatic restart.
