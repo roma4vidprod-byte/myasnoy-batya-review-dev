@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 14
+# Yandex + AI Autonomy Roadmap — after Stage 15
 
-Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Stage 15 Autonomous CSRF + server-side one-shot writer PASS on readiness-only live acceptance; live execute remains exact-approval gated and was not invoked. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -30,11 +30,10 @@ Isolated VPS Chrome, ephemeral profile, pipe-only CDP, exact GET-only Yandex rea
 ### Stage 14 — AI Reply Engine Foundation — PASS
 Pointer-style AI draft composer, exact-scope safe review context, deterministic output policy, isolated Unix-socket AI service and human approval boundary. Provider activation is fail-closed until API credential/model is configured.
 
-## Remaining stages
+### Stage 15 — Autonomous CSRF + server-side one-shot writer — PASS
+Root-only VPS orchestration now performs a transient Server Browser CSRF handoff into the existing isolated writer boundary without the customer laptop. Live readiness proved `SERVER_CSRF_READY`, one browser GET, zero writer provider requests, zero provider writes, zero queue claims, exact session/action binding, ephemeral browser cleanup and unchanged DB hashes. The execute path remains exact action/review/text/fingerprint/idempotency bound; no live Stage15 reply POST was performed. Canonical acceptance: `docs/YANDEX_SERVER_REPLY_STAGE15.md`.
 
-### Stage 15 — Autonomous CSRF + server-side one-shot writer
-Use the VPS server browser to obtain fresh CSRF and execute an exact approved reply without the customer laptop.
-Preserve exact action/review/text/fingerprint/idempotency binding and never auto-retry an uncertain POST.
+## Remaining stages
 
 ### Stage 16 — Yandex Session Lifecycle Manager
 Create deterministic AUTH → SESSION → CSRF → READ telemetry, cookie/session expiry monitoring, rotation and readiness state.

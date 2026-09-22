@@ -46,7 +46,7 @@ Once the profile is provided and representative access is confirmed, the whole t
 8. Run the isolated server-browser one-shot: ephemeral profile, pipe-only CDP, exact GET-only Reviews API, provider writes = 0.
 9. Run read-only health: AUTH/SESSION/READ must pass before persistence.
 10. Run full review read + scoped persistence and prove zero duplicates.
-11. Run reply-readiness with provider write disabled and provider writes = 0.
+11. Run the Stage15 root-only server reply orchestrator in `mode=readiness` only. Require `SERVER_CSRF_READY`, browser provider requests = 1, writer provider requests = 0, provider writes = 0, queue claims = 0, exact session/action binding and an ephemeral browser profile. Never use `mode=execute` during bootstrap.
 12. Deploy the admin workflow and prove exact-scope prepare/approve/cancel/read behavior.
 13. Verify the AI policy boundary: no raw secrets, no direct provider write, no tenant/scope changes, and only allowlisted Ops actions.
 14. Verify hourly sync, session revision binding, backup/monitoring and reboot safety.
@@ -66,6 +66,7 @@ A real reply still requires a later stage with exact review + exact text + separ
 - `tools/yandex-account-bootstrap/bootstrap-manifest.json` — canonical runtime, verification and parameterization file allowlist.
 - `scripts/build-yandex-account-bootstrap.mjs` — offline validator/builder; no network and no credentials.
 - `docs/YANDEX_TECHNICAL_ACCOUNT_ONE_STAGE_BOOTSTRAP.md` — this ordered runbook.
+- `docs/YANDEX_SERVER_REPLY_STAGE15.md` — accepted Server Browser CSRF/orchestrator boundary and no-write live evidence.
 
 The builder produces:
 
@@ -86,11 +87,11 @@ Historical evidence and old live-result files are deliberately excluded from the
 - hourly review sync passes independently of the customer laptop;
 - full review persistence is scoped and duplicate-free;
 - admin workflow reads the correct tenant only;
-- reply readiness is PASS with provider writes = 0;
+- Stage15 server reply readiness is PASS with `SERVER_CSRF_READY`, provider writes = 0, queue claims = 0, exact bindings and no persistent browser profile;
 - AI policy boundary is PASS: AI cannot access secrets, enable writes, alter scope, bypass challenges or retry uncertain POSTs;
 - no secret exists in Git/bootstrap profile/evidence;
 - a backup and rollback point exist;
 - all account-specific tests pass;
 - the stage ends before any real reply POST.
 
-After this acceptance, later autonomy work can move the account to Server Browser, Session Lifecycle and automatic recovery.
+After this acceptance, the account is ready to reuse the proven Server Browser + Stage15 server-CSRF boundary and proceed to Session Lifecycle and automatic recovery work.

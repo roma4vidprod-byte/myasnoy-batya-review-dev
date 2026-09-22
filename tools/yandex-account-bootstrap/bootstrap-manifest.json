@@ -108,6 +108,7 @@
     "tools/yandex-account-bootstrap/meatfather-profile.template.json",
     "tools/yandex-account-bootstrap/README.md",
     "docs/YANDEX_TECHNICAL_ACCOUNT_ONE_STAGE_BOOTSTRAP.md",
+    "docs/YANDEX_SERVER_REPLY_STAGE15.md",
     "docs/YANDEX_AUTONOMY_ROADMAP.md",
     "docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md"
   ],
@@ -142,6 +143,7 @@
     "docs/VPS14_YANDEX_REPLY_CONTRACT.md",
     "docs/VPS14_STAGE6_FINAL_QA.md",
     "docs/YANDEX_SERVER_BROWSER_STAGE13.md",
+    "docs/YANDEX_SERVER_REPLY_STAGE15.md",
     "docs/AI_REPUTATION_AND_YANDEX_OPS_ARCHITECTURE.md",
     "docs/AI_REPLY_ENGINE_STAGE14.md"
   ],

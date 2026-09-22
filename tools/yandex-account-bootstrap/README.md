@@ -16,6 +16,13 @@ Canonical file allowlist: `bootstrap-manifest.json`.
 If representative access is still PENDING, the generated plan remains BLOCKED.
 If it is CONFIRMED and validation passes, the plan reports READY_FOR_ONE_STAGE_ACCOUNT_PREPARATION.
 
+## Current portability baseline
+
+The pack includes the accepted Stage13 Server Browser and Stage15 server-CSRF/root-orchestrator runtime.
+During technical-account bootstrap, Stage15 is exercised only in `mode=readiness`: one exact browser GET may obtain CSRF, while writer provider requests, provider writes and queue claims must remain zero.
+The accepted Stage15 entrypoints are symlink-safe so `/current` may point to an immutable release without turning the CLI into a silent no-op.
+Canonical Stage15 acceptance: `docs/YANDEX_SERVER_REPLY_STAGE15.md`.
+
 ## Safety
 
 The builder is offline and does not log in to Yandex.
