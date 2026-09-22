@@ -47,10 +47,12 @@ Once the profile is provided and representative access is confirmed, the whole t
 9. Run read-only health: AUTH/SESSION/READ must pass before persistence.
 10. Run full review read + scoped persistence and prove zero duplicates.
 11. Run the Stage15 root-only server reply orchestrator in `mode=readiness` only. Require `SERVER_CSRF_READY`, browser provider requests = 1, writer provider requests = 0, provider writes = 0, queue claims = 0, exact session/action binding and an ephemeral browser profile. Never use `mode=execute` during bootstrap.
-12. Deploy the admin workflow and prove exact-scope prepare/approve/cancel/read behavior.
-13. Verify the AI policy boundary: no raw secrets, no direct provider write, no tenant/scope changes, and only allowlisted Ops actions.
-14. Verify hourly sync, session revision binding, backup/monitoring and reboot safety.
-15. Freeze the account bootstrap evidence and stop with a report.
+12. Run the Stage16 lifecycle snapshot with provider requests = 0 and provider writes = 0. Require sanitized cookie/session TTL aggregates only; raw cookie names/values, CSRF values, session keys and credential identifiers are forbidden.
+13. Run the Stage16 deep readiness chain `AUTH -> SESSION -> CSRF -> READ`. Require one Stage15 CSRF browser GET + one Server Browser read GET, the same session revision across all stages, provider writes = 0 and queue claims = 0.
+14. Deploy the admin workflow and prove exact-scope prepare/approve/cancel/read behavior.
+15. Verify the AI policy boundary: no raw secrets, no direct provider write, no tenant/scope changes, and only allowlisted Ops actions.
+16. Verify hourly sync, Stage16 network-off lifecycle monitoring, session revision binding, backup/monitoring and reboot safety.
+17. Freeze the account bootstrap evidence and stop with a report.
 
 Any failed gate stops the stage. Roll back server/runtime changes before retrying.
 
