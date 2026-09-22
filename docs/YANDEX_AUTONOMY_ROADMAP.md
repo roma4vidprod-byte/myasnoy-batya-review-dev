@@ -1,6 +1,6 @@
-# Yandex + AI Autonomy Roadmap — after Stage 13
+# Yandex + AI Autonomy Roadmap — after Stage 14
 
-Status: Stage 13 PASS. Server Browser Foundation works on VPS. Account Bootstrap Pack is maintained.
+Status: Stage 13 PASS. Stage 14 AI Reply Engine Foundation PASS and deployed fail-closed. Account Bootstrap Pack is maintained.
 
 ## Fixed strategy
 
@@ -27,12 +27,10 @@ Every future Yandex/AI stage that adds or changes runtime, DB, browser, session,
 ### Stage 13 — Server Browser Foundation — PASS
 Isolated VPS Chrome, ephemeral profile, pipe-only CDP, exact GET-only Yandex read, separate DB/OS role and provider writes = 0.
 
-## Remaining stages
+### Stage 14 — AI Reply Engine Foundation — PASS
+Pointer-style AI draft composer, exact-scope safe review context, deterministic output policy, isolated Unix-socket AI service and human approval boundary. Provider activation is fail-closed until API credential/model is configured.
 
-### Stage 14 — AI Reply Engine Foundation
-Add AI-generated reply drafts inside the existing Stage12 workflow.
-AI receives only safe review/business context and produces a draft; deterministic policy validation + human approval remain mandatory.
-No direct Yandex publish capability is given to the model.
+## Remaining stages
 
 ### Stage 15 — Autonomous CSRF + server-side one-shot writer
 Use the VPS server browser to obtain fresh CSRF and execute an exact approved reply without the customer laptop.
