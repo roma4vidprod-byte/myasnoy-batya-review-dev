@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "customer_slug": "myasnoy-batya",
+  "technical_yandex_login": "CHANGE-ME",
+  "session_account_label": "slukh-myasnoy-batya-tech-01",
+  "company_id": "13f3cb80-487a-4a19-96a1-fb3103200230",
+  "location_id": "9a95f63b-18e6-447b-a449-8530b67ddbae",
+  "yandex_organization_id": "54309413522",
+  "provider": "yandex",
+  "location_label": "Асбест · Ленинградская 41А",
+  "representative_access": "PENDING"
+}

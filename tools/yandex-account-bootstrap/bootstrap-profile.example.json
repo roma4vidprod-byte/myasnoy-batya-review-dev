@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "customer_slug": "example-client",
+  "technical_yandex_login": "technical-account@example.invalid",
+  "session_account_label": "slukh-example-client-01",
+  "company_id": "00000000-0000-4000-8000-000000000001",
+  "location_id": "00000000-0000-4000-8000-000000000002",
+  "yandex_organization_id": "12345678901",
+  "provider": "yandex",
+  "location_label": "Example location",
+  "representative_access": "PENDING"
+}
