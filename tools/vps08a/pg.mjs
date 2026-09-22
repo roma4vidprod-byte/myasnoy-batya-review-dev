@@ -6,7 +6,7 @@ import {userInfo} from 'node:os';
 import {VPS_SESSION_SCOPE} from '../../lib/server/yandex-session/profile-context.js';
 import {fail} from '../../lib/server/yandex-session/crypto.js';
 
-export function createVpsRpc({persistencePhase} = {}) {
+export function createVpsRpc({persistencePhase,persistenceRevision} = {}) {
   const role=userInfo().username;
   if(process.platform!=='linux'||!['review-yandex-reader','review-yandex-import'].includes(role))fail('SESSION_ROLE_DENIED');
   return async function rpc(name,args) {
@@ -17,13 +17,14 @@ export function createVpsRpc({persistencePhase} = {}) {
     if(!persist && (name!=='review_yandex_session_store'||args.p_company_id!==VPS_SESSION_SCOPE.companyId||
       args.p_location_id!==VPS_SESSION_SCOPE.locationId||args.p_org_id!==VPS_SESSION_SCOPE.organizationId||
       !['status','read','replace','transition'].includes(args.p_action)))fail('SESSION_SCOPE_INVALID');
-    const revision=persist?4:args.p_expected_revision;
+    const revision=persist?persistenceRevision:args.p_expected_revision;
     if(revision!==null&&(!Number.isSafeInteger(revision)||revision<0))fail('SESSION_REVISION_REQUIRED');
+    if(persist&&revision<1)fail('SESSION_REVISION_REQUIRED');
     const data=JSON.stringify(persist?args.p_reviews:args.p_data);
     if(!data||Buffer.byteLength(data)>(persist?4_000_000:100000))fail('SESSION_INPUT_INVALID');
     const quoted="'"+data.replaceAll("'","''")+"'::jsonb";
     const sql=persist
-      ? `select vps_yandex_private.persist_call('${args.p_company_id}'::uuid,'${args.p_location_id}'::uuid,'yandex','${args.p_external_location_id}',4,'${persistencePhase}',${quoted});\n`
+      ? `select vps_yandex_private.persist_call('${args.p_company_id}'::uuid,'${args.p_location_id}'::uuid,'yandex','${args.p_external_location_id}',${revision},'${persistencePhase}',${quoted});\n`
       : `select vps_yandex_private.session_call('${args.p_company_id}'::uuid,'${args.p_location_id}'::uuid,'${args.p_org_id}','${args.p_action}',${revision??'null'},${quoted});\n`;
     return new Promise((resolve,reject)=>{
       const child=spawn('/usr/lib/postgresql/17/bin/psql',['-XqAtw','-v','ON_ERROR_STOP=1','-h','/var/run/postgresql','-U',role,'-d','review_activator_lab'],

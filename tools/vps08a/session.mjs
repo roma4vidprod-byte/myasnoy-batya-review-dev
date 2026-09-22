@@ -4,7 +4,7 @@
 import {openSync,closeSync,fstatSync,readFileSync,constants} from 'node:fs';
 import {userInfo} from 'node:os';
 import {createVpsSessionContext,VPS_SESSION_SCOPE as scope} from '../../lib/server/yandex-session/profile-context.js';
-import {fail,decryptSessionClassified} from '../../lib/server/yandex-session/crypto.js';
+import {fail,decryptSessionForRequest} from '../../lib/server/yandex-session/crypto.js';
 import {createSessionStore} from '../../lib/server/yandex-session/store.js';
 import {createYandexSessionService} from '../../lib/server/yandex-session/service.js';
 import {prepareVpsImport} from '../../lib/server/yandex-session/vps-import.js';
@@ -24,7 +24,7 @@ try {
   const manual=['manual-first','manual-replay'].includes(operation);
   const context=createVpsSessionContext(),role=userInfo().username;
   if(operation==='import'?role!=='review-yandex-import':role!=='review-yandex-reader')fail('SESSION_ROLE_DENIED');
-  const rpc=createVpsRpc({persistencePhase:manual?operation.slice(7):undefined}),store=createSessionStore({rpc,context});
+  const rpc=createVpsRpc(),store=createSessionStore({rpc,context});
   const status=()=>rpc('review_yandex_session_store',{p_company_id:scope.companyId,p_location_id:scope.locationId,p_org_id:scope.organizationId,p_action:'status',p_expected_revision:null,p_data:{}});
   if(operation==='status'){emit({ok:true,session:await status()});}
   else {
@@ -56,12 +56,15 @@ try {
     }else{
       const row=await store.read(scope);
       if(!row)fail('SESSION_NOT_READY');
-      const validated=decryptSessionClassified(scope,row,ring,Date.now(),context);
+      const validated=decryptSessionForRequest(scope,row,ring,Date.now(),context);
       for(const c of validated.cookies)c.value='';
+      const persistenceRpc=manual?createVpsRpc({
+        persistencePhase:operation.slice(7),persistenceRevision:Number(row.revision)
+      }):null;
       const service=createYandexSessionService({store,keyring:ring,context,allowRead:true,
-        allowManualPersistence:manual,persistenceWriter:manual?createReviewPersistenceWriter({rpc}):null,
+        allowManualPersistence:manual,persistenceWriter:manual?createReviewPersistenceWriter({rpc:persistenceRpc}):null,
         fetchImpl:async(url,options)=>{attempted++;const response=await fetch(url,options);completed++;statuses.push(response.status);return response;}});
-      const result=manual?await service.persistManual(scope,{expectedRevision:4}):operation==='boundary34'
+      const result=manual?await service.persistManual(scope,{expectedRevision:Number(row.revision)}):operation==='boundary34'
         ? await service.boundaryDiagnostic(scope,{expectedRevision:3})
         : operation==='page4'
         ? await service.contractDiagnostic(scope,{page:4,expectedRevision:3})

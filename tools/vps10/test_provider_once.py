@@ -19,7 +19,7 @@ SPEC.loader.exec_module(M)
 def valid():
     return {
         'ok': True, 'operation': 'manual-replay',
-        'state_before': 'READY', 'revision_before': 4, 'revision': 4,
+        'state_before': 'READY', 'revision_before': 6, 'revision': 6,
         'session_mutations': 'OFF', 'review_persistence': 'SUCCESS',
         'notifications': 'OFF', 'scope_valid': True, 'contract_valid': True,
         'attempted': 4, 'completed': 4, 'http_statuses': [200] * 4,
@@ -38,7 +38,7 @@ class ValidateTests(unittest.TestCase):
     def test_valid_replay(self):
         before = {'real': 72, 'synthetic': 2, 'duplicates': 0}
         after = {'real': 72, 'synthetic': 2, 'duplicates': 0}
-        result = M.validate_sync(valid(), before, after)
+        result = M.validate_sync(valid(), before, after, 6)
         self.assertEqual(result['real_review_count'], 72)
         self.assertEqual(result['unchanged'], 72)
 
@@ -49,7 +49,8 @@ class ValidateTests(unittest.TestCase):
             M.validate_sync(
                 value,
                 {'real': 72, 'synthetic': 2, 'duplicates': 0},
-                {'real': 72, 'synthetic': 2, 'duplicates': 0}
+                {'real': 72, 'synthetic': 2, 'duplicates': 0},
+                6
             )
 
     def test_rejects_insert_count_mismatch(self):
@@ -61,7 +62,8 @@ class ValidateTests(unittest.TestCase):
             M.validate_sync(
                 value,
                 {'real': 72, 'synthetic': 2, 'duplicates': 0},
-                {'real': 72, 'synthetic': 2, 'duplicates': 0}
+                {'real': 72, 'synthetic': 2, 'duplicates': 0},
+                6
             )
 
     def test_rejects_session_mutation(self):
@@ -71,7 +73,19 @@ class ValidateTests(unittest.TestCase):
             M.validate_sync(
                 value,
                 {'real': 72, 'synthetic': 2, 'duplicates': 0},
-                {'real': 72, 'synthetic': 2, 'duplicates': 0}
+                {'real': 72, 'synthetic': 2, 'duplicates': 0},
+                6
+            )
+
+    def test_rejects_revision_drift(self):
+        value = valid()
+        value['revision'] = 7
+        with self.assertRaises(M.SafeFailure):
+            M.validate_sync(
+                value,
+                {'real': 72, 'synthetic': 2, 'duplicates': 0},
+                {'real': 72, 'synthetic': 2, 'duplicates': 0},
+                6
             )
 
 

@@ -1,24 +1,7 @@
--- VPS09 capability adapter, not another writer. Apply only to the fixed LAB
--- or disposable native fixture. The existing invoker RPC stays unchanged.
 begin;
 set local lock_timeout='5s';
-do $$ begin
-  if current_database() not in ('review_activator_lab','vps09_disposable')
-    or not exists(select 1 from vps_lab_private.version where version='vps04-auth-api-v1') then
-    raise exception 'VPS_DATABASE_REQUIRED';
-  end if;
-end $$;
-grant select,insert on public.review_external_reviews to vps_yandex_owner;
-grant update(author_name,rating,review_text,published_at,observed_at,raw_payload,owner_reply_text,owner_replied_at)
-  on public.review_external_reviews to vps_yandex_owner;
-create policy vps09_exact_reviews on public.review_external_reviews to vps_yandex_owner
-  using(company_id='13f3cb80-487a-4a19-96a1-fb3103200230' and location_id='9a95f63b-18e6-447b-a449-8530b67ddbae'
-    and provider='yandex' and external_location_id='54309413522')
-  with check(company_id='13f3cb80-487a-4a19-96a1-fb3103200230' and location_id='9a95f63b-18e6-447b-a449-8530b67ddbae'
-    and provider='yandex' and external_location_id='54309413522');
-grant execute on function public.review_persist_external_reviews(uuid,uuid,text,text,jsonb) to vps_yandex_owner;
-
-create function vps_yandex_private.persist_call(p_company_id uuid,p_location_id uuid,p_provider text,
+set local statement_timeout='30s';
+create or replace function vps_yandex_private.persist_call(p_company_id uuid,p_location_id uuid,p_provider text,
  p_org_id text,p_expected_revision bigint,p_phase text,p_reviews jsonb)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare v_state text; v_revision bigint; v_count bigint; v_result jsonb;
@@ -58,7 +41,4 @@ begin
       or r.raw_payload is distinct from b.raw_payload) then raise exception 'REVIEW_BATCH_VERIFY_FAILED'; end if;
   return v_result;
 end $$;
-alter function vps_yandex_private.persist_call(uuid,uuid,text,text,bigint,text,jsonb) owner to vps_yandex_owner;
-revoke all on function vps_yandex_private.persist_call(uuid,uuid,text,text,bigint,text,jsonb) from public;
-grant execute on function vps_yandex_private.persist_call(uuid,uuid,text,text,bigint,text,jsonb) to "review-yandex-reader";
 commit;

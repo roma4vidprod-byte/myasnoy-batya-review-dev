@@ -69,8 +69,9 @@ def session_status():
     value = one_json(p.stdout)
     row = value.get('session')
     need(value.get('ok') is True and isinstance(row, dict), 'SESSION_STATUS_FAILED')
-    need(row.get('state') == 'READY' and row.get('revision') == 4,
-         'SESSION_NOT_READY_REV4')
+    need(row.get('state') == 'READY'
+         and type(row.get('revision')) is int and row.get('revision') >= 1,
+         'SESSION_NOT_READY')
     need(row.get('last_error_code') is None, 'SESSION_STATUS_FAILED')
     return row
 
@@ -105,13 +106,16 @@ from public.review_external_reviews;"""
     return value
 
 
-def validate_sync(value, before, after):
+def validate_sync(value, before, after, expected_revision):
     need(value.get('ok') is True and value.get('operation') == 'manual-replay',
          'SYNC_RESULT_INVALID')
-    need(value.get('state_before') == 'READY' and value.get('revision_before') == 4,
+    need(type(expected_revision) is int and expected_revision >= 1,
          'SYNC_SESSION_INVALID')
-    need(value.get('revision') == 4 and value.get('session_mutations') == 'OFF',
+    need(value.get('state_before') == 'READY'
+         and value.get('revision_before') == expected_revision,
          'SYNC_SESSION_INVALID')
+    need(value.get('revision') == expected_revision
+         and value.get('session_mutations') == 'OFF', 'SYNC_SESSION_INVALID')
     need(value.get('review_persistence') == 'SUCCESS'
          and value.get('notifications') == 'OFF', 'SYNC_PERSISTENCE_INVALID')
     need(value.get('scope_valid') is True and value.get('contract_valid') is True,
@@ -201,22 +205,24 @@ def main():
         return 0
     count = None
     try:
-        session_status()
+        session = session_status()
+        revision = session['revision']
         before = db_summary()
         count = before['real']
         child = run(session_args('manual-replay'), timeout=70)
         need(child.returncode == 0, 'SYNC_CHILD_FAILED')
         value = one_json(child.stdout)
-        session_status()
+        after_session = session_status()
+        need(after_session.get('revision') == revision, 'SYNC_SESSION_INVALID')
         after = db_summary()
         count = after['real']
-        summary = validate_sync(value, before, after)
+        summary = validate_sync(value, before, after, revision)
         write_receipt(True, count)
         print(json.dumps({
             'status': 'PASS', **summary,
             'provider_requests': value.get('attempted'),
             'yandex_writes': 0, 'notifications': 'OFF',
-            'session_revision': 4
+            'session_revision': revision
         }, separators=(',', ':')))
         return 0
     except SafeFailure as error:
