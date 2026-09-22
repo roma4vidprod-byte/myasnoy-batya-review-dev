@@ -1,0 +1,13 @@
+[Unit]
+Description=Review Activator Stage20 hourly Yandex contract drift check
+
+[Timer]
+OnBootSec=12min
+OnUnitActiveSec=1h
+RandomizedDelaySec=2min
+AccuracySec=1min
+Persistent=true
+Unit=review-yandex-contract-drift.service
+
+[Install]
+WantedBy=timers.target

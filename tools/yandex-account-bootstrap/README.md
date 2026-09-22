@@ -18,7 +18,7 @@ If it is CONFIRMED and validation passes, the plan reports READY_FOR_ONE_STAGE_A
 
 ## Current portability baseline
 
-The pack includes the accepted Stage13 Server Browser, Stage15 server-CSRF/root-orchestrator runtime, Stage16 Session Lifecycle Manager, Stage17 AI Yandex Ops Agent Foundation, Stage18 deterministic Automatic Recovery Orchestrator and Stage19 no-secret operator fallback.
+The pack includes the accepted Stage13 Server Browser, Stage15 server-CSRF/root-orchestrator runtime, Stage16 Session Lifecycle Manager, Stage17 AI Yandex Ops Agent Foundation, Stage18 deterministic Automatic Recovery Orchestrator, Stage19 no-secret operator fallback and Stage20 contract-drift protection/AI diagnosis boundary.
 During technical-account bootstrap, Stage15 is exercised only in `mode=readiness`: one exact browser GET may obtain CSRF, while writer provider requests, provider writes and queue claims must remain zero.
 Stage16 then runs a network-off lifecycle snapshot plus the explicit `AUTH -> SESSION -> CSRF -> READ` readiness chain. Scheduled lifecycle monitoring remains network-off and stores only safe TTL/count/freshness aggregates.
 Stage17 converts only fixed lifecycle/sync evidence into a strict sanitized AI Ops envelope. AI may return only an allowlisted classification/playbook proposal; execution and provider-write authorization remain false.

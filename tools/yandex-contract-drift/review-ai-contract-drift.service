@@ -1,0 +1,43 @@
+[Unit]
+Description=Review Activator Stage20 isolated AI contract drift diagnosis
+ConditionHost=v3248121.hosted-by-vdsina.ru
+ConditionPathExists=/etc/review-activator-ai/openai-api-key
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=review-ai-ops
+Group=review-ai-ops-client
+WorkingDirectory=/opt/review-activator-contract-drift/current
+ExecStart=/opt/node/bin/node /opt/review-activator-contract-drift/current/tools/yandex-contract-drift/drift-ai-service.mjs
+EnvironmentFile=-/etc/review-activator-ai/ops-model.env
+LoadCredential=openai-api-key:/etc/review-activator-ai/openai-api-key
+RuntimeDirectory=review-ai-contract-drift
+RuntimeDirectoryMode=0770
+Restart=on-failure
+RestartSec=3
+UMask=0007
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryHigh=128M
+MemoryMax=192M
+TasksMax=48
+LimitCORE=0
+InaccessiblePaths=-/etc/review-activator-yandex -/opt/review-activator-yandex -/opt/review-activator-yandex-browser -/opt/review-activator-reply -/var/backups/review-activator -/var/lib/review-activator-ops
+StandardInput=null
+StandardOutput=journal
+StandardError=journal
