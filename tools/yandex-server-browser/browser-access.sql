@@ -53,8 +53,10 @@ from public,anon,authenticated,service_role,"review-yandex-reader","review-yande
 grant execute on function vps_yandex_private.browser_session_read() to "review-yandex-browser";
 
 revoke all on all tables in schema public,review_private,vps_yandex_private from "review-yandex-browser";
-revoke execute on all functions in schema public,review_private from "review-yandex-browser";
+revoke execute on all functions in schema public,review_private,vps_yandex_private from "review-yandex-browser";
 revoke usage on schema review_private from "review-yandex-browser";
+grant usage on schema vps_yandex_private to "review-yandex-browser";
+grant execute on function vps_yandex_private.browser_session_read() to "review-yandex-browser";
 
 alter role "review-yandex-browser" set log_statement='none';
 alter role "review-yandex-browser" set log_min_error_statement='panic';

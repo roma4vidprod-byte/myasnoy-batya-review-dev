@@ -72,6 +72,7 @@ test('Stage13 browser DB role can only call read-only session RPC',()=>{
     "'54309413522','read',null",'SESSION_NOT_READY'
   ])assert.ok(sql.includes(value),value);
   assert.match(sql,/revoke all on all tables in schema public,review_private,vps_yandex_private/);
+  assert.match(sql,/revoke execute on all functions in schema public,review_private,vps_yandex_private/);
   assert.match(sql,/grant execute on function vps_yandex_private\.browser_session_read\(\)/);
   assert.doesNotMatch(sql,/reply_worker_claim_next|reply_worker_finish|business-answer/);
   assert.match(store,/select vps_yandex_private\.browser_session_read\(\)/);
