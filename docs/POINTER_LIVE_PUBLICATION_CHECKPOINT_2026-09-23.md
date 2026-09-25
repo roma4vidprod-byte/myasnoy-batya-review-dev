@@ -58,3 +58,20 @@ Run ID: `pointer-live-2026-09-23T08-07-39-395Z`.
 - `status.safe.json` — подтверждение остановленного наблюдателя и счётчики.
 - `pointer-list-post-submit.safe.json` — ограниченное наблюдение обновлённой ленты Pointer.
 Содержимое почты, пароли, одноразовые коды, raw headers и значения промокодов в checkpoint не включены.
+
+## Follow-up 25 September 2026 — Yandex publication confirmed
+On 2026-09-25 the original Yandex Maps tab for organization `201788766979` was rechecked before attempting any duplicate publication.
+The page now shows the signed-in user's own review block with the label `Вы оценили это место`:
+- public author: `Данил Валин`;
+- review date shown by Yandex: `23 сентября`;
+- text: `Все супер, на протяжении нескольких лет уже беру, ни каких претензий нет`;
+- the review is visible in the public review page for the 4-й Пятилетки, 25А location.
+
+This proves that the original controlled attempt did reach Yandex publication; the initial absence was therefore a delayed-visibility/moderation observation, not proof of failed submission. No second/duplicate review was submitted on 25 September.
+
+Pointer was then checked separately. A direct Pointer search by the distinctive text fragment `Все супер` returned no matching visible review at that moment. The newest visible Pointer review was a different review by `Александр Золотавин`, written 25 September 04:33 and shown as published 25 September 07:05.
+
+Therefore the current verified state is:
+`Pointer visit/event chain -> Yandex review published -> Pointer match/import for this exact review NOT YET OBSERVED`.
+
+The reward email was not rechecked in this follow-up because the previously prepared mail tab was no longer open. Absence of a Pointer search result does not yet prove permanent matching failure; it may reflect provider ingestion/indexing delay or another backend condition. Duplicate review submission is explicitly not required.
