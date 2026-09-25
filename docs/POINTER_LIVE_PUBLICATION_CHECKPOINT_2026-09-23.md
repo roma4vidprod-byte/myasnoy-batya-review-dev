@@ -75,3 +75,28 @@ Therefore the current verified state is:
 `Pointer visit/event chain -> Yandex review published -> Pointer match/import for this exact review NOT YET OBSERVED`.
 
 The reward email was not rechecked in this follow-up because the previously prepared mail tab was no longer open. Absence of a Pointer search result does not yet prove permanent matching failure; it may reflect provider ingestion/indexing delay or another backend condition. Duplicate review submission is explicitly not required.
+
+## Follow-up 25 September 2026 — controlled re-save of the same Yandex review
+A clean unauthenticated Chrome profile was used to re-check public visibility of the review before any new mutation. In that profile:
+- the business page showed 87 reviews;
+- the author name `Данил Валин` was not visible in the loaded public page;
+- the controlled review text was not visible in the loaded public page;
+- no signed-in marker such as `Вы оценили это место` was present.
+
+In the signed-in author session, the existing review menu explicitly showed:
+`Отзыв опубликован 23 сентября, 13:13`
+with actions `Изменить отзыв` and `Удалить отзыв`.
+This demonstrates an inconsistency between the author's signed-in state and the anonymous loaded public page; it does not by itself reveal Yandex's moderation reason.
+
+To avoid a duplicate review, the existing review was edited rather than creating a second one. The rating remained 5 stars. The substantive text was unchanged; only a final period was added so that Yandex treated the form as changed. The existing review editor was then saved.
+
+After the save:
+- the editor closed/navigated away from the review page;
+- returning to the business reviews page no longer showed the author's own review block;
+- the action `Изменить отзыв` was no longer present;
+- the button `Написать отзыв` was present again;
+- no explicit `на модерации` / `на проверке` message was displayed.
+
+Therefore the safe interpretation is: the same review was re-submitted/re-saved and is no longer presented as the author's currently published review. It is reasonable to treat it as pending re-processing, but Yandex did not expose an explicit moderation status in the observed UI. No second duplicate review was intentionally created.
+
+The page-level network observer did not capture a dedicated review mutation endpoint; it captured only Yandex service/analytics requests. Thus backend acceptance is not independently proven from the network log. The UI state transition is the available evidence for the re-save.
